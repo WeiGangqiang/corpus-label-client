@@ -6,7 +6,6 @@ import { message } from 'antd'
 import 'style/base.less'
 
 import Header from './header'
-import TabList from './tabList'
 import BreadcrumbBack from './breadcrumb'
 
 

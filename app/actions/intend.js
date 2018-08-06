@@ -20,6 +20,10 @@ export const fetchEntity = createAjaxAction(
   receiveEntityList,
 );
 
-export const fetchCorpus = createAjaxAction(intend.corpus)
+export const fetchCorpus = createAjaxAction(intend.corpus);
 
-export const postCorpus = createAjaxAction(intend.postCorpus)
+export const postCorpus = createAjaxAction(intend.postCorpus);
+
+export const simplifier = createAjaxAction(intend.simplifier);
+
+export const get
