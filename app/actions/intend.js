@@ -26,4 +26,5 @@ export const postCorpus = createAjaxAction(intend.postCorpus);
 
 export const simplifier = createAjaxAction(intend.simplifier);
 
-export const get
+export const getPattern = createAjaxAction(intend.getPattern);
+
