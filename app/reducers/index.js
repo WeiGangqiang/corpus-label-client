@@ -13,18 +13,20 @@ import {
 
 import { serveResult, agentResult, hostResult } from './serve'
 import { intendResult, entityResult } from './intend';
+import { patternResult, predictResult } from './pattern'
 
 const rootReducer = combineReducers({
   routing,
   config: (state = {}) => state,
   tabListResult,
-
   loginResponse,
   serveResult,
   agentResult,
   intendResult,
   entityResult,
   hostResult,
+  patternResult,
+  predictResult
 });
 
 export default rootReducer;

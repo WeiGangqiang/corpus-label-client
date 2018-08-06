@@ -1,18 +1,24 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { hashHistory, Link } from 'react-router'
-import { Spin, Icon } from 'antd'
+import { Spin, Icon, Form, Input, Button } from 'antd'
 import { isArrayDomain } from 'utils/util'
 import { fetchIntend, fetchEntity, fetchCorpus, postCorpus } from 'actions/intend'
 
 const agentName = sessionStorage.getItem('agentName');
-console.log(agentName)
+const FormItem = Form.Item
 
 @connect((state, dispatch) => ({
   config: state.config,
   intendResult: state.intendResult,
   entityResult: state.entityResult,
 }))
+
+@Form.create({
+  onFieldsChange(props, items) {
+    console.log(props, items)
+  },
+})
 export default class intendList extends Component {
   constructor(props) {
     super(props)
@@ -211,6 +217,22 @@ export default class intendList extends Component {
           <Col span={12} lg={4}>modelPath:</Col>
         </Row>
 
+        <div style={{...style.corpusBox, display: this.state.varietyEntity.length ? 'block' : 'none'}}>
+          {this.state.varietyEntity.length ? this.state.intentId.length && this.state.varietyEntity.length == 1 ? <div style={style.headerTitle}>选择的意图</div> : <div style={style.headerTitle}>请选择所属意图</div> : ''}
+          <div style={{maxHeight: '301px',overflowY:'auto'}}>
+            <ul style={style.flexBox}>
+              {
+                this.state.varietyEntity.map((item, index) => {
+                  return <li className={item.intentId==this.state.intentId? 'active-btn': ''} onClick={this.getIntend.bind(this,item,index)} style={style.serveLi} key={item.intentId}>{item.zhName || item.name}</li>
+                })
+              }
+              {
+                this.state.originEntity.length > 10 && this.state.varietyEntity.length <= 10 ? <li onClick={this.getMore.bind(this)} style={style.serveLi}>···</li> : ''
+              }
+            </ul>
+          </div>
+        </div>
+        <div style={{...style.corpusBox, fontSize: '14px', display : this.state.varietyEntity.length ? 'none' : 'block',}}>没有意图</div>
 
         <div style={style.corpusBox}>
           <ul style={style.flexBox}>
@@ -229,24 +251,46 @@ export default class intendList extends Component {
             <div style={{...style.button, background : '#cacaca',border: '1px solid #cacaca'}} onClick={this.reBack.bind(this)}>取消</div>
             <div style={{...style.button, background : '#cacaca',border: '1px solid #cacaca'}} onClick={this.getNext.bind(this)}>丢弃</div>
           </div>
+          <Form layout="inline" onSubmit={this.handleSubmit}>
+            <FormItem
+                validateStatus={userNameError ? 'error' : ''}
+                help={userNameError || ''}
+            >
+              {getFieldDecorator('userName', {
+                rules: [{ required: true, message: 'Please input your username!' }],
+              })(
+                  <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+              )}
+            </FormItem>
+            <FormItem>
+              <Button
+                  type="primary"
+                  htmlType="submit"
+                  disabled={hasErrors(getFieldsError())}
+              >
+                简化
+              </Button>
+            </FormItem>
+            <FormItem>
+              <div></div>
+              <Button
+                  type="primary"
+                  htmlType="submit"
+                  disabled={hasErrors(getFieldsError())}
+              >
+                简化
+              </Button>
+            </FormItem>
+          </Form>
         </div>
-        <div style={{...style.corpusBox, display: this.state.varietyEntity.length ? 'block' : 'none'}}>
-          {this.state.varietyEntity.length ? this.state.intentId.length && this.state.varietyEntity.length == 1 ? <div style={style.headerTitle}>选择的意图</div> : <div style={style.headerTitle}>请选择所属意图</div> : ''}
-          <div style={{maxHeight: '301px',overflowY:'auto'}}>
-            <ul style={style.flexBox}>
-              {
-                this.state.varietyEntity.map((item, index) => {
-                  return <li className={item.intentId==this.state.intentId? 'active-btn': ''} onClick={this.getIntend.bind(this,item,index)} style={style.serveLi} key={item.intentId}>{item.zhName || item.name}</li>
-                })
-              }
-              {
-                this.state.originEntity.length > 10 && this.state.varietyEntity.length <= 10 ? <li onClick={this.getMore.bind(this)} style={style.serveLi}>···</li> : ''
-              }
-            </ul>
-          </div>
 
-        </div>
-        <div style={{...style.corpusBox, fontSize: '14px', display : this.state.varietyEntity.length ? 'none' : 'block',}}>没有意图</div>
+        <ul>
+          <li>
+            <div>1<Icon></Icon></div>
+            <div>添加</div>
+            <div>删除</div>
+          </li>
+        </ul>
       </div> : '' }
         </Spin>
   }
