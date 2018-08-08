@@ -27,7 +27,7 @@ export const putPhrase = ajax.fetchJSONByPost('/phrase', mockUrl, 'putJson');
 
 export const deletePhrase = ajax.fetchJSONByPost('/phrase', mockUrl, 'deleteJson');
 
-export const predict = ajax.fetchJSONByPost('/predict', mockUrl, 'postJson');
+export const predict = ajax.fetchJSONByPost('/label/predict', mockUrl, 'postJson');
 
 export const generate = ajax.fetchJSONByPost('/generate', mockUrl, 'postJson');
 

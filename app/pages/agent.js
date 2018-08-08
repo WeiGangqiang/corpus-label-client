@@ -36,7 +36,7 @@ export default class Agent extends Component {
         //     console.log(error)
         // }))
       this.props.dispatch(fetchAgent('?host=http://127.0.0.1',data => {
-        console.log(data);
+        // console.log(data);
       }, error => {
         console.log(error)
       }))
@@ -66,7 +66,7 @@ export default class Agent extends Component {
 
         const { serveResult, agentResult } = this.props;
 
-        console.log(agentResult)
+        // console.log(agentResult)
 
         const style={
 

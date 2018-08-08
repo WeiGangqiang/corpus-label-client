@@ -53,7 +53,10 @@ ul,li{
 #content-container { position: relative; /*padding-top: @g-header-height; padding-left: @g-left-width-base;*/  background-color: #e7ebee; }
 .page-header { border: 0 none; color: #7c7c7c; font-size: 2.2em; font-weight: 100; margin: 0; padding: 10px 0;}
 .page-header .label { margin-right: 0.5em;}
-#page-content { padding:0;display: flex; flex-direction: column;}
+#page-content { padding:0;display: flex; flex-direction: column;
+  .ant-spin-nested-loading{ height:100%;.ant-spin-container{
+    height: 100%;} }
+}
 
 #mainnav-container { position: absolute; width: @g-left-width-base; left: 0; margin-top: @g-header-height; top: 0; bottom: 0; z-index: 4; min-height: 100%; background-color: #42485B ; 
   .ant-menu .ant-menu-submenu-title { background-color: #42485B; height: 36px; line-height: 36px; padding:0; margin:0; color: #fff;
@@ -173,4 +176,6 @@ ul,li{
   width: 100%;
   display: block;
   background: #fafafa;
+  margin-top: -55px;
+  float: left;
 }

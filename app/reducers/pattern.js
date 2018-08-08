@@ -28,7 +28,7 @@ const predictState ={
 
 export const predictResult = handleActions({
   'request predict list'(state, action) {
-    return {...state, ...action, pattern: {...pattern, sentence: action.sentence}}
+    return {...state, ...action, pattern: {...state.pattern, sentence: action.sentence}}
   },
   'receive predict list'(state, action) {
     const {req, res} = action.payload;

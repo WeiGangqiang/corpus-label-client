@@ -118,6 +118,28 @@ const ajaxHttp = {
       },
     })
   },
+  putJson: function (url, data) {
+    return axios({
+      method: 'put',
+      url,
+      data,
+      timeout: 10000,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+  },
+  deleteJson: function (url, data) {
+    return axios({
+      method: 'delete',
+      url,
+      data,
+      timeout: 10000,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+  }
 }
 
 function axiosPost(url, reqData, target, sign, handleCancel) {
@@ -139,6 +161,10 @@ function axiosPost(url, reqData, target, sign, handleCancel) {
       return ajaxHttp.postForm(newUrl, reqData);
     case 'postJson':
       return ajaxHttp.postJson(newUrl, reqData);
+    case 'putJson':
+      return ajaxHttp.putJson(newUrl, reqData);
+    case 'deleteJson':
+      return ajaxHttp.deleteJson(newUrl, reqData);
     default:
       return ajaxHttp.postJson(newUrl, reqData)
   }
