@@ -65,9 +65,7 @@ export default class intendList extends Component {
             for(let j=0;j<data[i].valuesF.length;j++){
               let reg = /[\[\]]/g
               let labelReg = /\/L[0-9]/g
-              console.log('label reg before', data[i].valuesF[j])
               data[i].valuesF[j] = data[i].valuesF[j].replace(reg,'').replace(labelReg, '')
-              console.log('label reg after', data[i].valuesF[j])
             }
             data[i].valuesTen = data[i].valuesF.length > 10 ? [...data[i].valuesF.slice(0,10)] : [...data[i].valuesF]
             data[i].valuesShow = [...data[i].valuesTen]
