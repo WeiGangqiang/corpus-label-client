@@ -20,7 +20,7 @@ export const intendResult = handleActions({
   },
 }, intendState)
 
-const colorArray = ['#05a8aa', '#09aa40', '#f3f60b', '#fa8107', '#fd3709', '#c20133', '#aa0891', '#6406b8', '#0c07f8', '#09bffd'];
+const colorArray = ['#4fc3f7', '#29b6f6', '#03a9f4', '#039be5', '#0288d1', '#42a5f5', '#2196f3', '#1e88e5', '#1976d2'];
 const entityState = () => [];
 export const entityResult = handleActions({
   'request entity list'(state, action) {
