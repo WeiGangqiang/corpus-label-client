@@ -63,7 +63,11 @@ export default class intendList extends Component {
           for(let i=0;i<data.length;i++){
             data[i].valuesF = [...data[i].values]
             for(let j=0;j<data[i].valuesF.length;j++){
-              data[i].valuesF[j] = data[i].valuesF[j].replace('/'+data[i].subEntities[0].match(":(.*)")[1]+' ','')
+              let reg = /[\[\]]/g
+              let labelReg = /\/L[0-9]/g
+              console.log('label reg before', data[i].valuesF[j])
+              data[i].valuesF[j] = data[i].valuesF[j].replace(reg,'').replace(labelReg, '')
+              console.log('label reg after', data[i].valuesF[j])
             }
             data[i].valuesTen = data[i].valuesF.length > 10 ? [...data[i].valuesF.slice(0,10)] : [...data[i].valuesF]
             data[i].valuesShow = [...data[i].valuesTen]
@@ -122,7 +126,9 @@ export default class intendList extends Component {
       for(let i=0;i<data.length;i++){
         data[i].valuesF = [...data[i].values]
         for(let j=0;j<data[i].valuesF.length;j++){
-          data[i].valuesF[j] = data[i].valuesF[j].replace('/'+data[i].subEntities[0].match(":(.*)")[1]+' ','')
+          let reg = /[\[\]]/g
+          let labelReg = /\/L[0-9]/g
+          data[i].valuesF[j] = data[i].valuesF[j].replace(reg,'').replace(labelReg, '')
         }
         data[i].valuesTen = data[i].valuesF.length > 10 ? [...data[i].valuesF.slice(0,10)] : [...data[i].valuesF]
         data[i].valuesShow = [...data[i].valuesTen]
@@ -515,11 +521,13 @@ export default class intendList extends Component {
               </Row>
               <div style={style.corpusBox}>
                 <ul style={style.flexBox}>
-                  {
+                  { 
                     this.state.entityParam.map((item,i) => {
-                      return <li style={{...style.serveLi,color:'#fff'}} key={item.entity} onClick={this.setColor.bind(this,item)}><span style={{...style.serveLiSpan, background: item.color, border:'1px solid '+item.color+"'"}} >{item.name}</span>{item.valuesShow.map((value, index) => {
-                        return <span style={{...style.serveLiSpan, background: item.color, border:'1px solid '+item.color+"'"}} key={index}>{value}</span>
-                      })}
+                      return <li style={{...style.serveLi,color:'#fff'}} key={item.entity} onClick={this.setColor.bind(this,item)}
+                              ><span style={{...style.serveLiSpan, background: '#188ae2', border:'1px solid '+item.color+"'"}} >{item.name}</span>
+                            {item.valuesShow.map((value, index) => {
+                              return <span style={{...style.serveLiSpan, background: item.color, border:'1px solid '+item.color+"'"}} key={index}>{value}</span>
+                            })}
                       {
                         item.values.length>10 ? item.valuesShow.length<=10?<span onClick={this.showMoreValues.bind(this,i)} style={{...style.serveLiSpan, background: item.color, border:'1px solid '+item.color+"'"}}>···</span>:<span onClick={this.showLessValues.bind(this,i)} style={{...style.serveLiSpan, background: item.color, border:'1px solid '+item.color+"'"}}>-</span>: ''
                       }
