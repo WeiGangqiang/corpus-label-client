@@ -57,38 +57,9 @@ export default class intendList extends Component {
     this.props.dispatch(fetchIntend('?agent=' + agentName, data =>{
       if(data.length){
         this.setState({
-          originEntity: [...data],
-          name: data[0].name,
-          zhName: data[0].zhName,
-          modelPath: data[0].modelPath,
-          intentId: data[0].intentId
+          originEntity: [...data]
         })
-        this.props.dispatch(fetchEntity('?agent=' + agentName + '&intentId=' + data[0].intentId, data => {
-          for(let i=0;i<data.length;i++){
-            data[i].valuesF = [...data[i].values]
-            for(let j=0;j<data[i].valuesF.length;j++){
-              let reg = /[\[\]]/g
-              let labelReg = /\/L[0-9]/g
-              data[i].valuesF[j] = data[i].valuesF[j].replace(reg,'').replace(labelReg, '')
-            }
-            data[i].valuesTen = data[i].valuesF.length > 10 ? [...data[i].valuesF.slice(0,10)] : [...data[i].valuesF]
-            data[i].valuesShow = [...data[i].valuesTen]
-          }
-          this.setState({
-            entityParam: [...data]
-          })
-        }, error => {
-
-        }))
-        this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + data[0].intentId
-        , data => {
-          console.log(data)
-              this.setState({
-                phraseArray: [...data]
-              })
-        }, error => {
-          console.log(error)
-        }))
+        this.initData(data[0])
       }
     }, error => {
     }))
@@ -137,7 +108,6 @@ export default class intendList extends Component {
           console.log(error)
         }))
     this.props.dispatch(getPattern('?agent='+agentName+'&intentId='+obj.intentId+'&type='+this.state.type,data => {
-      console.log(data)
       for(let i=0;i<data.length;i++){
         let content = {
           pattern: {
@@ -172,16 +142,7 @@ export default class intendList extends Component {
           contents:[...this.state.contents, content],
           signWords:[...this.state.signWords]
         });
-
-        const that=this
-        setTimeout(function () {
-          console.log(that.state.signWords)
-        })
-
-
-
       }
-
     },error => {
 
     }))
@@ -214,7 +175,6 @@ export default class intendList extends Component {
         })
       }
     }else if(document.getSelection) {
-      console.log(document.getSelection())
       if(window.getSelection().toString()){
         this.setState({
           signWord:window.getSelection().toString()
@@ -230,7 +190,6 @@ export default class intendList extends Component {
     }
   }
   setColor(obj) {
-    console.log(obj)
     if(!this.state.signWords[this.state.contentIndex]){
       this.state.signWords[this.state.contentIndex]=[]
     }
@@ -246,9 +205,9 @@ export default class intendList extends Component {
       signWord:this.state.signWord,
       signWordStart:this.state.signWordStart,
       signWordEnd:this.state.signWordEnd,
-      color:obj.color,
-      id:obj.name,
-      type: 'entity'
+      color:obj.color||'#1976d2',
+      id:obj.name||obj.phraseId,
+      type: obj.name?'entity':'phrase'
     }]
     if(this.state.signWords[this.state.contentIndex].length>1){
       this.state.signWords[this.state.contentIndex].sort(function(obj1, obj2){
@@ -261,6 +220,25 @@ export default class intendList extends Component {
       signWordStart: '',
       signWordEnd: ''
     })
+  }
+  addPhrase() {
+
+    this.props.dispatch(postPhrase({
+      similars: [this.state.signWord],
+      intentId: this.state.intentId,
+      intent: this.state.name,
+      agent: agentName
+    },data => {
+      this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + this.state.intentId
+          , data => {
+              console.log(data)
+            this.setState({
+              phraseArray: [...data]
+            })
+          }, error => {
+            console.log(error)
+          }))
+    }))
   }
   showSignWord(arr,word) {
     let showSign='';
@@ -463,23 +441,6 @@ export default class intendList extends Component {
     })
   }
 
-  addPhrase() {
-    this.props.dispatch(postPhrase({
-      similars: [this.state.signWord],
-      intentId: this.state.intentId,
-      intent: this.state.name,
-      agent: agentName
-    },data => {
-      this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + this.state.intentId
-          , data => {
-            this.setState({
-              phraseArray: [...data]
-            })
-          }, error => {
-            console.log(error)
-          }))
-    }))
-  }
   delPhraseText(index,i) {
     this.state.phraseArray[index].similars.splice(i,1);
     this.props.dispatch(putPhrase({
@@ -498,8 +459,9 @@ export default class intendList extends Component {
       intent: this.state.name,
       agent: agentName
     }))
+    this.state.phraseArray.splice(index,1)
     this.setState({
-      phraseArray: [...this.state.phraseArray.splice(index,1)]
+      phraseArray: [...this.state.phraseArray]
     })
   }
   showAddPhrase(index) {
@@ -705,8 +667,6 @@ export default class intendList extends Component {
                       </li>
                     })
                   }
-                  <li style={{...style.serveLi,color:'#fff'}} onClick={this.addPhrase.bind(this)}><span style={{...style.serveLiSpan, background: '#09bffd', border:'1px solid #09bffd'}} >添加近义词</span>
-                  </li>
                 </ul>
                 <div style={style.pBox}>
                     {this.state.contents.length ? this.state.contents.map((content,index) => {
@@ -751,8 +711,11 @@ export default class intendList extends Component {
                 </div>
               </div>
               <ul style={style.phraseBox}>
+                <li style={{...style.serveLi,color:'#fff'}}><span onClick={this.addPhrase.bind(this)} style={{...style.serveLiSpan, background: '#09bffd', border:'1px solid #09bffd'}} >添加近义词</span>
+                </li>
                 {this.state.phraseArray.map((phrase, index) => {
                   return  <li key={index} style={{...style.phraseItem, background: index%2===0?'#fbfbfb':'#fff'}}>
+                    <div style={style.phraseText} onClick={this.setColor.bind(this,phrase)}>{phrase.phraseId}</div>
                         {
                           phrase.similars.map((item,i) => {
                             return <div style={style.phraseText} key={i}>{item}<Icon onClick={this.delPhraseText.bind(this,index,i)} type="close" /></div>
@@ -771,17 +734,6 @@ export default class intendList extends Component {
           title="添加近义词"
           centered
           visible={this.state.showModalFlag}
-          onOk={() => this.addPhraseText()}
-          onCancel={() => this.hideAddPhrase()}
-          destroyOnClose={true}
-      >
-        <Input onBlur={this.getPhraseText}></Input>
-        <span>如果添加多个中间用逗号隔开，如：漂亮，美丽</span>
-      </Modal>
-      <Modal
-          title="添加语料规则"
-          centered
-          visible={this.state.showModalPatternFlag}
           onOk={() => this.addPhraseText()}
           onCancel={() => this.hideAddPhrase()}
           destroyOnClose={true}
