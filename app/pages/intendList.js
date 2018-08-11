@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { hashHistory, Link } from 'react-router'
 import { Spin, Icon, Form, Input, Button, Row, Col, Modal } from 'antd'
 import { isArrayDomain } from 'utils/util'
-import { fetchIntend, fetchEntity, fetchCorpus, postCorpus, simplifier, predict, getPhrase, putPhrase, deletePhrase, postPhrase } from 'actions/intend'
-import {PatternLine} from 'components/pattern'
+import { fetchIntend, fetchEntity, getPattern, postCorpus, simplifier, predict, getPhrase, putPhrase, deletePhrase, postPhrase, postPattern } from 'actions/intend'
+import {PatternList} from 'components/patternList'
 
 const agentName = sessionStorage.getItem('agentName');
 const FormItem = Form.Item
@@ -28,7 +28,7 @@ export default class intendList extends Component {
       contents:[],
       content: '',
       value:'',
-      intentId: 1,
+      intentId: '1',
       signWord: '',
       signWords: [],
       replaceWords: [],
@@ -64,6 +64,7 @@ export default class intendList extends Component {
           modelPath: data[0].modelPath,
           intentId: data[0].intentId
         })
+        console.log('update intent id', inttentId)
         this.props.dispatch(fetchEntity('?agent=' + agentName + '&intentId=' + data[0].intentId, data => {
           for(let i=0;i<data.length;i++){
             data[i].valuesF = [...data[i].values]
@@ -113,6 +114,7 @@ export default class intendList extends Component {
       modelPath: obj.modelPath,
       intentId: obj.intentId
     });
+    console.log('update intentid', obj.intentId, this.state.intentId)
     this.props.dispatch(fetchEntity('?agent=' + agentName + '&intentId=' + obj.intentId, data => {
       for(let i=0;i<data.length;i++){
         data[i].valuesF = [...data[i].values]
@@ -663,6 +665,7 @@ export default class intendList extends Component {
         float: 'right',
       }
     };
+    console.log('this.state.intentId', this.state.intentId)
 
     return <Spin spinning={intendResult.loading}>
       <div style={style.innerContainer}>
@@ -709,7 +712,8 @@ export default class intendList extends Component {
                   <li style={{...style.serveLi,color:'#fff'}} onClick={this.addPhrase.bind(this)}><span style={{...style.serveLiSpan, background: '#09bffd', border:'1px solid #09bffd'}} >添加近义词</span>
                   </li>
                 </ul>
-                <div style={style.pBox}>
+                <PatternList agentName = {agentName} intentId ={this.state.intentId} corpusType="positive" />
+                {/* <div style={style.pBox}>
                     {this.state.contents.length ? this.state.contents.map((content,index) => {
                       return <Row key={index} >
                         <Col style={style.corpusCol} span={12}>
@@ -725,10 +729,10 @@ export default class intendList extends Component {
                           <div style={{...style.button, background : '#cacaca',border: '1px solid #cacaca'}} onClick={this.reBack.bind(this,index)}>取消</div>
                           <div style={{...style.button, background : '#cacaca',border: '1px solid #cacaca'}} onClick={this.delPattern.bind(this,index)}>删除</div>
                           {/*<div style={{...style.button, background : '#cacaca',border: '1px solid #cacaca'}} onClick={this.getNext.bind(this,index)}>丢弃</div>*/}
-                        </div>
+                        {/* </div>
                       </Row>
                     }) : <p style={style.p}>没有语料了，小主你吃个西瓜，休息一下吧！</p>}
-                </div>
+                </div> */} */}
 
                 <Form layout="inline">
                   <FormItem>
