@@ -3,8 +3,10 @@ import { connect } from 'react-redux'
 import { hashHistory, Link } from 'react-router'
 import { Spin, Icon, Form, Input, Button, Row, Col, Modal } from 'antd'
 import { isArrayDomain } from 'utils/util'
-import { fetchIntend, fetchEntity, getPattern, postCorpus, simplifier, predict, getPhrase, putPhrase, deletePhrase, postPhrase, postPattern } from 'actions/intend'
-import {PatternList} from 'components/patternList'
+import { fetchIntend, fetchEntity, fetchCorpus, postCorpus, simplifier, predict, getPhrase, putPhrase, deletePhrase, postPhrase } from 'actions/intend'
+
+import { PatternLine, PhraseList, EntityParameters, IntentList, CorpusSimplifier } from "components/index";
+import { PatternList } from '../components/patternList';
 
 const agentName = sessionStorage.getItem('agentName');
 const FormItem = Form.Item
@@ -51,6 +53,13 @@ export default class intendList extends Component {
     this.getPhraseText = this.getPhraseText.bind(this);
     this.initData = this.initData.bind(this);
     this.showSignWord = this.showSignWord.bind(this);
+    this.getIntent = this.getIntent.bind(this)
+    this.getPhrase = this.getPhrase.bind(this)
+    this.showMoreValues = this.showMoreValues.bind(this)
+    this.showLessValues = this.showLessValues.bind(this)
+    this.useSimCorpus = this.useSimCorpus.bind(this)
+    this.noUseSimCorpus = this.noUseSimCorpus.bind(this)
+
   }
   componentWillMount() {
     // 请求相应的预料，对signWord进行赋值等等
@@ -58,39 +67,9 @@ export default class intendList extends Component {
     this.props.dispatch(fetchIntend('?agent=' + agentName, data =>{
       if(data.length){
         this.setState({
-          originEntity: [...data],
-          name: data[0].name,
-          zhName: data[0].zhName,
-          modelPath: data[0].modelPath,
-          intentId: data[0].intentId
+          originEntity: [...data]
         })
-        console.log('update intent id', inttentId)
-        this.props.dispatch(fetchEntity('?agent=' + agentName + '&intentId=' + data[0].intentId, data => {
-          for(let i=0;i<data.length;i++){
-            data[i].valuesF = [...data[i].values]
-            for(let j=0;j<data[i].valuesF.length;j++){
-              let reg = /[\[\]]/g
-              let labelReg = /\/L[0-9]/g
-              data[i].valuesF[j] = data[i].valuesF[j].replace(reg,'').replace(labelReg, '')
-            }
-            data[i].valuesTen = data[i].valuesF.length > 10 ? [...data[i].valuesF.slice(0,10)] : [...data[i].valuesF]
-            data[i].valuesShow = [...data[i].valuesTen]
-          }
-          this.setState({
-            entityParam: [...data]
-          })
-        }, error => {
-
-        }))
-        this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + data[0].intentId
-        , data => {
-          console.log(data)
-              this.setState({
-                phraseArray: [...data]
-              })
-        }, error => {
-          console.log(error)
-        }))
+        this.initData(data[0])
       }
     }, error => {
     }))
@@ -98,7 +77,7 @@ export default class intendList extends Component {
   }
   componentDidMount() {
   }
-  getIntend(item,index) {
+  getIntent(item,index) {
     this.setState({
       contents:[],
       signWords: [],
@@ -140,7 +119,6 @@ export default class intendList extends Component {
           console.log(error)
         }))
     this.props.dispatch(getPattern('?agent='+agentName+'&intentId='+obj.intentId+'&type='+this.state.type,data => {
-      console.log(data)
       for(let i=0;i<data.length;i++){
         let content = {
           pattern: {
@@ -175,19 +153,20 @@ export default class intendList extends Component {
           contents:[...this.state.contents, content],
           signWords:[...this.state.signWords]
         });
-
-        const that=this
-        setTimeout(function () {
-          console.log(that.state.signWords)
-        })
-
-
-
       }
-
     },error => {
 
     }))
+  }
+  getPhrase () {
+    this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + this.state.intentId
+        , data => {
+          this.setState({
+            phraseArray: [...data]
+          })
+        }, error => {
+          console.log(error)
+        }))
   }
   wordEnd(index, e) {
     console.log(e.target.pageX,e.target.pageY)
@@ -217,7 +196,6 @@ export default class intendList extends Component {
         })
       }
     }else if(document.getSelection) {
-      console.log(document.getSelection())
       if(window.getSelection().toString()){
         this.setState({
           signWord:window.getSelection().toString()
@@ -233,7 +211,6 @@ export default class intendList extends Component {
     }
   }
   setColor(obj) {
-    console.log(obj)
     if(!this.state.signWords[this.state.contentIndex]){
       this.state.signWords[this.state.contentIndex]=[]
     }
@@ -249,9 +226,9 @@ export default class intendList extends Component {
       signWord:this.state.signWord,
       signWordStart:this.state.signWordStart,
       signWordEnd:this.state.signWordEnd,
-      color:obj.color,
-      id:obj.name,
-      type: 'entity'
+      color:obj.color||'#1976d2',
+      id:obj.name||obj.phraseId,
+      type: obj.name?'entity':'phrase'
     }]
     if(this.state.signWords[this.state.contentIndex].length>1){
       this.state.signWords[this.state.contentIndex].sort(function(obj1, obj2){
@@ -264,6 +241,25 @@ export default class intendList extends Component {
       signWordStart: '',
       signWordEnd: ''
     })
+  }
+  addPhrase() {
+
+    this.props.dispatch(postPhrase({
+      similars: [this.state.signWord],
+      intentId: this.state.intentId,
+      intent: this.state.name,
+      agent: agentName
+    },data => {
+      this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + this.state.intentId
+          , data => {
+              console.log(data)
+            this.setState({
+              phraseArray: [...data]
+            })
+          }, error => {
+            console.log(error)
+          }))
+    }))
   }
   showSignWord(arr,word) {
     let showSign='';
@@ -466,23 +462,6 @@ export default class intendList extends Component {
     })
   }
 
-  addPhrase() {
-    this.props.dispatch(postPhrase({
-      similars: [this.state.signWord],
-      intentId: this.state.intentId,
-      intent: this.state.name,
-      agent: agentName
-    },data => {
-      this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + this.state.intentId
-          , data => {
-            this.setState({
-              phraseArray: [...data]
-            })
-          }, error => {
-            console.log(error)
-          }))
-    }))
-  }
   delPhraseText(index,i) {
     this.state.phraseArray[index].similars.splice(i,1);
     this.props.dispatch(putPhrase({
@@ -501,8 +480,9 @@ export default class intendList extends Component {
       intent: this.state.name,
       agent: agentName
     }))
+    this.state.phraseArray.splice(index,1)
     this.setState({
-      phraseArray: [...this.state.phraseArray.splice(index,1)]
+      phraseArray: [...this.state.phraseArray]
     })
   }
   showAddPhrase(index) {
@@ -671,21 +651,8 @@ export default class intendList extends Component {
       <div style={style.innerContainer}>
         <Link className='bread-cruft' to={'/selectService'}><Icon type='left'></Icon>服务器选择</Link>
         <div style={style.innerBox} className='intentContainer'>
-          <div className='intentSlide' style={style.intendBox}>
-            <div style={{...style.corpusBox, display: this.state.originEntity.length ? 'block' : 'none'}}>
-              {this.state.originEntity.length ? this.state.intentId.length && this.state.originEntity.length == 1 ? <div style={style.headerTitle}>选择的意图</div> : <div style={style.headerTitle}>请选择所属意图</div> : ''}
-              <div style={{height: '100%',overflowY:'auto'}}>
-                <ul style={style.flexBox}>
-                  {
-                    this.state.originEntity.map((item, index) => {
-                      return <li className={item.intentId==this.state.intentId? 'active-btn': ''} onClick={this.getIntend.bind(this,item,index)} style={style.serveLi} key={item.intentId}>{item.zhName || item.name}</li>
-                    })
-                  }
-                </ul>
-              </div>
-            </div>
-            <div style={{...style.corpusBox, fontSize: '14px', display : this.state.originEntity.length ? 'none' : 'block',}}>没有意图</div>
-          </div>
+
+          <IntentList originEntity={this.state.originEntity} intentId={this.state.intentId} getIntent={this.getIntent}></IntentList>
 
           <div style={{height:'100%',overflow:'auto'}}>
             { !intendResult.loading ? <div className="container">
@@ -695,105 +662,71 @@ export default class intendList extends Component {
                 <Col style={style.col} span={24} >modelPath:{this.state.modelPath}</Col>
               </Row>
               <div style={style.corpusBox}>
-                <ul style={style.flexBox}>
-                  { 
-                    this.state.entityParam.map((item,i) => {
-                      return <li style={{...style.serveLi,color:'#fff'}} key={item.entity} onClick={this.setColor.bind(this,item)}
-                              ><span style={{...style.serveLiSpan, background: '#188ae2', border:'1px solid '+item.color+"'"}} >{item.name}</span>
-                            {item.valuesShow.map((value, index) => {
-                              return <span style={{...style.serveLiSpan, background: item.color, border:'1px solid '+item.color+"'"}} key={index}>{value}</span>
-                            })}
-                      {
-                        item.values.length>10 ? item.valuesShow.length<=10?<span onClick={this.showMoreValues.bind(this,i)} style={{...style.serveLiSpan, background: item.color, border:'1px solid '+item.color+"'"}}>···</span>:<span onClick={this.showLessValues.bind(this,i)} style={{...style.serveLiSpan, background: item.color, border:'1px solid '+item.color+"'"}}>-</span>: ''
-                      }
-                      </li>
-                    })
-                  }
-                  <li style={{...style.serveLi,color:'#fff'}} onClick={this.addPhrase.bind(this)}><span style={{...style.serveLiSpan, background: '#09bffd', border:'1px solid #09bffd'}} >添加近义词</span>
-                  </li>
-                </ul>
-                <PatternList agentName = {agentName} intentId ={this.state.intentId} corpusType="positive" />
-                {/* <div style={style.pBox}>
-                    {this.state.contents.length ? this.state.contents.map((content,index) => {
-                      return <Row key={index} >
-                        <Col style={style.corpusCol} span={12}>
-                          <div style={style.corpusSpan}>标注区</div>
-                          <p style={style.p}  onMouseUp={this.wordEnd.bind(this,index)}>{content.pattern.sentence}</p>
-                        </Col>
-                        <Col style={style.corpusCol} span={12}>
-                          <div style={style.corpusSpan}>展示区</div>
-                          <p style={style.p} dangerouslySetInnerHTML={{__html: this.showSignWord(this.state.signWords[index],content.pattern.sentence)}}></p>
-                        </Col>
-                        <div style={style.funBox}>
-                          <div style={{...style.button,background: '#188ae2',border: '1px solid #188ae2'}} onClick={this.submit.bind(this,index,content)}>提交</div>
-                          <div style={{...style.button, background : '#cacaca',border: '1px solid #cacaca'}} onClick={this.reBack.bind(this,index)}>取消</div>
-                          <div style={{...style.button, background : '#cacaca',border: '1px solid #cacaca'}} onClick={this.delPattern.bind(this,index)}>删除</div>
-                          {/*<div style={{...style.button, background : '#cacaca',border: '1px solid #cacaca'}} onClick={this.getNext.bind(this,index)}>丢弃</div>*/}
-                        {/* </div>
-                      </Row>
-                    }) : <p style={style.p}>没有语料了，小主你吃个西瓜，休息一下吧！</p>}
-                </div> */} */}
 
-                <Form layout="inline">
-                  <FormItem>
-                    {getFieldDecorator('newCorpus', {
-                    })(
-                        <Input  style={{width:'300px'}} placeholder="请输入新的语料" onPressEnter={this.simplifier.bind(this)} onChange={this.corpusInput.bind(this)} onBlur={this.corpusBlur.bind(this)}/>
-                    )}
-                  </FormItem>
-                  <FormItem>
-                    <Button type="primary" disabled={!this.state.newCorpus} onClick={this.simplifier.bind(this)}>
-                      简化
-                    </Button>
-                  </FormItem>
-                </Form>
-                <div style={{display:'flex',marginTop: '20px'}}>
-                  <div style={style.newCorpusBox}>{this.state.simCorpus}</div>
-                  <Button onClick={this.useSimCorpus.bind(this)} type="primary" disabled={!this.state.simCorpus} style={{marginLeft: '16px'}}>
-                    使用简化模型
-                  </Button>
-                  <Button onClick={this.noUseSimCorpus.bind(this)}>不使用简化模型</Button>
-                </div>
+                <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues}></EntityParameters>
+
+                {/*<ul style={style.flexBox}>*/}
+                  {/*{ */}
+                    {/*this.state.entityParam.map((item,i) => {*/}
+                      {/*return <li style={{...style.serveLi,color:'#fff'}} key={item.entity} onClick={this.setColor.bind(this,item)}*/}
+                              {/*><span style={{...style.serveLiSpan, background: '#188ae2', border:'1px solid '+item.color+"'"}} >{item.name}</span>*/}
+                            {/*{item.valuesShow.map((value, index) => {*/}
+                              {/*return <span style={{...style.serveLiSpan, background: item.color, border:'1px solid '+item.color+"'"}} key={index}>{value}</span>*/}
+                            {/*})}*/}
+                      {/*{*/}
+                        {/*item.values.length>10 ? item.valuesShow.length<=10?<span onClick={this.showMoreValues.bind(this,i)} style={{...style.serveLiSpan, background: item.color, border:'1px solid '+item.color+"'"}}>···</span>:<span onClick={this.showLessValues.bind(this,i)} style={{...style.serveLiSpan, background: item.color, border:'1px solid '+item.color+"'"}}>-</span>: ''*/}
+                      {/*}*/}
+                      {/*</li>*/}
+                    {/*})*/}
+                  {/*}*/}
+                {/*</ul>*/}
+                <PatternList agentName={agentName}  intentId={this.state.intentId} corpusType="postive"/>
+                <CorpusSimplifier useSimCorpus={this.useSimCorpus} noUseSimCorpus={this.noUseSimCorpus}></CorpusSimplifier>
+
+                {/*<Form layout="inline">*/}
+                  {/*<FormItem>*/}
+                    {/*{getFieldDecorator('newCorpus', {*/}
+                    {/*})(*/}
+                        {/*<Input  style={{width:'300px'}} placeholder="请输入新的语料" onPressEnter={this.simplifier.bind(this)} onChange={this.corpusInput.bind(this)} onBlur={this.corpusBlur.bind(this)}/>*/}
+                    {/*)}*/}
+                  {/*</FormItem>*/}
+                  {/*<FormItem>*/}
+                    {/*<Button type="primary" disabled={!this.state.newCorpus} onClick={this.simplifier.bind(this)}>*/}
+                      {/*简化*/}
+                    {/*</Button>*/}
+                  {/*</FormItem>*/}
+                {/*</Form>*/}
+                {/*<div style={{display:'flex',marginTop: '20px'}}>*/}
+                  {/*<div style={style.newCorpusBox}>{this.state.simCorpus}</div>*/}
+                  {/*<Button onClick={this.useSimCorpus.bind(this)} type="primary" disabled={!this.state.simCorpus} style={{marginLeft: '16px'}}>*/}
+                    {/*使用简化模型*/}
+                  {/*</Button>*/}
+                  {/*<Button onClick={this.noUseSimCorpus.bind(this)}>不使用简化模型</Button>*/}
+                {/*</div>*/}
               </div>
-              <ul style={style.phraseBox}>
-                {this.state.phraseArray.map((phrase, index) => {
-                  return  <li key={index} style={{...style.phraseItem, background: index%2===0?'#fbfbfb':'#fff'}}>
-                        {
-                          phrase.similars.map((item,i) => {
-                            return <div style={style.phraseText} key={i}>{item}<Icon onClick={this.delPhraseText.bind(this,index,i)} type="close" /></div>
-                          })
-                        }
-                    <div onClick={this.showAddPhrase.bind(this,index)} style={style.phraseText}>添加</div>
-                    <div onClick={this.delPhraseItem.bind(this,index)} style={style.phraseText}>删除</div>
-                  </li>
-                })}
-              </ul>
+
+              <PhraseList intent={this.state.name} agent={agentName} phraseArray={this.state.phraseArray} updatePhraseArray={this.getPhrase}></PhraseList>
+
+              {/*<ul style={style.phraseBox}>*/}
+                {/*<li style={{...style.serveLi,color:'#fff'}}><span onClick={this.addPhrase.bind(this)} style={{...style.serveLiSpan, background: '#09bffd', border:'1px solid #09bffd'}} >添加近义词</span>*/}
+                {/*</li>*/}
+                {/*{this.state.phraseArray.map((phrase, index) => {*/}
+                  {/*return  <li key={index} style={{...style.phraseItem, background: index%2===0?'#fbfbfb':'#fff'}}>*/}
+                    {/*<div style={style.phraseText} onClick={this.setColor.bind(this,phrase)}>{phrase.phraseId}</div>*/}
+                        {/*{*/}
+                          {/*phrase.similars.map((item,i) => {*/}
+                            {/*return <div style={style.phraseText} key={i}>{item}<Icon onClick={this.delPhraseText.bind(this,index,i)} type="close" /></div>*/}
+                          {/*})*/}
+                        {/*}*/}
+                    {/*<div onClick={this.showAddPhrase.bind(this,index)} style={style.phraseText}>添加</div>*/}
+                    {/*<div onClick={this.delPhraseItem.bind(this,index)} style={style.phraseText}>删除</div>*/}
+                  {/*</li>*/}
+                {/*})}*/}
+              {/*</ul>*/}
             </div> : '' }
           </div>
         </div>
       </div>
-      <Modal
-          title="添加近义词"
-          centered
-          visible={this.state.showModalFlag}
-          onOk={() => this.addPhraseText()}
-          onCancel={() => this.hideAddPhrase()}
-          destroyOnClose={true}
-      >
-        <Input onBlur={this.getPhraseText}></Input>
-        <span>如果添加多个中间用逗号隔开，如：漂亮，美丽</span>
-      </Modal>
-      <Modal
-          title="添加语料规则"
-          centered
-          visible={this.state.showModalPatternFlag}
-          onOk={() => this.addPhraseText()}
-          onCancel={() => this.hideAddPhrase()}
-          destroyOnClose={true}
-      >
-        <Input onBlur={this.getPhraseText}></Input>
-        <span>如果添加多个中间用逗号隔开，如：漂亮，美丽</span>
-      </Modal>
     </Spin>
   }
 }
