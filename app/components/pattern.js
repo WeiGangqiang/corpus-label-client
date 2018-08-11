@@ -4,25 +4,6 @@ import {Button} from 'antd'
 export class PatternLine extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            patternId : props.patternId,
-            pattern: {
-                "sentence": "我刘亦菲你喜欢吗吗",
-                "labels":
-                [{
-                  "type": "entity",
-                  "id": "star",
-                  "length": 3,
-                  "startPos": 1
-              },
-              {
-                  "type": "phrase",
-                  "id": "14700686050982298",
-                  "length": 2,
-                  "startPos": 5
-              }]
-            }
-        }
     }
      
     getSpanStyleBy = (type) => {
@@ -38,8 +19,8 @@ export class PatternLine extends Component {
     }
 
     getSpans = () => {
-        let sentence = this.state.pattern.sentence
-        let labels = this.state.pattern.labels
+        let sentence = this.props.pattern.sentence
+        let labels = this.props.pattern.labels
         let startPos = 0
         let spans = []
         labels.forEach(label => {
@@ -56,8 +37,8 @@ export class PatternLine extends Component {
     }
 
     getSpanStartPos = () => {
-        let sentence = this.state.pattern.sentence
-        let labels = this.state.pattern.labels
+        let sentence = this.props.pattern.sentence
+        let labels = this.props.pattern.labels
         let startPos = 0
         let spanStarts = []
         labels.forEach(label => {
@@ -81,12 +62,12 @@ export class PatternLine extends Component {
     selectWord = (e) => {
         let selection = (window.getSelection) ? window.getSelection(): document.getSelection()
         let selectStartPos = this.calcStartPos(selection.anchorNode.parentNode.id, selection.anchorOffset)
-        this.props.updateSelectLabel(this.state.patternId, {startPos: selectStartPos, length: selection.toString().length})
+        this.props.updateSelectLabel(this.props.patternId, {startPos: selectStartPos, length: selection.toString().length})
     }
 
     removePattern = () => {
         console.log('pattern id is called')
-        this.props.removePatternBy(this.state.patternId)
+        this.props.removePatternBy(this.props.patternId)
     }
     
     render() {
@@ -97,6 +78,7 @@ export class PatternLine extends Component {
 }
 
 PatternLine.propTypes = { 
-    patternId: React.PropTypes.string,
+    patternId: React.PropTypes.number,
     removePatternBy: React.PropTypes.func,
+    pattern :React.PropTypes.object,
     updateSelectLabel: React.PropTypes.func};

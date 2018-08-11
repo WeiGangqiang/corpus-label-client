@@ -3,9 +3,10 @@ import { connect } from 'react-redux'
 import { hashHistory, Link } from 'react-router'
 import { Spin, Icon, Form, Input, Button, Row, Col, Modal } from 'antd'
 import { isArrayDomain } from 'utils/util'
-import { fetchIntend, fetchEntity, fetchCorpus, postCorpus, simplifier, predict, getPhrase, putPhrase, deletePhrase, postPhrase } from 'actions/intend'
+import { fetchIntend, fetchEntity,postPattern, postCorpus, simplifier, predict, getPhrase, putPhrase, deletePhrase, postPhrase } from 'actions/intend'
 
 import { PatternLine, PhraseList, EntityParameters, IntentList, CorpusSimplifier } from "components/index";
+import { PatternList } from '../components/patternList';
 
 const agentName = sessionStorage.getItem('agentName');
 const FormItem = Form.Item
@@ -29,7 +30,7 @@ export default class intendList extends Component {
       contents:[],
       content: '',
       value:'',
-      intentId: 1,
+      intentId: '1',
       signWord: '',
       signWords: [],
       replaceWords: [],
@@ -92,6 +93,7 @@ export default class intendList extends Component {
       modelPath: obj.modelPath,
       intentId: obj.intentId
     });
+    console.log('update intentid', obj.intentId, this.state.intentId)
     this.props.dispatch(fetchEntity('?agent=' + agentName + '&intentId=' + obj.intentId, data => {
       for(let i=0;i<data.length;i++){
         data[i].valuesF = [...data[i].values]
@@ -118,45 +120,6 @@ export default class intendList extends Component {
         }, error => {
           console.log(error)
         }))
-    this.props.dispatch(getPattern('?agent='+agentName+'&intentId='+obj.intentId+'&type='+this.state.type,data => {
-      for(let i=0;i<data.length;i++){
-        let content = {
-          pattern: {
-            sentence: data[i].sentence,
-            labels: data[i].labels
-          },
-          type: this.state.type,
-          intentId: this.state.intentId,
-          intent: this.state.name,
-          agent: agentName
-        }
-        for(let j=0;j<data[i].labels.length;j++){
-            let signItem = {
-              signWord:data[i].sentence.substr(data[i].labels[j].startPos,data[i].labels[j].length),
-              signWordStart:data[i].labels[j].startPos,
-              signWordEnd:parseInt(data[i].labels[j].startPos) -(-data[i].labels[j].length),
-              color:colorArray[i],
-              id: data[i].labels[j].id,
-              type: data[i].labels[j].type
-            }
-            if(!this.state.signWords[i]){
-              this.state.signWords[i]=[]
-            }
-            this.state.signWords[i] = [...this.state.signWords[i],signItem]
-        }
-        if(this.state.signWords[i]&&this.state.signWords[i].length>1){
-          this.state.signWords[i].sort(function(obj1, obj2){
-            return obj1.signWordStart < obj2.signWordStart
-          })
-        }
-        this.setState({
-          contents:[...this.state.contents, content],
-          signWords:[...this.state.signWords]
-        });
-      }
-    },error => {
-
-    }))
   }
   getPhrase () {
     this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + this.state.intentId
@@ -168,82 +131,7 @@ export default class intendList extends Component {
           console.log(error)
         }))
   }
-  wordEnd(index, e) {
-    console.log(e.target.pageX,e.target.pageY)
-    this.setState({
-      contentIndex: index
-    })
-    if(window.getSelection){
-
-      // var range = window.getSelection().getRangeAt(0);
-      // console.log(range)
-      // var offset = 0;
-      // var str = '';
-      // var container = range.startContainer;
-      // while(container.previousSibling){
-      //   str += container.previousSibling.textContent.trim();
-      //   offset += container.previousSibling.textContent.trim().length;
-      //   container = container.previousSibling;
-      // }
-
-      if(window.getSelection().toString()){
-        //anchorOffset
-        //extentOffset
-        this.setState({
-          signWord:window.getSelection().toString(),
-          signWordStart: window.getSelection().anchorOffset<=window.getSelection().extentOffset?window.getSelection().anchorOffset:window.getSelection().extentOffset,
-          signWordEnd: window.getSelection().extentOffset>window.getSelection().anchorOffset?window.getSelection().extentOffset:window.getSelection().anchorOffset
-        })
-      }
-    }else if(document.getSelection) {
-      if(window.getSelection().toString()){
-        this.setState({
-          signWord:window.getSelection().toString()
-        })
-      }
-    }else if(document.selection) {
-      console.log(document.selection)
-      if(window.getSelection().toString()){
-        this.setState({
-          signWord:window.getSelection().toString()
-        })
-      }
-    }
-  }
-  setColor(obj) {
-    if(!this.state.signWords[this.state.contentIndex]){
-      this.state.signWords[this.state.contentIndex]=[]
-    }
-    for(let i=0;i<this.state.signWords[this.state.contentIndex].length;i++){
-      if(this.state.signWordEnd<=this.state.signWords[this.state.contentIndex][i].signWordStart||this.state.signWordStart>=this.state.signWords[this.state.contentIndex][i].signWordEnd){
-
-      }else{
-        this.state.signWords[this.state.contentIndex].splice(i,1)
-        i--;
-      }
-    }
-    this.state.signWords[this.state.contentIndex] = [...this.state.signWords[this.state.contentIndex],{
-      signWord:this.state.signWord,
-      signWordStart:this.state.signWordStart,
-      signWordEnd:this.state.signWordEnd,
-      color:obj.color||'#1976d2',
-      id:obj.name||obj.phraseId,
-      type: obj.name?'entity':'phrase'
-    }]
-    if(this.state.signWords[this.state.contentIndex].length>1){
-      this.state.signWords[this.state.contentIndex].sort(function(obj1, obj2){
-        return obj1.signWordStart < obj2.signWordStart
-      })
-    }
-    this.setState({
-      signWords: [...this.state.signWords],
-      signWord: '',
-      signWordStart: '',
-      signWordEnd: ''
-    })
-  }
   addPhrase() {
-
     this.props.dispatch(postPhrase({
       similars: [this.state.signWord],
       intentId: this.state.intentId,
@@ -273,20 +161,6 @@ export default class intendList extends Component {
     return word
   }
   submit(index,content) {
-    // let param = {};
-    // param.sentence = this.state.contents[0]
-    // this.state.signWords.map((item, index) => {
-    //   param.sentence = param.sentence.replace(eval('/' + item + '/g'), this.state.replaceWords[index])
-    // })
-    // param.intentId = this.state.intentId;
-    // param.intent = this.state.name;
-    // param.accept = true;
-    // param.agent = sessionStorage.getItem('agentName');
-    // this.props.dispatch(postCorpus(param, data => {
-    //     this.getNext();
-    // }, error => {
-    //
-    // }))
     const signItem = this.state.signWords[index]
     console.log(signItem)
     let labels=[]
@@ -645,6 +519,7 @@ export default class intendList extends Component {
         float: 'right',
       }
     };
+    console.log('this.state.intentId', this.state.intentId)
 
     return <Spin spinning={intendResult.loading}>
       <div style={style.innerContainer}>
@@ -679,28 +554,7 @@ export default class intendList extends Component {
                     {/*})*/}
                   {/*}*/}
                 {/*</ul>*/}
-                <div style={style.pBox}>
-                    {this.state.contents.length ? this.state.contents.map((content,index) => {
-                      return <Row key={index} >
-                        <Col style={style.corpusCol} span={12}>
-                          <div style={style.corpusSpan}>标注区</div>
-                          <p style={style.p}  onMouseUp={this.wordEnd.bind(this,index)}>{content.pattern.sentence}</p>
-                        </Col>
-                        <Col style={style.corpusCol} span={12}>
-                          <div style={style.corpusSpan}>展示区</div>
-                          <p style={style.p} dangerouslySetInnerHTML={{__html: this.showSignWord(this.state.signWords[index],content.pattern.sentence)}}></p>
-                        </Col>
-                        <div style={style.funBox}>
-                          <div style={{...style.button,background: '#188ae2',border: '1px solid #188ae2'}} onClick={this.submit.bind(this,index,content)}>提交</div>
-                          <div style={{...style.button, background : '#cacaca',border: '1px solid #cacaca'}} onClick={this.reBack.bind(this,index)}>取消</div>
-                          <div style={{...style.button, background : '#cacaca',border: '1px solid #cacaca'}} onClick={this.delPattern.bind(this,index)}>删除</div>
-                          {/*<div style={{...style.button, background : '#cacaca',border: '1px solid #cacaca'}} onClick={this.getNext.bind(this,index)}>丢弃</div>*/}
-                        </div>
-                      </Row>
-                    }) : <p style={style.p}>没有语料了，小主你吃个西瓜，休息一下吧！</p>}
-                </div>
-
-
+                <PatternList agentName={agentName}  intentId={this.state.intentId} corpusType="postive"/>
                 <CorpusSimplifier useSimCorpus={this.useSimCorpus} noUseSimCorpus={this.noUseSimCorpus}></CorpusSimplifier>
 
                 {/*<Form layout="inline">*/}
