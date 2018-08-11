@@ -102,6 +102,7 @@ export default class intendList extends Component {
         }
         data[i].valuesShow = [...data[i].valuesF.slice(0,10)]
       }
+      console.log(data)
       this.setState({
         entityParam: [...data]
       })
@@ -110,6 +111,7 @@ export default class intendList extends Component {
     }))
     this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + obj.intentId
         , data => {
+      console.log(data)
           this.setState({
             phraseArray: [...data]
           })
