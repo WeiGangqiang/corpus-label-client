@@ -4,6 +4,7 @@ import { hashHistory, Link } from 'react-router'
 import { Spin, Icon, Form, Input, Button, Row, Col, Modal } from 'antd'
 import { isArrayDomain } from 'utils/util'
 import { fetchIntend, fetchEntity, fetchCorpus, postCorpus, simplifier, predict, getPhrase, putPhrase, deletePhrase, postPhrase } from 'actions/intend'
+import {PatternLine} from 'components/pattern'
 
 const agentName = sessionStorage.getItem('agentName');
 const FormItem = Form.Item
@@ -533,11 +534,12 @@ export default class intendList extends Component {
                     })
                   }
                 </ul>
-                <div style={style.pBox}>
+                <div style={style.pBox}> 
+                 <PatternLine patternId ="pattern" removePatternBy={this.removePatternBy} updateSelectLabel={this.updateSelectLabel} />
                   {/*<Icon type='close' className='off_btn'></Icon>*/}
-                  {this.state.contents.length ? this.state.contents.map((content,index) => {
+                  {/* {this.state.contents.length ? this.state.contents.map((content,index) => {
                     return <p key={index} style={style.p}  onMouseUp={this.wordEnd.bind(this)} dangerouslySetInnerHTML={{__html: content.pattern.sentence}}></p>
-                  }) : <p style={style.p}>没有语料了，小主你吃个西瓜，休息一下吧！</p>}
+                  }) : <p style={style.p}>没有语料了，小主你吃个西瓜，休息一下吧！</p>} */}
                 </div>
                 <div style={style.funBox}>
                   <div style={{...style.button,background: '#188ae2',border: '1px solid #188ae2'}} onClick={this.submit.bind(this)}>提交</div>
