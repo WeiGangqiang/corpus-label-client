@@ -10,3 +10,8 @@ export const isArrayDomain = (arr, array) => {
   })
   return flag
 }
+
+export const getIndexFromString = (words, string) => {
+  for (var i = -1, arr = []; (i = string.indexOf(words, i + 1)) > -1;  arr.push(i));
+  return arr
+}
