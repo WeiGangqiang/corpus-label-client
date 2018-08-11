@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import { hashHistory, Link } from 'react-router'
 import { Spin, Icon, Form, Input, Button, Row, Col, Modal } from 'antd'
 import { isArrayDomain } from 'utils/util'
-import { fetchIntend, fetchEntity, fetchCorpus, postCorpus, simplifier, predict, getPhrase, putPhrase, deletePhrase, postPhrase, putPattern, getPattern, postPattern, deletePattern } from 'actions/intend'
+import { fetchIntend, fetchEntity, fetchCorpus, postCorpus, simplifier, predict, getPhrase, putPhrase, deletePhrase, postPhrase } from 'actions/intend'
+import {PatternLine} from 'components/pattern'
 
 const agentName = sessionStorage.getItem('agentName');
 const FormItem = Form.Item
