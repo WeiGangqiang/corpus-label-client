@@ -58,6 +58,9 @@ export class CorpusSimplifier extends Component{
       simCorpus: '',
       newCorpus: ''
     })
+    this.props.form.setFieldsValue({
+      newCorpus: ''
+    })
   }
 
   noUseSimCorpus() {
@@ -65,6 +68,9 @@ export class CorpusSimplifier extends Component{
     this.setState({
       newCorpus: '',
       simCorpus: ''
+    })
+    this.props.form.setFieldsValue({
+      newCorpus: ''
     })
   }
 

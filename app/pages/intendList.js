@@ -1,15 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { hashHistory, Link } from 'react-router'
-import { Spin, Icon, Form, Input, Button, Row, Col, Modal } from 'antd'
+import { Link } from 'react-router'
+import { Spin, Icon, Form, Row, Col} from 'antd'
 import { isArrayDomain } from 'utils/util'
 import { fetchIntend, fetchEntity,postPattern, postCorpus, simplifier, predict, getPhrase, putPhrase, deletePhrase, postPhrase } from 'actions/intend'
 
-import { PatternLine, PhraseList, EntityParameters, IntentList, CorpusSimplifier } from "components/index";
-import { PatternList } from '../components/patternList';
+import { PatternList, PhraseList, EntityParameters, IntentList, CorpusSimplifier } from "components/index";
 
 const agentName = sessionStorage.getItem('agentName');
-const FormItem = Form.Item
 
 @connect((state, dispatch) => ({
   config: state.config,
@@ -48,11 +46,7 @@ export default class intendList extends Component {
       contentIndex: '',
       type: 'positive'
     };
-    this.addPhraseText = this.addPhraseText.bind(this);
-    this.hideAddPhrase = this.hideAddPhrase.bind(this);
-    this.getPhraseText = this.getPhraseText.bind(this);
     this.initData = this.initData.bind(this);
-    this.showSignWord = this.showSignWord.bind(this);
     this.getIntent = this.getIntent.bind(this)
     this.getPhrase = this.getPhrase.bind(this)
     this.showMoreValues = this.showMoreValues.bind(this)
@@ -131,24 +125,6 @@ export default class intendList extends Component {
           console.log(error)
         }))
   }
-  addPhrase() {
-    this.props.dispatch(postPhrase({
-      similars: [this.state.signWord],
-      intentId: this.state.intentId,
-      intent: this.state.name,
-      agent: agentName
-    },data => {
-      this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + this.state.intentId
-          , data => {
-              console.log(data)
-            this.setState({
-              phraseArray: [...data]
-            })
-          }, error => {
-            console.log(error)
-          }))
-    }))
-  }
   showSignWord(arr,word) {
     let showSign='';
     if(arr){
@@ -159,57 +135,6 @@ export default class intendList extends Component {
     }
     }
     return word
-  }
-  submit(index,content) {
-    const signItem = this.state.signWords[index]
-    console.log(signItem)
-    let labels=[]
-    for(let i=0;i<signItem.length;i++){
-      labels = [...labels,{
-        type: signItem[i].type,
-        id: signItem[i].id,
-        length: signItem[i].signWordEnd-signItem[i].signWordStart,
-        startPos: signItem[i].signWordStart
-      },]
-    }
-    var param={
-      pattern: {
-        sentence: content.pattern.sentence,
-        labels: labels
-      },
-      type: this.state.type,
-      patternId: index,
-      intentId: this.state.intentId,
-      intent: this.state.name,
-      agent: agentName
-    }
-    this.props.dispatch(putPattern(param,data=>{
-      console.log(data)
-    },error=>{
-
-    }))
-  }
-  reBack() {
-    this.setState({
-      content: this.state.contents[0]
-    })
-  }
-  delPattern(index) {
-    this.props.dispatch(deletePattern({
-      "patternId": index,
-      "type"     : this.state.type,
-      "intentId" : this.state.intentId,
-      "intent"   :this.state.name,
-      "agent"    : agentName
-  }))
-  }
-  getNext() {
-    this.state.contents.shift();
-    this.state.contents.length ? this.setState({
-        content: this.state.contents[0]
-      }) : this.setState({
-      content: ''
-    })
   }
 
   simplifier() {
@@ -226,29 +151,11 @@ export default class intendList extends Component {
       }
     })
   }
-  corpusInput() {
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        this.setState({
-          newCorpus: values.newCorpus
-        })
-      }
-    })
-  }
-  corpusBlur() {
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        this.setState({
-          newCorpus: values.newCorpus
-        })
-      }
-    })
-  }
 
-  useSimCorpus() {
+  useSimCorpus(simCorpus) {
     this.props.dispatch(postPattern({
       pattern: {
-        sentence: this.state.simCorpus,
+        sentence: simCorpus,
         labels:[]
       },
       type: this.state.type,
@@ -261,33 +168,33 @@ export default class intendList extends Component {
       "intentId" : this.state.intentId,
       "agent"    : agentName
     },data => {
-      const content = {
-        pattern: {
-          sentence: this.state.simCorpus,
-          labels: data
-        },
-        type: "positive",
-        intentId: this.state.intentId,
-        intent: this.state.name,
-        agent: agentName
-    }
-      this.setState({
-        contents:[...this.state.contents, content],
-        newCorpus: '',
-        simCorpus: ''
-      });
-      this.props.form.setFieldsValue({
-        newCorpus: ''
-      })
+    //   const content = {
+    //     pattern: {
+    //       sentence: this.state.simCorpus,
+    //       labels: data
+    //     },
+    //     type: "positive",
+    //     intentId: this.state.intentId,
+    //     intent: this.state.name,
+    //     agent: agentName
+    // }
+    //   this.setState({
+    //     contents:[...this.state.contents, content],
+    //     newCorpus: '',
+    //     simCorpus: ''
+    //   });
+    //   this.props.form.setFieldsValue({
+    //     newCorpus: ''
+    //   })
     }, error => {
       console.log(error)
     }))
 
   }
-  noUseSimCorpus() {
+  noUseSimCorpus(newCorpus) {
     this.props.dispatch(postPattern({
       pattern: {
-        sentence: this.state.newCorpus,
+        sentence: newCorpus,
         labels:[]
       },
       type: this.state.type,
@@ -300,24 +207,24 @@ export default class intendList extends Component {
       "intentId" : this.state.intentId,
       "agent"    : agentName
     },data => {
-      const content = {
-        pattern: {
-          sentence: this.state.newCorpus,
-          labels: data
-        },
-        type: "positive",
-        intentId: this.state.intentId,
-        intent: this.state.name,
-        agent: agentName
-      }
-      this.setState({
-        contents:[...this.state.contents, content],
-        newCorpus: '',
-        simCorpus: ''
-      });
-      this.props.form.setFieldsValue({
-        newCorpus: ''
-      })
+      // const content = {
+      //   pattern: {
+      //     sentence: this.state.newCorpus,
+      //     labels: data
+      //   },
+      //   type: "positive",
+      //   intentId: this.state.intentId,
+      //   intent: this.state.name,
+      //   agent: agentName
+      // }
+      // this.setState({
+      //   contents:[...this.state.contents, content],
+      //   newCorpus: '',
+      //   simCorpus: ''
+      // });
+      // this.props.form.setFieldsValue({
+      //   newCorpus: ''
+      // })
     }, error => {
       console.log(error)
     }))
@@ -336,68 +243,9 @@ export default class intendList extends Component {
     })
   }
 
-  delPhraseText(index,i) {
-    this.state.phraseArray[index].similars.splice(i,1);
-    this.props.dispatch(putPhrase({
-        ...this.state.phraseArray[index],
-      intent: this.state.name,
-      agent: agentName
-    }))
-    this.setState({
-      phraseArray: [...this.state.phraseArray]
-    })
-  }
-  delPhraseItem(index) {
-    this.props.dispatch(deletePhrase({
-      phraseId: this.state.phraseArray[index].phraseId,
-      intentId: this.state.phraseArray[index].intentId,
-      intent: this.state.name,
-      agent: agentName
-    }))
-    this.state.phraseArray.splice(index,1)
-    this.setState({
-      phraseArray: [...this.state.phraseArray]
-    })
-  }
-  showAddPhrase(index) {
-    this.setState({
-      showModalFlag: true,
-      phraseIndex: index
-    })
-  }
-  addPhraseText() {
-    const phraseText = this.state.phraseText.replace('，',',').split(',');
-    this.state.phraseArray[this.state.phraseIndex].similars = this.state.phraseArray[this.state.phraseIndex].similars.concat(phraseText)
-    this.props.dispatch(putPhrase({
-      ...this.state.phraseArray[this.state.phraseIndex],
-      intent: this.state.name,
-      agent: agentName
-    }))
-    this.setState({
-      phraseArray:this.state.phraseArray,
-      showModalFlag: false,
-      phraseText: '',
-      phraseIndex: ''
-    })
-  }
-  hideAddPhrase() {
-    this.setState({
-      showModalFlag: false,
-      phraseText: '',
-      phraseIndex: ''
-    })
-  }
-  getPhraseText(e) {
-    this.setState({
-      phraseText: e.target.value
-    })
-  }
-
   render() {
 
-    const { intendResult, entityResult } = this.props;
-
-    const {getFieldDecorator} = this.props.form
+    const { intendResult } = this.props;
 
     const style = {
       container: {
@@ -539,64 +387,13 @@ export default class intendList extends Component {
 
                 <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues}></EntityParameters>
 
-                {/*<ul style={style.flexBox}>*/}
-                  {/*{ */}
-                    {/*this.state.entityParam.map((item,i) => {*/}
-                      {/*return <li style={{...style.serveLi,color:'#fff'}} key={item.entity} onClick={this.setColor.bind(this,item)}*/}
-                              {/*><span style={{...style.serveLiSpan, background: '#188ae2', border:'1px solid '+item.color+"'"}} >{item.name}</span>*/}
-                            {/*{item.valuesShow.map((value, index) => {*/}
-                              {/*return <span style={{...style.serveLiSpan, background: item.color, border:'1px solid '+item.color+"'"}} key={index}>{value}</span>*/}
-                            {/*})}*/}
-                      {/*{*/}
-                        {/*item.values.length>10 ? item.valuesShow.length<=10?<span onClick={this.showMoreValues.bind(this,i)} style={{...style.serveLiSpan, background: item.color, border:'1px solid '+item.color+"'"}}>···</span>:<span onClick={this.showLessValues.bind(this,i)} style={{...style.serveLiSpan, background: item.color, border:'1px solid '+item.color+"'"}}>-</span>: ''*/}
-                      {/*}*/}
-                      {/*</li>*/}
-                    {/*})*/}
-                  {/*}*/}
-                {/*</ul>*/}
-                <PatternList agentName={agentName}  intentId={this.state.intentId} corpusType="postive"/>
+                <PatternList agentName={agentName}  intentId={this.state.intentId} corpusType={this.state.type}/>
                 <CorpusSimplifier useSimCorpus={this.useSimCorpus} noUseSimCorpus={this.noUseSimCorpus}></CorpusSimplifier>
 
-                {/*<Form layout="inline">*/}
-                  {/*<FormItem>*/}
-                    {/*{getFieldDecorator('newCorpus', {*/}
-                    {/*})(*/}
-                        {/*<Input  style={{width:'300px'}} placeholder="请输入新的语料" onPressEnter={this.simplifier.bind(this)} onChange={this.corpusInput.bind(this)} onBlur={this.corpusBlur.bind(this)}/>*/}
-                    {/*)}*/}
-                  {/*</FormItem>*/}
-                  {/*<FormItem>*/}
-                    {/*<Button type="primary" disabled={!this.state.newCorpus} onClick={this.simplifier.bind(this)}>*/}
-                      {/*简化*/}
-                    {/*</Button>*/}
-                  {/*</FormItem>*/}
-                {/*</Form>*/}
-                {/*<div style={{display:'flex',marginTop: '20px'}}>*/}
-                  {/*<div style={style.newCorpusBox}>{this.state.simCorpus}</div>*/}
-                  {/*<Button onClick={this.useSimCorpus.bind(this)} type="primary" disabled={!this.state.simCorpus} style={{marginLeft: '16px'}}>*/}
-                    {/*使用简化模型*/}
-                  {/*</Button>*/}
-                  {/*<Button onClick={this.noUseSimCorpus.bind(this)}>不使用简化模型</Button>*/}
-                {/*</div>*/}
               </div>
 
               <PhraseList intent={this.state.name} agent={agentName} phraseArray={this.state.phraseArray} updatePhraseArray={this.getPhrase}></PhraseList>
 
-              {/*<ul style={style.phraseBox}>*/}
-                {/*<li style={{...style.serveLi,color:'#fff'}}><span onClick={this.addPhrase.bind(this)} style={{...style.serveLiSpan, background: '#09bffd', border:'1px solid #09bffd'}} >添加近义词</span>*/}
-                {/*</li>*/}
-                {/*{this.state.phraseArray.map((phrase, index) => {*/}
-                  {/*return  <li key={index} style={{...style.phraseItem, background: index%2===0?'#fbfbfb':'#fff'}}>*/}
-                    {/*<div style={style.phraseText} onClick={this.setColor.bind(this,phrase)}>{phrase.phraseId}</div>*/}
-                        {/*{*/}
-                          {/*phrase.similars.map((item,i) => {*/}
-                            {/*return <div style={style.phraseText} key={i}>{item}<Icon onClick={this.delPhraseText.bind(this,index,i)} type="close" /></div>*/}
-                          {/*})*/}
-                        {/*}*/}
-                    {/*<div onClick={this.showAddPhrase.bind(this,index)} style={style.phraseText}>添加</div>*/}
-                    {/*<div onClick={this.delPhraseItem.bind(this,index)} style={style.phraseText}>删除</div>*/}
-                  {/*</li>*/}
-                {/*})}*/}
-              {/*</ul>*/}
             </div> : '' }
           </div>
         </div>
