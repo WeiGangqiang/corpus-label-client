@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { hashHistory, Link } from 'react-router'
 import { Spin, Icon, Form, Input, Button, Row, Col, Modal } from 'antd'
 import { isArrayDomain } from 'utils/util'
-import { fetchIntend, fetchEntity, fetchCorpus, postCorpus, simplifier, predict, getPhrase, putPhrase, deletePhrase, postPhrase } from 'actions/intend'
+import { fetchIntend, fetchEntity,postPattern, postCorpus, simplifier, predict, getPhrase, putPhrase, deletePhrase, postPhrase } from 'actions/intend'
 
 import { PatternLine, PhraseList, EntityParameters, IntentList, CorpusSimplifier } from "components/index";
 import { PatternList } from '../components/patternList';
@@ -118,45 +118,6 @@ export default class intendList extends Component {
         }, error => {
           console.log(error)
         }))
-    this.props.dispatch(getPattern('?agent='+agentName+'&intentId='+obj.intentId+'&type='+this.state.type,data => {
-      for(let i=0;i<data.length;i++){
-        let content = {
-          pattern: {
-            sentence: data[i].sentence,
-            labels: data[i].labels
-          },
-          type: this.state.type,
-          intentId: this.state.intentId,
-          intent: this.state.name,
-          agent: agentName
-        }
-        for(let j=0;j<data[i].labels.length;j++){
-            let signItem = {
-              signWord:data[i].sentence.substr(data[i].labels[j].startPos,data[i].labels[j].length),
-              signWordStart:data[i].labels[j].startPos,
-              signWordEnd:parseInt(data[i].labels[j].startPos) -(-data[i].labels[j].length),
-              color:colorArray[i],
-              id: data[i].labels[j].id,
-              type: data[i].labels[j].type
-            }
-            if(!this.state.signWords[i]){
-              this.state.signWords[i]=[]
-            }
-            this.state.signWords[i] = [...this.state.signWords[i],signItem]
-        }
-        if(this.state.signWords[i]&&this.state.signWords[i].length>1){
-          this.state.signWords[i].sort(function(obj1, obj2){
-            return obj1.signWordStart < obj2.signWordStart
-          })
-        }
-        this.setState({
-          contents:[...this.state.contents, content],
-          signWords:[...this.state.signWords]
-        });
-      }
-    },error => {
-
-    }))
   }
   getPhrase () {
     this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + this.state.intentId
@@ -168,82 +129,7 @@ export default class intendList extends Component {
           console.log(error)
         }))
   }
-  wordEnd(index, e) {
-    console.log(e.target.pageX,e.target.pageY)
-    this.setState({
-      contentIndex: index
-    })
-    if(window.getSelection){
-
-      // var range = window.getSelection().getRangeAt(0);
-      // console.log(range)
-      // var offset = 0;
-      // var str = '';
-      // var container = range.startContainer;
-      // while(container.previousSibling){
-      //   str += container.previousSibling.textContent.trim();
-      //   offset += container.previousSibling.textContent.trim().length;
-      //   container = container.previousSibling;
-      // }
-
-      if(window.getSelection().toString()){
-        //anchorOffset
-        //extentOffset
-        this.setState({
-          signWord:window.getSelection().toString(),
-          signWordStart: window.getSelection().anchorOffset<=window.getSelection().extentOffset?window.getSelection().anchorOffset:window.getSelection().extentOffset,
-          signWordEnd: window.getSelection().extentOffset>window.getSelection().anchorOffset?window.getSelection().extentOffset:window.getSelection().anchorOffset
-        })
-      }
-    }else if(document.getSelection) {
-      if(window.getSelection().toString()){
-        this.setState({
-          signWord:window.getSelection().toString()
-        })
-      }
-    }else if(document.selection) {
-      console.log(document.selection)
-      if(window.getSelection().toString()){
-        this.setState({
-          signWord:window.getSelection().toString()
-        })
-      }
-    }
-  }
-  setColor(obj) {
-    if(!this.state.signWords[this.state.contentIndex]){
-      this.state.signWords[this.state.contentIndex]=[]
-    }
-    for(let i=0;i<this.state.signWords[this.state.contentIndex].length;i++){
-      if(this.state.signWordEnd<=this.state.signWords[this.state.contentIndex][i].signWordStart||this.state.signWordStart>=this.state.signWords[this.state.contentIndex][i].signWordEnd){
-
-      }else{
-        this.state.signWords[this.state.contentIndex].splice(i,1)
-        i--;
-      }
-    }
-    this.state.signWords[this.state.contentIndex] = [...this.state.signWords[this.state.contentIndex],{
-      signWord:this.state.signWord,
-      signWordStart:this.state.signWordStart,
-      signWordEnd:this.state.signWordEnd,
-      color:obj.color||'#1976d2',
-      id:obj.name||obj.phraseId,
-      type: obj.name?'entity':'phrase'
-    }]
-    if(this.state.signWords[this.state.contentIndex].length>1){
-      this.state.signWords[this.state.contentIndex].sort(function(obj1, obj2){
-        return obj1.signWordStart < obj2.signWordStart
-      })
-    }
-    this.setState({
-      signWords: [...this.state.signWords],
-      signWord: '',
-      signWordStart: '',
-      signWordEnd: ''
-    })
-  }
   addPhrase() {
-
     this.props.dispatch(postPhrase({
       similars: [this.state.signWord],
       intentId: this.state.intentId,
@@ -273,20 +159,6 @@ export default class intendList extends Component {
     return word
   }
   submit(index,content) {
-    // let param = {};
-    // param.sentence = this.state.contents[0]
-    // this.state.signWords.map((item, index) => {
-    //   param.sentence = param.sentence.replace(eval('/' + item + '/g'), this.state.replaceWords[index])
-    // })
-    // param.intentId = this.state.intentId;
-    // param.intent = this.state.name;
-    // param.accept = true;
-    // param.agent = sessionStorage.getItem('agentName');
-    // this.props.dispatch(postCorpus(param, data => {
-    //     this.getNext();
-    // }, error => {
-    //
-    // }))
     const signItem = this.state.signWords[index]
     console.log(signItem)
     let labels=[]
