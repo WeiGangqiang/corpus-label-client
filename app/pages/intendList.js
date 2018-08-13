@@ -117,13 +117,6 @@ export default class intendList extends Component {
   render() {
     const { intendResult } = this.props;
     const style = {
-      corpusBox:{
-        background: '#fbfbfb',
-        padding: '15px',
-        width: '100%',
-        height: '100%',
-        borderRadius: '15px'
-      },
       innerContainer:{
         width: '100%',
         height: '100%',
