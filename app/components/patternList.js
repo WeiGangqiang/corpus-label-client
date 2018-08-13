@@ -4,9 +4,6 @@ import { PatternLine} from 'components/pattern'
 import { getPattern, deletePattern, putPattern } from 'actions/intend'
 
 @connect((state, dispatch) => ({
-    config: state.config,
-    intendResult: state.intendResult,
-    entityResult: state.entityResult,
   }))
 
 export class PatternList extends Component {
@@ -20,17 +17,16 @@ export class PatternList extends Component {
     }
 
     componentWillReceiveProps(props){
-        console.log('get pattern list is called', props)
         this.getPatternList(props)
     }
-
+    
     getPatternList = (props) =>{
+        console.log('get pattern list is called', props)
         let url = '?agent=' + props.agentName + '&intentId=' + props.intentId + '&type=' + props.corpusType
         if(this.props.intentId ==='1'){
             console.log('intent id is invalid')
             return
         }
-        console.log('get pattern url', url)
         this.props.dispatch(getPattern(url,
             (data) => {
                 console.log('reading pattern data is', data)
@@ -77,8 +73,6 @@ export class PatternList extends Component {
         })
         newLabels.push(newLabel)
         pattern.labels = newLabels
-        console.log('new Labels is ', newLabels)
-        console.log('pattern is', pattern)
         this.props.dispatch(putPattern({
             "patternId": patternId,
             "type"     : this.props.corpusType,

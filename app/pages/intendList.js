@@ -5,7 +5,7 @@ import { Spin, Icon, Form, Row, Col} from 'antd'
 import { isArrayDomain } from 'utils/util'
 import { fetchIntend, fetchEntity,postPattern, postCorpus, predict, getPhrase, putPhrase, deletePhrase, postPhrase } from 'actions/intend'
 
-import { PatternList, PhraseList, EntityParameters, IntentList, CorpusSimplifier } from "components/index";
+import { PatternList, PhraseList, EntityParameters, IntentList, CorpusSimplifier, IntentDesc } from "components/index";
 
 const agentName = sessionStorage.getItem('agentName');
 
@@ -69,7 +69,6 @@ export default class intendList extends Component {
       modelPath: obj.modelPath,
       intentId: obj.intentId
     });
-    console.log('update intentid', obj.intentId, this.state.intentId)
     this.props.dispatch(fetchEntity('?agent=' + agentName + '&intentId=' + obj.intentId, data => {
       for(let i=0;i<data.length;i++){
         data[i].valuesF = [...data[i].values]
@@ -80,7 +79,6 @@ export default class intendList extends Component {
         }
         data[i].valuesShow = [...data[i].valuesF.slice(0,10)]
       }
-      console.log(data)
       this.setState({
         entityParam: [...data]
       })
@@ -89,7 +87,6 @@ export default class intendList extends Component {
     }))
     this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + obj.intentId
         , data => {
-      console.log(data)
           this.setState({
             phraseArray: [...data]
           })
@@ -164,9 +161,7 @@ export default class intendList extends Component {
   }
 
   render() {
-
     const { intendResult } = this.props;
-
     const style = {
       corpusBox:{
         background: '#fbfbfb',
@@ -182,38 +177,22 @@ export default class intendList extends Component {
       },
       innerBox:{
         height: '100%'
-      },
-      col:{
-        lineHeight: '40px'
-      },
+      }
     };
-    console.log('this.state.intentId', this.state.intentId)
-
     return <Spin spinning={intendResult.loading}>
       <div style={style.innerContainer}>
         <Link className='bread-cruft' to={'/selectService'}><Icon type='left'></Icon>服务器选择</Link>
         <div style={style.innerBox} className='intentContainer'>
-
           <IntentList originEntity={this.state.originEntity} intentId={this.state.intentId} getIntent={this.getIntent}></IntentList>
-
           <div style={{height:'100%',overflow:'auto'}}>
             { !intendResult.loading ? <div className="container">
-              <Row style={{height: '100px',background: '#fbfbfb',padding: '0 15px',fontSize: '14px',marginBottom:'15px'}}>
-                <Col style={style.col} span={12} >name:{this.state.name}</Col>
-                <Col style={style.col} span={12} >zhName:{this.state.zhName}</Col>
-                <Col style={style.col} span={24} >modelPath:{this.state.modelPath}</Col>
-              </Row>
+              <IntentDesc name={this.state.name} zhName={this.state.zhName} modelPath={this.state.modelPath}/>
               <div style={style.corpusBox}>
-
                 <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues}></EntityParameters>
-
                 <PatternList agentName={agentName}  intentId={this.state.intentId} corpusType={this.state.type}/>
                 <CorpusSimplifier useSimCorpus={this.useSimCorpus} noUseSimCorpus={this.noUseSimCorpus}></CorpusSimplifier>
-
               </div>
-
               <PhraseList intent={this.state.name} agent={agentName} phraseArray={this.state.phraseArray} updatePhraseArray={this.getPhrase}></PhraseList>
-
             </div> : '' }
           </div>
         </div>
