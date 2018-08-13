@@ -141,10 +141,8 @@ export class PatternList extends Component {
     render() {
         const style = {
             pBox:{
-                // position: 'relative',
-                width: '800px',
+                width: '1000px',
                 height: '300px', 
-                // float: 'left',
                 border: '1px solid #dadada',
             },
             corpusBox:{
