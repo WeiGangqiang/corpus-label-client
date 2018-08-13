@@ -39,9 +39,6 @@ export default class intendList extends Component {
     this.getPhrase = this.getPhrase.bind(this)
     this.showMoreValues = this.showMoreValues.bind(this)
     this.showLessValues = this.showLessValues.bind(this)
-    this.useSimCorpus = this.useSimCorpus.bind(this)
-    this.noUseSimCorpus = this.noUseSimCorpus.bind(this)
-
   }
   componentWillMount() {
     const agentName = sessionStorage.getItem('agentName');
@@ -104,49 +101,6 @@ export default class intendList extends Component {
           console.log(error)
         }))
   }
-
-  useSimCorpus(simCorpus) {
-    this.props.dispatch(postPattern({
-      pattern: {
-        sentence: simCorpus,
-        labels:[]
-      },
-      type: this.state.type,
-      intentId: this.state.intentId,
-      intent: this.state.name,
-      agent:agentName
-  }))
-    this.props.dispatch(predict({
-      "sentence" : simCorpus,
-      "intentId" : this.state.intentId,
-      "agent"    : agentName
-    },data => {
-    }, error => {
-      console.log(error)
-    }))
-
-  }
-  noUseSimCorpus(newCorpus) {
-    this.props.dispatch(postPattern({
-      pattern: {
-        sentence: newCorpus,
-        labels:[]
-      },
-      type: this.state.type,
-      intentId: this.state.intentId,
-      intent: this.state.name,
-      agent:agentName
-    }))
-    this.props.dispatch(predict({
-      "sentence" : newCorpus,
-      "intentId" : this.state.intentId,
-      "agent"    : agentName
-    },data => {
-    }, error => {
-      console.log(error)
-    }))
-  }
-
   showMoreValues(i) {
     this.state.entityParam[i].valuesShow = [...this.state.entityParam[i].valuesF]
     this.setState({
@@ -190,7 +144,6 @@ export default class intendList extends Component {
               <div style={style.corpusBox}>
                 <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues}></EntityParameters>
                 <PatternList agentName={agentName}  intentId={this.state.intentId} corpusType={this.state.type}/>
-                <CorpusSimplifier useSimCorpus={this.useSimCorpus} noUseSimCorpus={this.noUseSimCorpus}></CorpusSimplifier>
               </div>
               <PhraseList intent={this.state.name} agent={agentName} phraseArray={this.state.phraseArray} updatePhraseArray={this.getPhrase}></PhraseList>
             </div> : '' }

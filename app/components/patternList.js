@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { PatternLine} from 'components/pattern'
-import { getPattern, deletePattern, putPattern } from 'actions/intend'
+import { getPattern, deletePattern, putPattern, predict, postPattern } from 'actions/intend'
+import { CorpusSimplifier } from "./corpusSimplifier";
 
 @connect((state, dispatch) => ({
   }))
@@ -39,13 +40,15 @@ export class PatternList extends Component {
 
     removePatternBy = (patternId) =>{
         console.log('patternId', patternId, 'removed')
+        let that = this
         this.props.dispatch(deletePattern({
             "patternId": patternId,
             "type"     : this.props.corpusType,
             "intentId" : this.props.intentId,
             "agent"    : this.props.agentName
+        }, data=> {
+            that.getPatternList(that.props)
         }))
-        this.getPatternList(this.props)
     }
 
     updateSelectLabel = (patternId, selectLoc) => {
@@ -73,15 +76,49 @@ export class PatternList extends Component {
         })
         newLabels.push(newLabel)
         pattern.labels = newLabels
+        let that = this
         this.props.dispatch(putPattern({
             "patternId": patternId,
             "type"     : this.props.corpusType,
             "intentId" : this.props.intentId,
             "agent"    : this.props.agentName,
             "pattern"  : pattern
+        }, data=>{
+            that.getPatternList(that.props)
         }))
 
-        this.getPatternList(this.props)
+    }
+
+    addPattern = (newCorpus, labels) => {
+        console.log('add pattern for', newCorpus, labels)
+        let that  = this
+        this.props.dispatch(postPattern({
+            pattern: {
+                sentence: newCorpus,
+                labels: labels
+            },
+            type: this.props.corpusType,
+            intentId: this.props.intentId,
+            agent: this.props.agentName
+        }, data => {
+            console.log('add pattern result', data)
+            that.getPatternList(that.props)
+        }))
+    }
+    
+    addPatternWithPredict = (sentence) => {
+        let that  = this
+        this.props.dispatch(predict({
+            "sentence": sentence,
+            "intentId": this.props.intentId,
+            "agent": this.props.agentName
+        }, data => {
+            console.log('predict labels is', data)
+            that.addPattern(sentence, data)
+            console.log('add pattern finish')
+        }, error => {
+            console.log(error)
+        }))
     }
 
     getPatternViews = () => {
@@ -98,7 +135,9 @@ export class PatternList extends Component {
               },
         }
 
-        return <div style={style.pBox}> {this.getPatternViews()}</div>
+        return (<div> <div style={style.pBox}> {this.getPatternViews()}</div>
+                <CorpusSimplifier addPattern={this.addPatternWithPredict}></CorpusSimplifier>
+                </div>)
     }
 }
 
