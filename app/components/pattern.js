@@ -67,11 +67,12 @@ export class PatternLine extends Component {
         // console.log('pageX:' + e.pageX, 'pageY:' + e.pageY)
       // console.log('screenX:' + e.screenX, 'screenY:' + e.screenY)
         let selection = (window.getSelection) ? window.getSelection(): document.getSelection()
-        // console.log(selection.isCollapsed)
-      if (!selection.isCollapsed) {
-        let selectStartPos = this.calcStartPos(selection.anchorNode.parentNode.id, selection.anchorOffset)
-        this.props.updateSelectLabel(this.props.patternId, {startPos: selectStartPos, length: selection.toString().length})
-      }
+
+        console.log('select word is called........')
+        if(selection.toString().length > 0){
+            let selectStartPos = this.calcStartPos(selection.anchorNode.parentNode.id, selection.anchorOffset)
+            this.props.updateSelectLabel(this.props.patternId, {startPos: selectStartPos, length: selection.toString().length})
+        }
     }
 
     removePattern = () => {
