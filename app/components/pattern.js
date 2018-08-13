@@ -60,6 +60,9 @@ export class PatternLine extends Component {
     }
 
     selectWord = (e) => {
+        console.log(e)
+        console.log('pageX:' + e.pageX, 'pageY:' + e.pageY)
+      console.log('screenX:' + e.screenX, 'screenY:' + e.screenY)
         let selection = (window.getSelection) ? window.getSelection(): document.getSelection()
         let selectStartPos = this.calcStartPos(selection.anchorNode.parentNode.id, selection.anchorOffset)
         this.props.updateSelectLabel(this.props.patternId, {startPos: selectStartPos, length: selection.toString().length})

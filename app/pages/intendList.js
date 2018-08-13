@@ -183,16 +183,16 @@ export default class intendList extends Component {
       <div style={style.innerContainer}>
         <Link className='bread-cruft' to={'/selectService'}><Icon type='left'></Icon>服务器选择</Link>
         <div style={style.innerBox} className='intentContainer'>
-          <IntentList originEntity={this.state.originEntity} intentId={this.state.intentId} getIntent={this.getIntent}></IntentList>
+          <IntentList originEntity={this.state.originEntity} intentId={this.state.intentId} getIntent={this.getIntent}/>
           <div style={{height:'100%',overflow:'auto'}}>
             { !intendResult.loading ? <div className="container">
               <IntentDesc name={this.state.name} zhName={this.state.zhName} modelPath={this.state.modelPath}/>
               <div style={style.corpusBox}>
-                <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues}></EntityParameters>
+                <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues}/>
                 <PatternList agentName={agentName}  intentId={this.state.intentId} corpusType={this.state.type}/>
-                <CorpusSimplifier useSimCorpus={this.useSimCorpus} noUseSimCorpus={this.noUseSimCorpus}></CorpusSimplifier>
+                <CorpusSimplifier useSimCorpus={this.useSimCorpus} noUseSimCorpus={this.noUseSimCorpus}/>
               </div>
-              <PhraseList intent={this.state.name} agent={agentName} phraseArray={this.state.phraseArray} updatePhraseArray={this.getPhrase}></PhraseList>
+              <PhraseList intent={this.state.name} agent={agentName} phraseArray={this.state.phraseArray} updatePhraseArray={this.getPhrase}/>
             </div> : '' }
           </div>
         </div>
