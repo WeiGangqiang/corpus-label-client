@@ -74,6 +74,14 @@ export class PhraseList extends Component {
 
   }
 
+  getTitle = () => {
+    const subtitleCss = {
+      fontSize: '20px',
+      fontWeight: 'bold'
+    }
+    return <p style={subtitleCss}> 近义词列表 </p>
+  }
+
   render() {
 
     const style={
@@ -105,11 +113,18 @@ export class PhraseList extends Component {
         color: '#fff',
         fontSize: '14px',
         borderRadius: '3px'
+      },
+      phraseBox:{
+        background: '#fbfbfb',
+        padding: '15px',
+        width: '100%',
+        height: '100%',
+        borderRadius: '15px'
       }
-    }
-
+    }  
     return (
-        <div>
+        <div style={style.phraseBox}> 
+          {this.getTitle()}
           <ul style={style.phraseBox}>
             {this.props.phraseArray.map((phrase, index) => {
               return  <li key={index} style={{...style.phraseItem, background: index%2===0?'#fbfbfb':'#fff'}}>

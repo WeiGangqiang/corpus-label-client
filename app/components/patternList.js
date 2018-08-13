@@ -123,6 +123,15 @@ export class PatternList extends Component {
         }))
     }
 
+    getTitle = () => {
+        const subtitleCss = {
+          fontSize: '20px',
+          fontWeight: 'bold'
+        }
+        return <p style={subtitleCss}> 用户语料 </p>
+    }
+    
+
     getPatternViews = () => {
         return this.state.patternList.map((pattern, patternId) => {
             return (<PatternLine key={patternId} patternId={patternId} pattern={pattern} removePatternBy={this.removePatternBy} updateSelectLabel={this.updateSelectLabel}/>)
@@ -134,10 +143,20 @@ export class PatternList extends Component {
             pBox:{
                 position: 'relative',
                 border: '1px solid #dadada',
-              },
+            },
+            corpusBox:{
+                background: '#fbfbfb',
+                padding: '15px',
+                width: '100%',
+                height: '100%',
+                borderRadius: '15px',
+                marginBottom: '15px' 
+            },
         }
 
-        return (<div> <div style={style.pBox}> {this.getPatternViews()}</div>
+        return (<div style={style.corpusBox}> 
+                {this.getTitle()}
+                <div style={style.pBox}> {this.getPatternViews()}</div>
                 <CorpusSimplifier addPattern={this.addPatternWithPredict}></CorpusSimplifier>
                 </div>)
     }

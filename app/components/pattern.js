@@ -71,9 +71,6 @@ export class PatternLine extends Component {
     }
 
     selectWord = (e) => {
-        // console.log(e)
-        // console.log('pageX:' + e.pageX, 'pageY:' + e.pageY)
-      // console.log('screenX:' + e.screenX, 'screenY:' + e.screenY)
         let selection = (window.getSelection) ? window.getSelection(): document.getSelection()
         if(selection.toString().length > 0){
             let selectStartPos = this.calcShiftPos(selection.anchorNode.parentNode.id, selection.anchorOffset)
