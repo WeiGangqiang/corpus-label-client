@@ -117,13 +117,6 @@ export default class intendList extends Component {
   render() {
     const { intendResult } = this.props;
     const style = {
-      corpusBox:{
-        background: '#fbfbfb',
-        padding: '15px',
-        width: '100%',
-        height: '100%',
-        borderRadius: '15px'
-      },
       innerContainer:{
         width: '100%',
         height: '100%',
@@ -141,10 +134,9 @@ export default class intendList extends Component {
           <div style={{height:'100%',overflow:'auto'}}>
             { !intendResult.loading ? <div className="container">
               <IntentDesc name={this.state.name} zhName={this.state.zhName} modelPath={this.state.modelPath}/>
-              <div style={style.corpusBox}>
-                <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues}/>
-                <PatternList agentName={agentName}  intent={this.state.name} intentId={this.state.intentId} corpusType={this.state.type} updatePhrase={this.getPhrase}/>
-              </div>
+              <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues}/>
+<PatternList agentName={agentName}  intent={this.state.name} intentId={this.state.intentId} corpusType={this.state.type} updatePhrase={this.getPhrase}/>
+
               <PhraseList intent={this.state.name} agent={agentName} phraseArray={this.state.phraseArray} updatePhraseArray={this.getPhrase}/>
             </div> : '' }
           </div>

@@ -22,7 +22,6 @@ export class PatternList extends Component {
     }
     
     getPatternList = (props) =>{
-        console.log('get pattern list is called', props)
         let url = '?agent=' + props.agentName + '&intentId=' + props.intentId + '&type=' + props.corpusType
         if(this.props.intentId ==='1'){
             console.log('intent id is invalid')
@@ -80,8 +79,6 @@ export class PatternList extends Component {
             return left.startPos > right.startPos
         })
         pattern.labels = newLabels
-        console.log('patten sentence is ', pattern.sentence)
-        console.log('old labels', labels, 'update labels', newLabels)
         let that = this
         this.props.dispatch(putPattern({
             "patternId": patternId,
@@ -127,6 +124,15 @@ export class PatternList extends Component {
         }))
     }
 
+    getTitle = () => {
+        const subtitleCss = {
+          fontSize: '20px',
+          fontWeight: 'bold'
+        }
+        return <p style={subtitleCss}> 用户语料 </p>
+    }
+    
+
     getPatternViews = () => {
         return this.state.patternList.map((pattern, patternId) => {
             return (<PatternLine key={patternId} patternId={patternId} pattern={pattern} removePatternBy={this.removePatternBy} updateSelectLabel={this.updateSelectLabel} agent={this.props.agentName}  intent={this.props.intent} intentId={this.props.intentId}/>)
@@ -136,12 +142,23 @@ export class PatternList extends Component {
     render() {
         const style = {
             pBox:{
-                position: 'relative',
+                width: '1000px',
+                height: '300px', 
                 border: '1px solid #dadada',
-              },
+            },
+            corpusBox:{
+                background: '#fbfbfb',
+                padding: '15px',
+                width: '100%',
+                height: '100%',
+                borderRadius: '15px',
+                marginBottom: '15px' 
+            },
         }
 
-        return (<div> <div style={style.pBox}> {this.getPatternViews()}</div>
+        return (<div style={style.corpusBox}> 
+                {this.getTitle()}
+                <div style={style.pBox}> {this.getPatternViews()}</div>
                 <CorpusSimplifier addPattern={this.addPatternWithPredict}></CorpusSimplifier>
                 </div>)
     }

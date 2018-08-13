@@ -13,6 +13,14 @@ export class EntityParameters extends Component{
     this.props.showLessValues(i)
   }
 
+  getTitle = () => {
+    const subtitleCss = {
+      fontSize: '20px',
+      fontWeight: 'bold'
+    }
+    return <p style={subtitleCss}> 槽位信息 </p>
+  }
+
   render(){
 
     const style={
@@ -20,7 +28,14 @@ export class EntityParameters extends Component{
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'space-start',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        minHeight: '200px', 
+        background: '#fbfbfb',
+        padding: '15px',
+        width: '100%',
+        height: '100%',
+        borderRadius: '15px',
+        marginBottom: '15px' 
       },
       serveLi: {
         padding: '5px 0px',
@@ -38,6 +53,7 @@ export class EntityParameters extends Component{
 
     return (
         <ul style={style.flexBox}>
+          { this.getTitle()}
           {
             this.props.entityParam.map((item,i) => {
               return <li style={{...style.serveLi,color:'#fff'}} key={item.entity}>

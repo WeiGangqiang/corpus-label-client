@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import {Button} from 'antd'
+import {Button, Row, Col} from 'antd'
 import { ColorDownList } from "./colorDownList";
-
 
 export class PatternLine extends Component {
     constructor(props) {
@@ -67,21 +66,32 @@ export class PatternLine extends Component {
         return spanStarts
     }
 
-    calcStartPos = (spanId, offset) => {
+    calcShiftPos = (spanId, offset) => {
         let spanStartPos = this.getSpanStartPos()
         return spanStartPos[parseInt(spanId)] + offset
     }
 
+    calcLabelPos = (startPos, endPos) => {
+        if (startPos > endPos) {
+            return { startPos: endPos, length: (startPos - endPos) }
+        } else {
+            return { startPos: startPos, length: (endPos - startPos) }
+        }
+    }
+
     selectWord = (e) => {
         let selection = (window.getSelection) ? window.getSelection(): document.getSelection()
+
         console.log('select word is called........')
         if(selection.toString().length > 0){
             let selectStartPos = this.calcStartPos(selection.anchorNode.parentNode.id, selection.anchorOffset)
+          let selectEndPos = this.calcShiftPos(selection.focusNode.parentNode.id, selection.focusOffset)
           this.setState({
             showDownlist:true,
             top: e.pageY,
             left: e.pageX,
             selectStartPos: selectStartPos,
+            selectEndPos:selectEndPos,
             length: selection.toString().length,
             sentence: selection.toString()
           })
@@ -89,7 +99,6 @@ export class PatternLine extends Component {
     }
 
     removePattern = () => {
-        console.log('pattern id is called')
         this.props.removePatternBy(this.props.patternId)
     }
 
@@ -100,17 +109,21 @@ export class PatternLine extends Component {
   }
 
   entityOrPhrase = (obj) => {
-    this.props.updateSelectLabel(this.props.patternId, {startPos: this.state.selectStartPos, length: this.state.length,id:obj.id,type:obj.type})
+    this.props.updateSelectLabel(this.props.patternId, { ...this.calcLabelPos(selectStartPos, selectEndPos),id:obj.id,type:obj.type})
   }
     
     render() {
-        return (<div><p onMouseUp={this.selectWord}>{this.getSpans()}</p> 
-                    <Button onClick={this.removePattern}> 删除</Button>
-          {
-              this.state.showDownlist?<ColorDownList top={this.state.top} sentence={this.state.sentence} left={this.state.left} intent={this.props.intent} agent={this.props.agent} intentId={this.props.intentId} hideDownlist={this.hideDownlist} entityOrPhrase={this.entityOrPhrase}/>:''
-          }
-
-                 </div>)
+  return (<Row>
+  <Col span={20}>
+  <p onMouseUp={this.selectWord}>{this.getSpans()}</p>
+  </Col>
+  <Col span={4}>
+  <Button onClick={this.removePattern}  icon="close"></Button>
+  </Col>
+    {
+      this.state.showDownlist?<ColorDownList top={this.state.top} sentence={this.state.sentence} left={this.state.left} intent={this.props.intent} agent={this.props.agent} intentId={this.props.intentId} hideDownlist={this.hideDownlist} entityOrPhrase={this.entityOrPhrase}/>:''
+    }
+  </Row>)
     }
 }
 
