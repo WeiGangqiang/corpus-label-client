@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
 import {Button} from 'antd'
+import { ColorDownList } from "./colorDownList";
+
 
 export class PatternLine extends Component {
     constructor(props) {
         super(props)
+      this.state={
+        showDownlist: false,
+        top: 0,
+        left: 0
+      }
     }
      
     getSpanStyleBy = (type) => {
@@ -16,6 +23,9 @@ export class PatternLine extends Component {
             },
             similar: {
                 background: 'green',
+              color: '#fff',
+              padding: '5px 10px',
+              borderRadius: '3px'
             }
         }
         return  (type == 'entity') ? style.entity : style.similar
@@ -63,15 +73,18 @@ export class PatternLine extends Component {
     }
 
     selectWord = (e) => {
-        // console.log(e)
-        // console.log('pageX:' + e.pageX, 'pageY:' + e.pageY)
-      // console.log('screenX:' + e.screenX, 'screenY:' + e.screenY)
         let selection = (window.getSelection) ? window.getSelection(): document.getSelection()
-
         console.log('select word is called........')
         if(selection.toString().length > 0){
             let selectStartPos = this.calcStartPos(selection.anchorNode.parentNode.id, selection.anchorOffset)
-            this.props.updateSelectLabel(this.props.patternId, {startPos: selectStartPos, length: selection.toString().length})
+          this.setState({
+            showDownlist:true,
+            top: e.pageY,
+            left: e.pageX,
+            selectStartPos: selectStartPos,
+            length: selection.toString().length,
+            sentence: selection.toString()
+          })
         }
     }
 
@@ -79,10 +92,24 @@ export class PatternLine extends Component {
         console.log('pattern id is called')
         this.props.removePatternBy(this.props.patternId)
     }
+
+  hideDownlist = () => {
+        this.setState({
+          showDownlist: false
+        })
+  }
+
+  entityOrPhrase = (obj) => {
+    this.props.updateSelectLabel(this.props.patternId, {startPos: this.state.selectStartPos, length: this.state.length,id:obj.id,type:obj.type})
+  }
     
     render() {
         return (<div><p onMouseUp={this.selectWord}>{this.getSpans()}</p> 
                     <Button onClick={this.removePattern}> 删除</Button>
+          {
+              this.state.showDownlist?<ColorDownList top={this.state.top} sentence={this.state.sentence} left={this.state.left} intent={this.props.intent} agent={this.props.agent} intentId={this.props.intentId} hideDownlist={this.hideDownlist} entityOrPhrase={this.entityOrPhrase}/>:''
+          }
+
                  </div>)
     }
 }

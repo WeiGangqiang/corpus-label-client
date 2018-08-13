@@ -143,7 +143,7 @@ export default class intendList extends Component {
               <IntentDesc name={this.state.name} zhName={this.state.zhName} modelPath={this.state.modelPath}/>
               <div style={style.corpusBox}>
                 <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues}/>
-                <PatternList agentName={agentName}  intentId={this.state.intentId} corpusType={this.state.type}/>
+                <PatternList agentName={agentName}  intent={this.state.name} intentId={this.state.intentId} corpusType={this.state.type} updatePhrase={this.getPhrase}/>
               </div>
               <PhraseList intent={this.state.name} agent={agentName} phraseArray={this.state.phraseArray} updatePhraseArray={this.getPhrase}/>
             </div> : '' }

@@ -1,6 +1,9 @@
 import React,{ Component } from 'react';
 import { connect } from 'react-redux'
-import { fetchEntity, getPhrase } from 'actions/intend'
+import { Menu, Icon } from 'antd';
+import { fetchEntity, getPhrase, putPhrase } from 'actions/intend'
+
+const SubMenu = Menu.SubMenu;
 
 @connect((state, dispatch) => ({
 }))
@@ -9,12 +12,13 @@ export class ColorDownList extends Component{
     super(props)
     this.state={
       phraseArray: [],
-      entityParam: []
+      entityParam: [],
+      current: ''
     }
   }
 
   componentWillMount() {
-    this.props.dispatch(fetchEntity('?agent=' + agentName + '&intentId=' + obj.intentId, data => {
+    this.props.dispatch(fetchEntity('?agent=' + this.props.agent + '&intentId=' + this.props.intentId, data => {
       for(let i=0;i<data.length;i++){
         data[i].valuesF = [...data[i].values]
         for(let j=0;j<data[i].valuesF.length;j++){
@@ -30,7 +34,7 @@ export class ColorDownList extends Component{
     }, error => {
 
     }))
-    this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + obj.intentId
+    this.props.dispatch(getPhrase('?agent=' + this.props.agent + '&intentId=' + this.props.intentId
         , data => {
           this.setState({
             phraseArray: [...data]
@@ -52,36 +56,75 @@ export class ColorDownList extends Component{
 
   }
 
+  hideDownlist() {
+    this.props.hideDownlist()
+  }
+
+  stop = (e) => {
+    e.stopPropagation()
+  }
+
+  entityOrPhrase = (e) => {
+
+    let item = this.state.phraseArray.find(item => item.phraseId ===e.key.split('###')[0])
+
+    if (e.key.split('###')[1]== 'phrase'){
+      this.props.dispatch(putPhrase({
+        similars  : [...item.similars,this.props.sentence],
+        phraseId: item.phraseId,
+        intentId: item.intentId,
+        intent   : this.props.intent,
+        agent    : this.props.agent
+      },data=>{
+      }))
+    }
+
+    this.props.entityOrPhrase({id:e.key.split('###')[0],type:e.key.split('###')[1]})
+    this.props.hideDownlist()
+  }
+
+
+
   render() {
+
+    const style={
+      colorContainer:{
+        position: 'fixed',
+        width: '100%',
+        height: '100%',
+        top: 0,
+        left: 0,
+      },
+      innerBox:{
+        position: 'absolute',
+      },
+      innerLi:{
+        display:'inline-block'
+      }
+    }
+
     return (
-        <div>
-          <ul>
-            <li>
-              <h3>标注</h3>
-              <div>
-                <ul>
+        <div style={style.colorContainer} onClick={this.hideDownlist.bind(this)}>
+          <div style={{...style.innerBox,left: this.props.left + 'px', top: this.props.top + 'px'}} onClick={this.stop}>
+              <Menu onClick={this.entityOrPhrase}
+                    selectedKeys={[this.state.current]}
+                    mode="horizontal">
+                <SubMenu title={<span>标注<Icon type="down" /></span>}>
                   {
                     this.state.entityParam.map(entity => {
-                      return <li onClick={this.setEntity.bind(this)}>{entity.name}</li>
+                      return <Menu.Item key={entity.name + '###entity'}>{entity.name}</Menu.Item>
                     })
                   }
-                </ul>
-              </div>
-            </li>
-            <li>
-              <h3>近义词</h3>
-              <div>
-                <ul>
-                  <li onClick={this.addNewPhrase.bind(this)}>新增近义词</li>
+                </SubMenu>
+                <SubMenu title={<span>近义词<Icon type="down" /></span>}>
                   {
                     this.state.phraseArray.map(phrase => {
-                      return <li onClick={this.setPhrase.bind(this)}>{phrase.phraseId}</li>
+                      return <Menu.Item key={phrase.phraseId + '###phrase'}>{phrase.phraseId}</Menu.Item>
                     })
                   }
-                </ul>
-              </div>
-            </li>
-          </ul>
+                </SubMenu>
+              </Menu>
+          </div>
         </div>
 
     )

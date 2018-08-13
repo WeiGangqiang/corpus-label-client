@@ -52,8 +52,9 @@ export class PatternList extends Component {
     }
 
     updateSelectLabel = (patternId, selectLoc) => {
+        this.props.updatePhrase()
         this.setState({ selectPatternId: patternId, selectLoc: selectLoc })
-        let stubLabel = {type:'entity', id:"star", startPos: selectLoc.startPos, length: selectLoc.length}
+        let stubLabel = {type:selectLoc.type, id:selectLoc.id, startPos: selectLoc.startPos, length: selectLoc.length}
         this.updatePatternLabels(patternId, stubLabel)
         console.log('patternId', patternId, selectLoc)
     }
@@ -128,7 +129,7 @@ export class PatternList extends Component {
 
     getPatternViews = () => {
         return this.state.patternList.map((pattern, patternId) => {
-            return (<PatternLine key={patternId} patternId={patternId} pattern={pattern} removePatternBy={this.removePatternBy} updateSelectLabel={this.updateSelectLabel}/>)
+            return (<PatternLine key={patternId} patternId={patternId} pattern={pattern} removePatternBy={this.removePatternBy} updateSelectLabel={this.updateSelectLabel} agent={this.props.agentName}  intent={this.props.intent} intentId={this.props.intentId}/>)
         })
     }
 
