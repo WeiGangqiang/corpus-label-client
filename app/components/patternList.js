@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {PatternLine} from 'components/pattern'
 import {getPattern, deletePattern, putPattern, predict, postPattern} from 'actions/intend'
-import {CorpusSimplifier} from "./corpusSimplifier";
+import {Simplifier} from 'components/Simplifer'
 
 @connect((state, dispatch) => ({}))
 
@@ -161,7 +161,7 @@ export class PatternList extends Component {
         return (<div style={style.corpusBox}>
             {this.getTitle()}
             <div style={style.pBox}> {this.getPatternViews()}</div>
-            <CorpusSimplifier addPattern={this.addPatternWithPredict}></CorpusSimplifier>
+            <Simplifier addPattern={this.addPatternWithPredict}></Simplifier>
         </div>)
     }
 }
