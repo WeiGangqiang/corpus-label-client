@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Button} from 'antd'
+import {Button, Icon} from 'antd'
 
 export class PatternLine extends Component {
     constructor(props) {
@@ -82,10 +82,25 @@ export class PatternLine extends Component {
     removePattern = () => {
         this.props.removePatternBy(this.props.patternId)
     }
-    
     render() {
-        return (<div><p onMouseUp={this.selectWord}>{this.getSpans()}</p> 
-                    <Button onClick={this.removePattern}> 删除</Button>
+        const style = {
+            sentence: {
+                float: 'left',
+            },
+            option:{
+                float: 'right'
+            },
+            line:{
+                width: '800px',
+                height: '30px',
+                marginBottom:'10px'
+            }
+        }
+
+        return (<div  style={style.line}> 
+                    <p style={style.sentence} onMouseUp={this.selectWord}>{this.getSpans()}</p> 
+                    <div style={style.option}> <Button onClick={this.removePattern}  icon="close"></Button>
+                    </div>
                  </div>)
     }
 }
