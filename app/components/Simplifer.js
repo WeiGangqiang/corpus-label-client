@@ -28,11 +28,11 @@ export class Simplifier extends Component {
         })
     }
 
-    handleSearch = (value) => {
+    handleSearch = (value) => { 
         console.log('update input value', value)
         this.props.dispatch(simplifier({x: value}, data => {
             this.setState({
-                dataSource: !value ? [] : [
+                dataSource: !value && data.y!=value ? [] : [
                     data.y
                 ],
                 orginal: value,
@@ -60,10 +60,10 @@ export class Simplifier extends Component {
                 <FormItem>
                     <AutoComplete
                         dataSource={this.state.dataSource}
-                        style={{ width: 200 }}
+                        style={{ width: 500 }}
                         onSelect={this.onSelect}
                         onSearch={this.handleSearch}
-                        placeholder="input here"
+                        placeholder="请输入语料"
                     />
                 </FormItem>
                 <FormItem>

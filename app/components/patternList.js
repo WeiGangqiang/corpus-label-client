@@ -12,7 +12,8 @@ export class PatternList extends Component {
         this.state = {
             patternList: [],
             selectLoc: {},
-            selectPatternId: 0
+            selectPatternId: 0,
+            simpliferKey: 0
         }
     }
 
@@ -93,6 +94,9 @@ export class PatternList extends Component {
 
     addPattern = (newCorpus, labels) => {
         console.log('add pattern for', newCorpus, labels)
+        this.setState({
+            simpliferKey: this.state.simpliferKey + 1
+        })
         let that = this
         this.props.dispatch(postPattern({
             pattern: {
@@ -117,7 +121,6 @@ export class PatternList extends Component {
         }, data => {
             console.log('predict labels is', data)
             that.addPattern(sentence, data)
-            console.log('add pattern finish')
         }, error => {
             console.log(error)
         }))
@@ -161,7 +164,7 @@ export class PatternList extends Component {
         return (<div style={style.corpusBox}>
             {this.getTitle()}
             <div style={style.pBox}> {this.getPatternViews()}</div>
-            <Simplifier addPattern={this.addPatternWithPredict}></Simplifier>
+            <Simplifier key={this.state.simpliferKey} addPattern={this.addPatternWithPredict}></Simplifier>
         </div>)
     }
 }
