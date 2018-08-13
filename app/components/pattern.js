@@ -61,8 +61,11 @@ export class PatternLine extends Component {
 
     selectWord = (e) => {
         let selection = (window.getSelection) ? window.getSelection(): document.getSelection()
-        let selectStartPos = this.calcStartPos(selection.anchorNode.parentNode.id, selection.anchorOffset)
-        this.props.updateSelectLabel(this.props.patternId, {startPos: selectStartPos, length: selection.toString().length})
+        console.log('select word is called........')
+        if(selection.toString().length > 0){
+            let selectStartPos = this.calcStartPos(selection.anchorNode.parentNode.id, selection.anchorOffset)
+            this.props.updateSelectLabel(this.props.patternId, {startPos: selectStartPos, length: selection.toString().length})
+        }
     }
 
     removePattern = () => {

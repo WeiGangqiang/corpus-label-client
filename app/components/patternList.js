@@ -75,7 +75,12 @@ export class PatternList extends Component {
             return !this.isLocOverLap(newLabel, label)  
         })
         newLabels.push(newLabel)
+        newLabels.sort( (left, right) => {
+            return left.startPos > right.startPos
+        })
         pattern.labels = newLabels
+        console.log('patten sentence is ', pattern.sentence)
+        console.log('old labels', labels, 'update labels', newLabels)
         let that = this
         this.props.dispatch(putPattern({
             "patternId": patternId,
