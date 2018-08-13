@@ -10,6 +10,9 @@ export class PatternLine extends Component {
         const style = {
             entity: {
                 background: 'blue',
+                color: '#fff',
+                padding: '5px 10px',
+              borderRadius: '3px'
             },
             similar: {
                 background: 'green',
@@ -60,12 +63,15 @@ export class PatternLine extends Component {
     }
 
     selectWord = (e) => {
-        console.log(e)
-        console.log('pageX:' + e.pageX, 'pageY:' + e.pageY)
-      console.log('screenX:' + e.screenX, 'screenY:' + e.screenY)
+        // console.log(e)
+        // console.log('pageX:' + e.pageX, 'pageY:' + e.pageY)
+      // console.log('screenX:' + e.screenX, 'screenY:' + e.screenY)
         let selection = (window.getSelection) ? window.getSelection(): document.getSelection()
+        // console.log(selection.isCollapsed)
+      if (!selection.isCollapsed) {
         let selectStartPos = this.calcStartPos(selection.anchorNode.parentNode.id, selection.anchorOffset)
         this.props.updateSelectLabel(this.props.patternId, {startPos: selectStartPos, length: selection.toString().length})
+      }
     }
 
     removePattern = () => {
