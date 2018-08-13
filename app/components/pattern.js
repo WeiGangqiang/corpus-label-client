@@ -122,18 +122,26 @@ export class PatternLine extends Component {
         const style={
             corpusBox:{
                 borderBottom: '1px solid #dadada',
-                paddingLeft: '15px'
+                paddingLeft: '15px',
+                paddingRight: '40px',
+            },
+            colRight:{
+                float: 'right',
+                marginRight: '-40px',
+                marginTop: '4px'
             },
             corpusP:{
-                lineHeight: '32px'
+                marginBottom: 0,
+                lineHeight: '40px',
+                fontSize: '14px'
             }
         }
         return (<Row style={style.corpusBox}>
-            <Col span={20}>
-                <p style={style.corpusP} onMouseUp={this.selectWord}>{this.getSpans()}</p>
-            </Col>
-            <Col span={4}>
+            <Col style={style.colRight}>
                 <Button onClick={this.removePattern} icon="close"></Button>
+            </Col>
+            <Col >
+                <p style={style.corpusP} onMouseUp={this.selectWord}>{this.getSpans()}</p>
             </Col>
             {
                 this.state.showDownlist ?

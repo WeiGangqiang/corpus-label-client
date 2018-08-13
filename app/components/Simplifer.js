@@ -56,7 +56,7 @@ export class Simplifier extends Component {
 
     render(){
         return (
-            <Form layout="inline">
+            <Form style={{marginTop: '15px'}} layout="inline">
                 <FormItem>
                     <AutoComplete
                         dataSource={this.state.dataSource}
