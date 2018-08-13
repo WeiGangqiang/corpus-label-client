@@ -57,9 +57,17 @@ export class PatternLine extends Component {
         return spanStarts
     }
 
-    calcStartPos = (spanId, offset) => {
+    calcShiftPos = (spanId, offset) => {
         let spanStartPos = this.getSpanStartPos()
         return spanStartPos[parseInt(spanId)] + offset
+    }
+
+    calcLabelPos = (startPos, endPos) => {
+        if (startPos > endPos) {
+            return { startPos: endPos, length: (startPos - endPos) }
+        } else {
+            return { startPos: startPos, length: (endPos - startPos) }
+        }
     }
 
     selectWord = (e) => {
@@ -68,15 +76,15 @@ export class PatternLine extends Component {
       // console.log('screenX:' + e.screenX, 'screenY:' + e.screenY)
         let selection = (window.getSelection) ? window.getSelection(): document.getSelection()
 
-        console.log('select word is called........')
+        console.log('select word is called........', selection)
         if(selection.toString().length > 0){
-            let selectStartPos = this.calcStartPos(selection.anchorNode.parentNode.id, selection.anchorOffset)
-            this.props.updateSelectLabel(this.props.patternId, {startPos: selectStartPos, length: selection.toString().length})
+            let selectStartPos = this.calcShiftPos(selection.anchorNode.parentNode.id, selection.anchorOffset)
+            let selectEndPos = this.calcShiftPos(selection.focusNode.parentNode.id, selection.focusOffset)
+            this.props.updateSelectLabel(this.props.patternId, this.calcLabelPos(selectStartPos, selectEndPos))
         }
     }
 
     removePattern = () => {
-        console.log('pattern id is called')
         this.props.removePatternBy(this.props.patternId)
     }
     

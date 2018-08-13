@@ -22,7 +22,6 @@ export class PatternList extends Component {
     }
     
     getPatternList = (props) =>{
-        console.log('get pattern list is called', props)
         let url = '?agent=' + props.agentName + '&intentId=' + props.intentId + '&type=' + props.corpusType
         if(this.props.intentId ==='1'){
             console.log('intent id is invalid')
@@ -79,8 +78,6 @@ export class PatternList extends Component {
             return left.startPos > right.startPos
         })
         pattern.labels = newLabels
-        console.log('patten sentence is ', pattern.sentence)
-        console.log('old labels', labels, 'update labels', newLabels)
         let that = this
         this.props.dispatch(putPattern({
             "patternId": patternId,
