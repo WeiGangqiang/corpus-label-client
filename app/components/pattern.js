@@ -60,6 +60,9 @@ export class PatternLine extends Component {
     }
 
     selectWord = (e) => {
+        console.log(e)
+        console.log('pageX:' + e.pageX, 'pageY:' + e.pageY)
+      console.log('screenX:' + e.screenX, 'screenY:' + e.screenY)
         let selection = (window.getSelection) ? window.getSelection(): document.getSelection()
         console.log('select word is called........')
         if(selection.toString().length > 0){
