@@ -1,5 +1,5 @@
-import { ajax } from 'utils'
-import { mockUrl } from '../config'
+import {ajax} from 'utils'
+import {mockUrl} from '../config'
 
 export const intendList = ajax.fetchJSONByPost('/intents', mockUrl, 'getJson');
 

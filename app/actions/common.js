@@ -1,12 +1,12 @@
 import {
-  createAction,
+    createAction,
 } from 'redux-actions'
 import {
-  common,
+    common,
 } from 'api'
 import {
-  createAjaxAction,
-  fakeAjaxAction,
+    createAjaxAction,
+    fakeAjaxAction,
 } from 'utils'
 
 
