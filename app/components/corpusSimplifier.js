@@ -19,12 +19,12 @@ export class CorpusSimplifier extends Component{
     }
   }
 
-  simplifier() {
+  simplifier = () => {
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.props.dispatch(simplifier({x:values.newCorpus}, data => {
+        this.props.dispatch(simplifier({ x: values.newCorpus }, data => {
           this.setState({
-            simCorpus:data.y
+            simCorpus: data.y
           })
         }, err => {
           console.log(err)
@@ -33,7 +33,7 @@ export class CorpusSimplifier extends Component{
     })
   }
 
-  corpusInput() {
+  corpusInput = () => {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.setState({
@@ -42,7 +42,7 @@ export class CorpusSimplifier extends Component{
       }
     })
   }
-  corpusBlur() {
+  corpusBlur = () => {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.setState({
@@ -52,8 +52,9 @@ export class CorpusSimplifier extends Component{
     })
   }
 
-  useSimCorpus() {
-    this.props.useSimCorpus(this.state.simCorpus)
+  useSimCorpus = () => {
+    console.log('use sim corpus ......')
+    this.props.addPattern(this.state.simCorpus)
     this.setState({
       simCorpus: '',
       newCorpus: ''
@@ -63,8 +64,9 @@ export class CorpusSimplifier extends Component{
     })
   }
 
-  noUseSimCorpus() {
-    this.props.noUseSimCorpus(this.state.newCorpus)
+  noUseSimCorpus = () => {
+    console.log('no use sim corpus ......')
+    this.props.addPattern(this.state.newCorpus)
     this.setState({
       newCorpus: '',
       simCorpus: ''
@@ -94,21 +96,21 @@ export class CorpusSimplifier extends Component{
             <FormItem>
               {getFieldDecorator('newCorpus', {
               })(
-                  <Input  style={{width:'300px'}} placeholder="请输入新的语料" onPressEnter={this.simplifier.bind(this)} onChange={this.corpusInput.bind(this)} onBlur={this.corpusBlur.bind(this)}/>
+                  <Input  style={{width:'300px'}} placeholder="请输入新的语料" onPressEnter={this.simplifier} onChange={this.corpusInput} onBlur={this.corpusBlur}/>
               )}
             </FormItem>
             <FormItem>
-              <Button type="primary" disabled={!this.state.newCorpus} onClick={this.simplifier.bind(this)}>
+              <Button type="primary" disabled={!this.state.newCorpus} onClick={this.simplifier}>
                 简化
               </Button>
             </FormItem>
           </Form>
           <div style={{display:'flex',marginTop: '20px'}}>
             <div style={style.newCorpusBox}>{this.state.simCorpus}</div>
-            <Button onClick={this.useSimCorpus.bind(this)} type="primary" disabled={!this.state.simCorpus} style={{marginLeft: '16px'}}>
+            <Button onClick={this.useSimCorpus} type="primary" disabled={!this.state.simCorpus} style={{marginLeft: '16px'}}>
               使用简化模型
             </Button>
-            <Button onClick={this.noUseSimCorpus.bind(this)}>不使用简化模型</Button>
+            <Button onClick={this.noUseSimCorpus}>不使用简化模型</Button>
           </div>
         </div>
     )
