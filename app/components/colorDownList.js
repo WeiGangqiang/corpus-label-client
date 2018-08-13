@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import {Menu, Icon} from 'antd';
-import {fetchEntity, getPhrase, putPhrase} from 'actions/intend'
+import {fetchEntity, getPhrase, putPhrase, postPhrase} from 'actions/intend'
 
 const SubMenu = Menu.SubMenu;
 
@@ -43,18 +43,6 @@ export class ColorDownList extends Component {
             }))
     }
 
-    setEntity() {
-
-    }
-
-    setPhrase() {
-
-    }
-
-    addNewPhrase() {
-
-    }
-
     hideDownlist() {
         this.props.hideDownlist()
     }
@@ -75,10 +63,18 @@ export class ColorDownList extends Component {
                 intent: this.props.intent,
                 agent: this.props.agent
             }, data => {
+                this.props.entityOrPhrase({id: e.key.split('###')[0], type: e.key.split('###')[1]})
+            }))
+        }else if(e.key.split('###')[1] == 'addNew'){
+            this.props.dispatch(postPhrase({
+                similars: [ this.props.sentence],
+                intentId: this.props.intentId,
+                intent: this.props.intent,
+                agent: this.props.agent
+            }, data => {
+                this.props.entityOrPhrase({id: data.id, type: 'phrase'})
             }))
         }
-
-        this.props.entityOrPhrase({id: e.key.split('###')[0], type: e.key.split('###')[1]})
         this.props.hideDownlist()
     }
 
@@ -92,6 +88,7 @@ export class ColorDownList extends Component {
                 height: '100%',
                 top: 0,
                 left: 0,
+                zIndex: 10
             },
             innerBox: {
                 position: 'absolute',
@@ -103,7 +100,7 @@ export class ColorDownList extends Component {
 
         return (
             <div style={style.colorContainer} onClick={this.hideDownlist.bind(this)}>
-                <div style={{...style.innerBox, left: this.props.left + 'px', top: this.props.top + 'px'}}
+                <div style={{...style.innerBox, left: this.props.left - 92 + 'px', top: this.props.top -(-10) + 'px'}}
                      onClick={this.stop}>
                     <Menu onClick={this.entityOrPhrase}
                           selectedKeys={[this.state.current]}
@@ -121,9 +118,11 @@ export class ColorDownList extends Component {
                                     return <Menu.Item key={phrase.phraseId + '###phrase'}>{phrase.phraseId}</Menu.Item>
                                 })
                             }
+                            <Menu.Item key={'453543###addNew'}>新增</Menu.Item>
                         </SubMenu>
                     </Menu>
                 </div>
+
             </div>
 
         )

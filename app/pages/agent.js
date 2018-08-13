@@ -72,7 +72,7 @@ export default class Agent extends Component {
             container: {
                 background: '#fff',
                 width: '90%',
-                padding: '20px',
+                padding: '0 20px',
             },
             flexBox: {
                 display: 'flex',
@@ -93,26 +93,29 @@ export default class Agent extends Component {
             }
         }
         return (
-            <Spin spinning={agentResult.loading}>
-                {!agentResult.loading ? <div style={style.container} className="container">
-                    {/*<div>服务器列表</div>*/}
-                    {/*<ul style={style.flexBox}>*/}
-                    {/*{serveResult.data.map(item=>{*/}
-                    {/*return <li className={item.id==this.state.serveId? 'active-btn':''} style={style.serveLi} key={item.id} onClick={this.selectServe.bind(this,item)}>{item.name}</li>*/}
-                    {/*})}*/}
-                    {/*</ul>*/}
-                    <div style={style.agentHead}>机器人列表</div>
-                    <ul style={style.flexBox}>
-                        {
-                            agentResult.data.map(item => {
-                                return <li className={item.id == this.state.agentId ? 'active-btn' : ''}
-                                           style={style.serveLi} key={item.id}
-                                           onClick={this.selectAgent.bind(this, item)}>{item.name}</li>
-                            })
-                        }
-                    </ul>
-                </div> : <div>数据正在加载中，您可以先去嗑瓜子</div>}
-            </Spin>
+            <div style={{marginTop:'55px'}}>
+                <div className='bread-cruft' ></div>
+                <Spin spinning={agentResult.loading}>
+                    {!agentResult.loading ? <div style={style.container} className="container">
+                        {/*<div>服务器列表</div>*/}
+                        {/*<ul style={style.flexBox}>*/}
+                        {/*{serveResult.data.map(item=>{*/}
+                        {/*return <li className={item.id==this.state.serveId? 'active-btn':''} style={style.serveLi} key={item.id} onClick={this.selectServe.bind(this,item)}>{item.name}</li>*/}
+                        {/*})}*/}
+                        {/*</ul>*/}
+                        <div style={style.agentHead}>机器人列表</div>
+                        <ul style={style.flexBox}>
+                            {
+                                agentResult.data.map(item => {
+                                    return <li className={item.id == this.state.agentId ? 'active-btn' : ''}
+                                               style={style.serveLi} key={item.id}
+                                               onClick={this.selectAgent.bind(this, item)}>{item.name}</li>
+                                })
+                            }
+                        </ul>
+                    </div> : <div>数据正在加载中，您可以先去嗑瓜子</div>}
+                </Spin>
+            </div>
         )
     }
 }

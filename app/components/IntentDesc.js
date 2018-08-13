@@ -10,7 +10,9 @@ export class IntentDesc extends Component {
     getTitle = () => {
         const subtitleCss = {
             fontSize: '20px',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            marginBottom: '0px',
+            lineHeight: '40px'
         }
         return <p style={subtitleCss}> 基本信息 </p>
     }
@@ -22,7 +24,9 @@ export class IntentDesc extends Component {
                 background: '#fbfbfb',
                 padding: '0 15px',
                 fontSize: '14px',
-                marginBottom: '15px'
+                marginBottom: '15px',
+                borderRadius: '15px'
+
             },
             col: {
                 lineHeight: '40px'

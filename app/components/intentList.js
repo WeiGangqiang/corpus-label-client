@@ -14,7 +14,7 @@ export class IntentList extends Component {
         const style = {
             corpusBox: {
                 background: '#fbfbfb',
-                padding: '15px',
+                padding: '40px 15px 15px',
                 width: '100%',
                 height: '100%',
                 borderRadius: '15px'
@@ -36,6 +36,10 @@ export class IntentList extends Component {
                 justifyContent: 'space-start',
                 flexDirection: 'column'
             },
+            serveLi:{
+                lineHeight: '40px',
+                cursor:'pointer'
+            }
         }
 
         return (

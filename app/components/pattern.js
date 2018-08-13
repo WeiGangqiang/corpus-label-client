@@ -37,14 +37,14 @@ export class PatternLine extends Component {
         let spans = []
         labels.forEach(label => {
             if (startPos < label.startPos) {
-                spans.push(<span key={spans.length} id={spans.length}>{sentence.slice(startPos, label.startPos)}</span>)
+                spans.push(<span className='corpusBlock' key={spans.length} id={spans.length}>{sentence.slice(startPos, label.startPos)}</span>)
             }
-            spans.push(<span key={spans.length} id={spans.length}
+            spans.push(<span className='corpusBlock' key={spans.length} id={spans.length}
                              style={this.getSpanStyleBy(label.type)}>{sentence.slice(label.startPos, label.startPos + label.length)}</span>)
             startPos = label.startPos + label.length
         })
         if (startPos < sentence.length) {
-            spans.push(<span key={spans.length} id={spans.length}>{sentence.slice(startPos)}</span>)
+            spans.push(<span className='corpusBlock' key={spans.length} id={spans.length}>{sentence.slice(startPos)}</span>)
         }
         return spans
     }
@@ -119,9 +119,18 @@ export class PatternLine extends Component {
     }
 
     render() {
-        return (<Row>
+        const style={
+            corpusBox:{
+                borderBottom: '1px solid #dadada',
+                paddingLeft: '15px'
+            },
+            corpusP:{
+                lineHeight: '32px'
+            }
+        }
+        return (<Row style={style.corpusBox}>
             <Col span={20}>
-                <p onMouseUp={this.selectWord}>{this.getSpans()}</p>
+                <p style={style.corpusP} onMouseUp={this.selectWord}>{this.getSpans()}</p>
             </Col>
             <Col span={4}>
                 <Button onClick={this.removePattern} icon="close"></Button>

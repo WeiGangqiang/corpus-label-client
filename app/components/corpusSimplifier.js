@@ -91,6 +91,9 @@ export class CorpusSimplifier extends Component {
     render() {
         const {getFieldDecorator} = this.props.form
         const style = {
+            simContainer:{
+                marginTop: '15px'
+            },
             newCorpusBox: {
                 width: '300px',
                 lineHeight: '32px',
@@ -102,7 +105,7 @@ export class CorpusSimplifier extends Component {
             },
         }
         return (
-            <div>
+            <div style={style.simContainer}>
                 <Form layout="inline">
                     <FormItem>
                         {getFieldDecorator('newCorpus', {})(
@@ -122,7 +125,7 @@ export class CorpusSimplifier extends Component {
                             style={{marginLeft: '16px'}}>
                         使用简化模型
                     </Button>
-                    <Button onClick={this.noUseSimCorpus}>不使用简化模型</Button>
+                    <Button style={{marginLeft: '16px'}} disabled={!this.state.simCorpus} onClick={this.noUseSimCorpus}>不使用简化模型</Button>
                 </div>
             </div>
         )

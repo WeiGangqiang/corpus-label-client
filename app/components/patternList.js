@@ -147,6 +147,7 @@ export class PatternList extends Component {
                 width: '1000px',
                 height: '300px',
                 border: '1px solid #dadada',
+                overflow: 'auto'
             },
             corpusBox: {
                 background: '#fbfbfb',

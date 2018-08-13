@@ -60,7 +60,7 @@ export class PhraseList extends Component {
     }
 
     addPhraseText() {
-        const phraseText = this.state.phraseText.replace('，', ',').split(',');
+        const phraseText = this.state.phraseText.replace(/，/g, ',').split(',');
         this.state.phrase.similars = this.state.phrase.similars.concat(phraseText)
         this.props.dispatch(putPhrase({
             ...this.state.phrase,
@@ -76,7 +76,9 @@ export class PhraseList extends Component {
     getTitle = () => {
         const subtitleCss = {
             fontSize: '20px',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            marginBottom: '0px',
+            lineHeight: '40px'
         }
         return <p style={subtitleCss}> 近义词列表 </p>
     }
@@ -84,8 +86,11 @@ export class PhraseList extends Component {
     render() {
 
         const style = {
-            phraseBox: {
-                marginTop: '15px'
+            phraseContainer: {
+                marginTop: '15px',
+                background: '#fbfbfb',
+                borderRadius: '15px',
+                padding: '0 15px'
             },
             serveLi: {
                 padding: '5px 0px',
@@ -101,28 +106,26 @@ export class PhraseList extends Component {
             },
             phraseItem: {
                 background: '#fbfbfb',
-                paddingLeft: '10px'
+                borderBottom: '1px solid green'
             },
             phraseText: {
                 display: 'inline-block',
                 padding: '5px 10px',
-                margin: '7px',
-                marginRight: '15px',
-                background: '#ccc',
+                margin: '7px 15px 7px 0',
+                background: 'green',
                 color: '#fff',
                 fontSize: '14px',
                 borderRadius: '3px'
             },
             phraseBox: {
                 background: '#fbfbfb',
-                padding: '15px',
                 width: '100%',
                 height: '100%',
                 borderRadius: '15px'
             }
         }
         return (
-            <div style={style.phraseBox}>
+            <div style={style.phraseContainer}>
                 {this.getTitle()}
                 <ul style={style.phraseBox}>
                     {this.props.phraseArray.map((phrase, index) => {

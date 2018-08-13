@@ -16,7 +16,9 @@ export class EntityParameters extends Component {
     getTitle = () => {
         const subtitleCss = {
             fontSize: '20px',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            marginBottom: '0px',
+            lineHeight: '40px',
         }
         return <p style={subtitleCss}> 槽位信息 </p>
     }
@@ -24,6 +26,12 @@ export class EntityParameters extends Component {
     render() {
 
         const style = {
+            entityContainer: {
+                marginTop: '15px',
+                background: '#fbfbfb',
+                borderRadius: '15px',
+                padding: '0 15px'
+            },
             flexBox: {
                 display: 'flex',
                 flexWrap: 'wrap',
@@ -31,15 +39,15 @@ export class EntityParameters extends Component {
                 flexDirection: 'column',
                 minHeight: '200px',
                 background: '#fbfbfb',
-                padding: '15px',
                 width: '100%',
                 height: '100%',
                 borderRadius: '15px',
-                marginBottom: '15px'
+                marginBottom: '15px',
+                overflow: 'auto',
             },
             serveLi: {
-                padding: '5px 0px',
                 fontSize: '14px',
+                borderBottom: '1px solid blue'
             },
             serveLiSpan: {
                 marginRight: '15px',
@@ -47,44 +55,47 @@ export class EntityParameters extends Component {
                 borderRadius: '3px',
                 cursor: 'pointer',
                 display: 'inline-block',
-                marginBottom: '15px'
+                margin: '7px 15px 7px 0px'
             },
         }
 
         return (
-            <ul style={style.flexBox}>
+            <div style={style.entityContainer}>
                 {this.getTitle()}
-                {
-                    this.props.entityParam.map((item, i) => {
-                        return <li style={{...style.serveLi, color: '#fff'}} key={item.entity}>
+                <ul style={style.flexBox}>
+                    {
+                        this.props.entityParam.map((item, i) => {
+                            return <li style={{...style.serveLi, color: '#fff'}} key={item.entity}>
                             <span style={{
                                 ...style.serveLiSpan,
-                                background: '#188ae2',
+                                background: 'blue',
                                 border: '1px solid ' + item.color + "'"
                             }}>{item.name}</span>
-                            {item.valuesShow.map((value, index) => {
-                                return <span style={{
-                                    ...style.serveLiSpan,
-                                    background: item.color,
-                                    border: '1px solid ' + item.color + "'"
-                                }} key={index}>{value}</span>
-                            })}
-                            {
-                                item.values.length > 10 ? item.valuesShow.length <= 10 ?
-                                    <span onClick={this.showMoreValues.bind(this, i)} style={{
+                                {item.valuesShow.map((value, index) => {
+                                    return <span style={{
                                         ...style.serveLiSpan,
-                                        background: item.color,
+                                        background: 'blue',
                                         border: '1px solid ' + item.color + "'"
-                                    }}>···</span> : <span onClick={this.showLessValues.bind(this, i)} style={{
-                                        ...style.serveLiSpan,
-                                        background: item.color,
-                                        border: '1px solid ' + item.color + "'"
-                                    }}>-</span> : ''
-                            }
-                        </li>
-                    })
-                }
-            </ul>
+                                    }} key={index}>{value}</span>
+                                })}
+                                {
+                                    item.values.length > 10 ? item.valuesShow.length <= 10 ?
+                                        <span onClick={this.showMoreValues.bind(this, i)} style={{
+                                            ...style.serveLiSpan,
+                                            background: item.color,
+                                            border: '1px solid ' + item.color + "'"
+                                        }}>···</span> : <span onClick={this.showLessValues.bind(this, i)} style={{
+                                            ...style.serveLiSpan,
+                                            background: item.color,
+                                            border: '1px solid ' + item.color + "'"
+                                        }}>-</span> : ''
+                                }
+                            </li>
+                        })
+                    }
+                </ul>
+            </div>
+
         )
     }
 }
