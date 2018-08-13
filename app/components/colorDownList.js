@@ -42,7 +42,6 @@ export class ColorDownList extends Component{
                     return <li onClick={this.setPhrase.bind(this)}>{phrase.phraseId}</li>
                   })
                 }
-
               </ul>
             </div>
           </li>
