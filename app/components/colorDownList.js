@@ -51,29 +51,54 @@ export class ColorDownList extends Component {
         e.stopPropagation()
     }
 
+    getButtonType = (e) => {
+      return e.key.split('###')[1]
+    }
+
+    getLabelId = (e)=> {
+      return e.key.split('###')[0]
+    }
+
+    updatePhraseLabel = (phraseId) => {
+      let item = this.state.phraseArray.find(item => item.phraseId === phraseId)
+      let that = this
+      this.props.dispatch(putPhrase({
+          similars: [...item.similars, this.props.sentence],
+          phraseId: item.phraseId,
+          intentId: item.intentId,
+          intent: this.props.intent,
+          agent: this.props.agent
+      }, data => {
+        that.props.entityOrPhrase({id:phraseId, type: 'phrase'})
+      }))
+    }
+
+    addPhrase = () => {
+      let that = this
+      this.props.dispatch(postPhrase({
+        similars: [this.props.sentence],
+        intentId: this.props.intentId,
+        intent: this.props.intent,
+        agent: this.props.agent
+      }, data => {
+        that.props.entityOrPhrase({ id: data.id, type: 'phrase' })
+      }))
+    }
+
+    addEntityLabel = (entityId) => {
+      this.props.entityOrPhrase({ id: entityId, type: 'entity' })
+    }
+
     entityOrPhrase = (e) => {
-        let item = this.state.phraseArray.find(item => item.phraseId === e.key.split('###')[0])
-        if (e.key.split('###')[1] == 'phrase') {
-            this.props.dispatch(putPhrase({
-                similars: [...item.similars, this.props.sentence],
-                phraseId: item.phraseId,
-                intentId: item.intentId,
-                intent: this.props.intent,
-                agent: this.props.agent
-            }, data => {
-                this.props.entityOrPhrase({id: e.key.split('###')[0], type: e.key.split('###')[1]})
-            }))
-        }else if(e.key.split('###')[1] == 'addNew'){
-            this.props.dispatch(postPhrase({
-                similars: [ this.props.sentence],
-                intentId: this.props.intentId,
-                intent: this.props.intent,
-                agent: this.props.agent
-            }, data => {
-                this.props.entityOrPhrase({id: data.id, type: 'phrase'})
-            }))
-        }
-        this.props.hideDownlist()
+      if(this.getButtonType(e) == 'phrase'){
+        this.updatePhraseLabel(this.getLabelId(e))
+
+      }else if (this.getButtonType(e) == 'addNew'){
+        this.addPhrase()
+      }else if (this.getButtonType(e) == 'entity'){
+        this.addEntityLabel(this.getLabelId(e))
+      }
+      this.props.hideDownlist()
     }
 
     getEntityDisplay = (entity) => {
@@ -172,9 +197,7 @@ export class ColorDownList extends Component {
                           {this.getSubMenu()}
                     </Menu>
                 </div>
-
             </div>
-
         )
     }
 }
