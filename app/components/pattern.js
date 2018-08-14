@@ -30,6 +30,14 @@ export class PatternLine extends Component {
         return (type == 'entity') ? style.entity : style.similar
     }
 
+    labelSpanSelected = (e) => {
+        console.log('span is clicked', e)
+        let selection = (window.getSelection) ? window.getSelection() : document.getSelection()
+        console.log('selection is ',selection)
+        let label = this.getLabelBy(selection.anchorNode.parentNode.id)
+        console.log('select label is ', label)
+    }
+
     getSpans = () => {
         let sentence = this.props.pattern.sentence
         let labels = this.props.pattern.labels
@@ -40,13 +48,32 @@ export class PatternLine extends Component {
                 spans.push(<span className='corpusBlock' key={spans.length} id={spans.length}>{sentence.slice(startPos, label.startPos)}</span>)
             }
             spans.push(<span className='corpusBlock' key={spans.length} id={spans.length}
-                             style={this.getSpanStyleBy(label.type)}>{sentence.slice(label.startPos, label.startPos + label.length)}</span>)
+                             style={this.getSpanStyleBy(label.type)} onClick={this.labelSpanSelected} >{sentence.slice(label.startPos, label.startPos + label.length)}</span>)
             startPos = label.startPos + label.length
         })
         if (startPos < sentence.length) {
             spans.push(<span className='corpusBlock' key={spans.length} id={spans.length}>{sentence.slice(startPos)}</span>)
         }
         return spans
+    }
+
+    getLabelBy = (id) => {
+        let labels = this.props.pattern.labels
+        let startPos = 0
+        let index = 0
+        for (let i in labels){
+            let label = labels[i]
+            if (startPos < label.startPos) {
+                if(index == id) return null
+                index = index + 1
+            }
+            if( index == id){
+                return label
+            }
+            index = index + 1
+            startPos = label.startPos + label.length
+        }
+        return null
     }
 
     getSpanStartPos = () => {

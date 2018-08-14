@@ -121,14 +121,18 @@ export class ColorDownList extends Component {
             },
             innerLi: {
                 display: 'inline-block'
+            },
+            menu: {
+              background: '#DDDDDD'
             }
+            
         }
 
         return (
             <div style={style.colorContainer} onClick={this.hideDownlist.bind(this)}>
                 <div style={{...style.innerBox, left: this.props.left - 92 + 'px', top: this.props.top -(-10) + 'px'}}
                      onClick={this.stop}>
-                    <Menu onClick={this.entityOrPhrase}
+                    <Menu style= {style.menu} onClick={this.entityOrPhrase}
                           selectedKeys={[this.state.current]}>
                           {this.getSubMenu()}
                     </Menu>
