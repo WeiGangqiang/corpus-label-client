@@ -73,7 +73,6 @@ export default class intendList extends Component {
     }
 
     initData(obj) {
-        const colorArray = ['#4fc3f7', '#29b6f6', '#03a9f4', '#039be5', '#0288d1', '#42a5f5', '#2196f3', '#1e88e5', '#1976d2'];
         this.setState({
             name: obj.name,
             zhName: obj.zhName,

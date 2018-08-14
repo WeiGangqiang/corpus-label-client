@@ -1,10 +1,17 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {putPhrase, deletePhrase} from 'actions/intend'
-import {Icon, Input, Modal} from 'antd'
+import {Table,Form,Button,Input,Icon} from 'antd'
 
 
-@connect((state, dispatch) => ({}))
+const FormItem = Form.Item
+
+@connect((state, props) => ({
+}))
+@Form.create({
+    onFieldsChange(props, items) {
+    },
+})
 export class PhraseList extends Component {
     constructor(props) {
         super(props)
@@ -57,17 +64,18 @@ export class PhraseList extends Component {
         this.setState({
             phraseText: e.target.value
         })
+        e.target.value = ''
     }
 
-    addPhraseText() {
+    addPhraseText(phrase) {
         const phraseText = this.state.phraseText.replace(/，/g, ',').split(',');
-        this.state.phrase.similars = this.state.phrase.similars.concat(phraseText)
+        phrase.similars = phrase.similars.concat(phraseText)
         this.props.dispatch(putPhrase({
-            ...this.state.phrase,
+            ...phrase,
             intent: this.props.intent,
             agent: this.props.agent
         }, data => {
-            this.hideAddPhrase()
+            // this.hideAddPhrase()
             this.props.updatePhraseArray()
         }));
 
@@ -83,8 +91,63 @@ export class PhraseList extends Component {
         return <p style={subtitleCss}> 近义词列表 </p>
     }
 
+    columns = () => {
+        const {getFieldDecorator} = this.props.form
+        const that = this
+        return [
+            {
+                title: '近义词类名',
+                dataIndex: 'phraseId',
+                key: 'phraseId',
+                render(text, record, index) {
+                    return <span className='corpusSpan' style={{background: record.color}}>{record.similars[0]}</span>
+                }
+            },
+            {
+                title: '近义词值',
+                dataIndex: 'name',
+                key: 'name',
+                className: 'phraseWord',
+                render(text, record, index) {
+                    return <div>
+                        {
+                            record.similars.map((item,i) => {
+                                return <div style={{display:'inline-block',border: '1px solid #dadada',margin:'7px 15px 7px 0',padding:'5px 10px'}} key={i}>{item}<Icon
+                                    onClick={that.delPhraseText.bind(that, record, i)} type="close"/></div>
+                            })
+                        }
+                    </div>
+                }
+            },
+            {
+                title: '添加',
+                dataIndex: 'add',
+                key: 'add',
+                render(text, record, index) {
+                    return <div style={{paddingRight: '80px'}}>
+                        <Input
+                            placeholder="请输入近义词"
+                            type="text"
+                            onBlur={that.getPhraseText.bind(that)}
+                        />
+                        <Button style={{float:'right',marginRight: '-80px'}} onClick={that.addPhraseText.bind(that, record)}>添加</Button>
+                        </div>
+                }
+            },
+            {
+                title: '删除',
+                dataIndex: 'delete',
+                key: 'delete',
+                render(text, record, index) {
+                    return <Button onClick={that.delPhraseItem.bind(that, record)}>删除</Button>
+                }
+            }
+        ]
+    }
+
     render() {
 
+        const {getFieldDecorator} = this.props.form
         const style = {
             phraseContainer: {
                 marginTop: '15px',
@@ -127,33 +190,41 @@ export class PhraseList extends Component {
         return (
             <div style={style.phraseContainer}>
                 {this.getTitle()}
-                <ul style={style.phraseBox}>
-                    {this.props.phraseArray.map((phrase, index) => {
-                        return <li key={index}
-                                   style={{...style.phraseItem, background: index % 2 === 0 ? '#fbfbfb' : '#fff'}}>
-                            <div style={style.phraseText}>{phrase.phraseId}</div>
-                            {
-                                phrase.similars.map((item, i) => {
-                                    return <div style={style.phraseText} key={i}>{item}<Icon
-                                        onClick={this.delPhraseText.bind(this, phrase, i)} type="close"/></div>
-                                })
-                            }
-                            <div onClick={this.showAddPhrase.bind(this, phrase)} style={style.phraseText}>添加</div>
-                            <div onClick={this.delPhraseItem.bind(this, phrase)} style={style.phraseText}>删除</div>
-                        </li>
-                    })}
-                </ul>
-                <Modal
-                    title="添加近义词"
-                    centered
-                    visible={this.state.showModalFlag}
-                    onOk={() => this.addPhraseText()}
-                    onCancel={() => this.hideAddPhrase()}
-                    destroyOnClose={true}
-                >
-                    <Input onBlur={this.getPhraseText.bind(this)}></Input>
-                    <span>如果添加多个中间用逗号隔开，如：漂亮，美丽</span>
-                </Modal>
+                {/*<ul style={style.phraseBox}>*/}
+                    {/*{this.props.phraseArray.map((phrase, index) => {*/}
+                        {/*return <li key={index}*/}
+                                   {/*style={{...style.phraseItem, background: index % 2 === 0 ? '#fbfbfb' : '#fff'}}>*/}
+                            {/*<div style={style.phraseText}>{phrase.phraseId}</div>*/}
+                            {/*{*/}
+                                {/*phrase.similars.map((item, i) => {*/}
+                                    {/*return <div style={style.phraseText} key={i}>{item}<Icon*/}
+                                        {/*onClick={this.delPhraseText.bind(this, phrase, i)} type="close"/></div>*/}
+                                {/*})*/}
+                            {/*}*/}
+                            {/*<div onClick={this.showAddPhrase.bind(this, phrase)} style={style.phraseText}>添加</div>*/}
+                            {/*<div onClick={this.delPhraseItem.bind(this, phrase)} style={style.phraseText}>删除</div>*/}
+                        {/*</li>*/}
+                    {/*})}*/}
+                {/*</ul>*/}
+                {/*<Modal*/}
+                    {/*title="添加近义词"*/}
+                    {/*centered*/}
+                    {/*visible={this.state.showModalFlag}*/}
+                    {/*onOk={() => this.addPhraseText()}*/}
+                    {/*onCancel={() => this.hideAddPhrase()}*/}
+                    {/*destroyOnClose={true}*/}
+                {/*>*/}
+                    {/*<Input onBlur={this.getPhraseText.bind(this)}></Input>*/}
+                    {/*<span>如果添加多个中间用逗号隔开，如：漂亮，美丽</span>*/}
+                {/*</Modal>*/}
+
+                <Table
+                    dataSource={this.props.phraseArray}
+                    columns={this.columns()}
+                    bordered
+                    pagination={false}
+                />
+
             </div>)
 
     }
