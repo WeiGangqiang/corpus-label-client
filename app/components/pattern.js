@@ -82,7 +82,6 @@ export class PatternLine extends Component {
 
     selectWord = (e) => {
         let selection = (window.getSelection) ? window.getSelection() : document.getSelection()
-
         console.log('select word is called........')
         if (selection.toString().length > 0) {
             let selectStartPos = this.calcShiftPos(selection.anchorNode.parentNode.id, selection.anchorOffset)
@@ -100,7 +99,7 @@ export class PatternLine extends Component {
     }
 
     removePattern = () => {
-        this.props.removePatternBy(this.props.patternId)
+        this.props.removePatternBy(this.props.patternId, this.props.corpusType)
     }
 
     hideDownlist = () => {
@@ -110,12 +109,12 @@ export class PatternLine extends Component {
     }
 
     entityOrPhrase = (obj) => {
-
+        console.log('add entity phrase list', obj)
         this.props.updateSelectLabel(this.props.patternId, {
             ...this.calcLabelPos(this.state.selectStartPos, this.state.selectEndPos),
             id: obj.id,
             type: obj.type
-        })
+        }, this.props.corpusType)
     }
 
     render() {

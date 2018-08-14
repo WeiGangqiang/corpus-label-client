@@ -46,7 +46,7 @@ export class Simplifier extends Component {
     }
 
     addCorpusToIntent = ()=> {   
-        this.props.addPattern(this.state.simplify)
+        this.props.addPattern(this.state.simplify, this.props.corpusType)
         this.setState({
             dataSource: [],
             orginal: '',
