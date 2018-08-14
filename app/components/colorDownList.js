@@ -78,6 +78,32 @@ export class ColorDownList extends Component {
         this.props.hideDownlist()
     }
 
+    getEntityDisplay = (entity) => {
+      console.log('entity', entity)
+      return '槽位：' + entity.name
+
+    }
+
+    getPhraseDisPlay = (phrase) => {
+      console.log('phrase', phrase)
+      return '近义词：' + phrase.similars.slice(0,2).join(',')
+    }
+    
+    getSubMenu = () =>{
+      let subMenus = []
+      let that = this
+      this.state.entityParam.forEach(entity => {
+        subMenus.push(<Menu.Item key={entity.name + '###entity'}>{that.getEntityDisplay(entity)}</Menu.Item>)
+      })
+
+      this.state.phraseArray.forEach(phrase => {
+        subMenus.push(<Menu.Item key={phrase.phraseId + '###phrase'}>{that.getPhraseDisPlay(phrase)}</Menu.Item>)
+      })
+
+      subMenus.push(<Menu.Item key={'453543###addNew'}>新增</Menu.Item>)
+      return subMenus
+    }
+
 
     render() {
 
@@ -95,31 +121,20 @@ export class ColorDownList extends Component {
             },
             innerLi: {
                 display: 'inline-block'
+            },
+            menu: {
+              background: '#DDDDDD'
             }
+            
         }
 
         return (
             <div style={style.colorContainer} onClick={this.hideDownlist.bind(this)}>
                 <div style={{...style.innerBox, left: this.props.left - 92 + 'px', top: this.props.top -(-10) + 'px'}}
                      onClick={this.stop}>
-                    <Menu onClick={this.entityOrPhrase}
-                          selectedKeys={[this.state.current]}
-                          mode="horizontal">
-                        <SubMenu title={<span>标注<Icon type="down"/></span>}>
-                            {
-                                this.state.entityParam.map(entity => {
-                                    return <Menu.Item key={entity.name + '###entity'}>{entity.name}</Menu.Item>
-                                })
-                            }
-                        </SubMenu>
-                        <SubMenu title={<span>近义词<Icon type="down"/></span>}>
-                            {
-                                this.state.phraseArray.map(phrase => {
-                                    return <Menu.Item key={phrase.phraseId + '###phrase'}>{phrase.phraseId}</Menu.Item>
-                                })
-                            }
-                            <Menu.Item key={'453543###addNew'}>新增</Menu.Item>
-                        </SubMenu>
+                    <Menu style= {style.menu} onClick={this.entityOrPhrase}
+                          selectedKeys={[this.state.current]}>
+                          {this.getSubMenu()}
                     </Menu>
                 </div>
 
