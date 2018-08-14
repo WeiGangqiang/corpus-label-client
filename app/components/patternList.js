@@ -145,6 +145,25 @@ export class PatternList extends Component {
         }))
     }
 
+    removeLabel = (patternId, labelIndex, corpusType) => {
+        let patternList = this.getPatternListBy(corpusType)
+        let pattern = patternList[patternId]
+        let newLabels =  pattern.labels.filter((value, index)=>{
+            return index != labelIndex
+        })
+        pattern.labels = newLabels
+        let that = this
+        this.props.dispatch(putPattern({
+            "patternId": patternId,
+            "type": corpusType,
+            "intentId": this.props.intentId,
+            "agent": this.props.agentName,
+            "pattern": pattern
+        }, data => {
+            that.getPatternList(that.props, corpusType)
+        }))
+    }
+
     getTitle = () => {
         const subtitleCss = {
             fontSize: '20px',
@@ -164,7 +183,7 @@ export class PatternList extends Component {
             return (<PatternLine key={patternId} patternId={patternId} pattern={pattern}
                                  removePatternBy={this.removePatternBy} updateSelectLabel={this.updateSelectLabel}
                                  agent={this.props.agentName} intent={this.props.intent}
-                                 intentId={this.props.intentId} corpusType={corpusType}/>)
+                                 intentId={this.props.intentId} corpusType={corpusType} removeLabel={this.removeLabel}/>)
         })
     }
 

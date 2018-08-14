@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
-import {Menu, Icon} from 'antd';
+import {Menu, Icon, Button} from 'antd';
 import {fetchEntity, getPhrase, putPhrase, postPhrase} from 'actions/intend'
 
 const SubMenu = Menu.SubMenu;
@@ -52,9 +52,7 @@ export class ColorDownList extends Component {
     }
 
     entityOrPhrase = (e) => {
-
         let item = this.state.phraseArray.find(item => item.phraseId === e.key.split('###')[0])
-
         if (e.key.split('###')[1] == 'phrase') {
             this.props.dispatch(putPhrase({
                 similars: [...item.similars, this.props.sentence],
@@ -79,13 +77,10 @@ export class ColorDownList extends Component {
     }
 
     getEntityDisplay = (entity) => {
-      console.log('entity', entity)
       return '槽位：' + entity.name
-
     }
 
     getPhraseDisPlay = (phrase) => {
-      console.log('phrase', phrase)
       return '近义词：' + phrase.similars.slice(0,2).join(',')
     }
     
@@ -104,9 +99,48 @@ export class ColorDownList extends Component {
       return subMenus
     }
 
+    removelabel = (e) => {
+      this.props.removeLabel(this.props.labelIndex)
+      this.props.hideDownlist()
+    }
+
+    findLabelDesc = ()=> {
+      let label = this.props.label
+      if (label.type == 'entity') {
+        let entity = this.state.entityParam.find((value)=> {
+          return value.id = label.id
+        })
+        return !entity ? '': this.getEntityDisplay(entity)
+      } else {
+        let phrase = this.state.phraseArray.find((value) => {
+          return value.id = label.id
+        })
+        return !phrase ? '': this.getPhraseDisPlay(phrase)
+      }
+    }
+
+    getCurLabelAction = () =>{
+      if (!this.props.hasLabel){
+        return ''
+      }
+
+      const style = {
+        labelAction: {
+          height: '30px',
+          background: '#DDDDDD',
+        },
+        detail: {
+          float: 'left'
+        },
+        button: {
+          float: 'right'
+        }
+      }
+
+      return (<div style={style.labelAction} > <p style={style.detail}>{this.findLabelDesc()} </p>  <Button style={style.button} onClick={this.removelabel} icon="close"></Button></div>)
+    }
 
     render() {
-
         const style = {
             colorContainer: {
                 position: 'fixed',
@@ -123,15 +157,16 @@ export class ColorDownList extends Component {
                 display: 'inline-block'
             },
             menu: {
-              background: '#DDDDDD'
+              background: '#DDDDDD',
+              float:'left'
             }
-            
         }
 
         return (
             <div style={style.colorContainer} onClick={this.hideDownlist.bind(this)}>
                 <div style={{...style.innerBox, left: this.props.left - 92 + 'px', top: this.props.top -(-10) + 'px'}}
                      onClick={this.stop}>
+                     {this.getCurLabelAction()}
                     <Menu style= {style.menu} onClick={this.entityOrPhrase}
                           selectedKeys={[this.state.current]}>
                           {this.getSubMenu()}

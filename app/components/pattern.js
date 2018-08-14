@@ -34,7 +34,22 @@ export class PatternLine extends Component {
         console.log('span is clicked', e)
         let selection = (window.getSelection) ? window.getSelection() : document.getSelection()
         console.log('selection is ',selection)
-        let label = this.getLabelBy(selection.anchorNode.parentNode.id)
+        let labelIndex = this.getLabelIndexBy(selection.anchorNode.parentNode.id)
+        let label = this.props.pattern.labels[labelIndex]
+        if(labelIndex != -1){
+            this.setState({
+                showDownlist: true,
+                top: e.pageY,
+                left: e.pageX,
+                selectStartPos: label.startPos,
+                selectEndPos: label.startPos + label.length,
+                length: label.length,
+                sentence: this.props.pattern.sentence.slice(label.startPos, label.startPos + label.length),
+                hasLabel: true,
+                labelIndex: labelIndex,
+                label: label
+            })
+        }
         console.log('select label is ', label)
     }
 
@@ -57,23 +72,23 @@ export class PatternLine extends Component {
         return spans
     }
 
-    getLabelBy = (id) => {
+    getLabelIndexBy = (id) => {
         let labels = this.props.pattern.labels
         let startPos = 0
         let index = 0
         for (let i in labels){
             let label = labels[i]
             if (startPos < label.startPos) {
-                if(index == id) return null
+                if(index == id) return -1
                 index = index + 1
             }
             if( index == id){
-                return label
+                return i
             }
             index = index + 1
             startPos = label.startPos + label.length
         }
-        return null
+        return -1
     }
 
     getSpanStartPos = () => {
@@ -120,7 +135,8 @@ export class PatternLine extends Component {
                 selectStartPos: selectStartPos,
                 selectEndPos: selectEndPos,
                 length: selection.toString().length,
-                sentence: selection.toString()
+                sentence: selection.toString(),
+                hasLabel: false
             })
         }
     }
@@ -142,6 +158,11 @@ export class PatternLine extends Component {
             id: obj.id,
             type: obj.type
         }, this.props.corpusType)
+    }
+
+    removeLabel = (labelIndex)=> {
+        console.log('remove label for', labelIndex)
+        this.props.removeLabel(this.props.patternId, labelIndex, this.props.corpusType)
     }
 
     render() {
@@ -172,6 +193,7 @@ export class PatternLine extends Component {
             {
                 this.state.showDownlist ?
                     <ColorDownList top={this.state.top} sentence={this.state.sentence} left={this.state.left}
+                                   hasLabel={this.state.hasLabel} labelIndex={this.state.labelIndex} label={this.state.label} removeLabel={this.removeLabel}
                                    intent={this.props.intent} agent={this.props.agent} intentId={this.props.intentId}
                                    hideDownlist={this.hideDownlist} entityOrPhrase={this.entityOrPhrase}/> : ''
             }
