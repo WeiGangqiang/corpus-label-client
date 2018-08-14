@@ -35,3 +35,18 @@ export const entityResult = handleActions({
     },
 }, entityState())
 
+
+const colorGreenArray = ['#81c784', '#66bb6a', '#4caf50', '#43a047', '#388e3c', '#2e7f32', '#aed581', '#9ccc65', '#8bc34a'];
+const phraseState = () => [];
+export const phraseResult = handleActions({
+    'request phrase list'(state, action) {
+        return [...state]
+    },
+    'receive phrase list'(state, action) {
+        const {req, res} = action.payload;
+        res.map((item, index) => {
+            item.color = colorGreenArray[index > 9 ? index - 9 : index]
+        });
+        return [...res]
+    },
+}, phraseState())
