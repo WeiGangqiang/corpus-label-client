@@ -11,23 +11,28 @@ export class PatternLine extends Component {
             left: 0
         }
     }
+    getlabelColor = (label) => {
+        console.log('entity param', this.props.entityParam)
+        console.log('phrase array', this.props.phraseArray)
+        if (label.type == 'entity') {
+            let entity = this.props.entityParam.find((value)=> {
+              return value.id = label.id
+            })
+            return !entity ? 'blue': entity.color
+          } else {
+            let phrase = this.props.phraseArray.find((value) => {
+              return value.id = label.id
+            })
+            return !phrase ? 'green': phrase.color
+          }
+    }
 
-    getSpanStyleBy = (type) => {
-        const style = {
-            entity: {
-                background: 'blue',
-                color: '#fff',
-                padding: '5px 10px',
-                borderRadius: '3px'
-            },
-            similar: {
-                background: 'green',
-                color: '#fff',
-                padding: '5px 10px',
-                borderRadius: '3px'
-            }
+    getSpanStyleBy = (label) => {
+        return {
+            background: this.getlabelColor(label),
+            color: '#fff',
+            padding: '1px 1px',
         }
-        return (type == 'entity') ? style.entity : style.similar
     }
 
     labelSpanSelected = (e) => {
@@ -60,14 +65,14 @@ export class PatternLine extends Component {
         let spans = []
         labels.forEach(label => {
             if (startPos < label.startPos) {
-                spans.push(<span className='corpusBlock' key={spans.length} id={spans.length}>{sentence.slice(startPos, label.startPos)}</span>)
+                spans.push(<span  key={spans.length} id={spans.length}>{sentence.slice(startPos, label.startPos)}</span>)
             }
-            spans.push(<span className='corpusBlock' key={spans.length} id={spans.length}
-                             style={this.getSpanStyleBy(label.type)} onClick={this.labelSpanSelected} >{sentence.slice(label.startPos, label.startPos + label.length)}</span>)
+            spans.push(<span key={spans.length} id={spans.length}
+                             style={this.getSpanStyleBy(label)} onClick={this.labelSpanSelected} >{sentence.slice(label.startPos, label.startPos + label.length)}</span>)
             startPos = label.startPos + label.length
         })
         if (startPos < sentence.length) {
-            spans.push(<span className='corpusBlock' key={spans.length} id={spans.length}>{sentence.slice(startPos)}</span>)
+            spans.push(<span key={spans.length} id={spans.length}>{sentence.slice(startPos)}</span>)
         }
         return spans
     }
@@ -200,6 +205,7 @@ export class PatternLine extends Component {
                     <ColorDownList top={this.state.top} sentence={this.state.sentence} left={this.state.left}
                                    hasLabel={this.state.hasLabel} labelIndex={this.state.labelIndex} label={this.state.label} removeLabel={this.removeLabel}
                                    intent={this.props.intent} agent={this.props.agent} intentId={this.props.intentId}
+                                   entityParam={this.props.entityParam} phraseArray={this.props.phraseArray}
                                    hideDownlist={this.hideDownlist} entityOrPhrase={this.entityOrPhrase}/> : ''
             }
         </Row>)

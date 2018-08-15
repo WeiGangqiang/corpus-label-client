@@ -92,39 +92,6 @@ export class EntityParameters extends Component {
         return (
             <div style={style.entityContainer}>
                 {this.getTitle()}
-                {/*<ul style={style.flexBox}>*/}
-                    {/*{*/}
-                        {/*this.props.entityParam.map((item, i) => {*/}
-                            {/*return <li style={{...style.serveLi, color: '#fff'}} key={item.entity}>*/}
-                            {/*<span style={{*/}
-                                {/*...style.serveLiSpan,*/}
-                                {/*background: 'blue',*/}
-                                {/*border: '1px solid ' + item.color + "'"*/}
-                            {/*}}>{item.name}</span>*/}
-                                {/*{item.valuesShow.map((value, index) => {*/}
-                                    {/*return <span style={{*/}
-                                        {/*...style.serveLiSpan,*/}
-                                        {/*background: 'blue',*/}
-                                        {/*border: '1px solid ' + item.color + "'"*/}
-                                    {/*}} key={index}>{value}</span>*/}
-                                {/*})}*/}
-                                {/*{*/}
-                                    {/*item.values.length > 10 ? item.valuesShow.length <= 10 ?*/}
-                                        {/*<span onClick={this.showMoreValues.bind(this, i)} style={{*/}
-                                            {/*...style.serveLiSpan,*/}
-                                            {/*background: item.color,*/}
-                                            {/*border: '1px solid ' + item.color + "'"*/}
-                                        {/*}}>···</span> : <span onClick={this.showLessValues.bind(this, i)} style={{*/}
-                                            {/*...style.serveLiSpan,*/}
-                                            {/*background: item.color,*/}
-                                            {/*border: '1px solid ' + item.color + "'"*/}
-                                        {/*}}>-</span> : ''*/}
-                                {/*}*/}
-                            {/*</li>*/}
-                        {/*})*/}
-                    {/*}*/}
-                {/*</ul>*/}
-
                 <Table
                     dataSource={this.props.entityParam}
                     columns={this.columns()}

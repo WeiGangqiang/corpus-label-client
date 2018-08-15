@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {PatternLine} from 'components/pattern'
-import {getPattern, deletePattern, putPattern, predict, postPattern} from 'actions/intend'
+import {getPattern, deletePattern, putPattern, predict, postPattern, fetchEntity, getPhrase} from 'actions/intend'
 import {Simplifier} from 'components/Simplifer'
 import { Tabs } from 'antd';
 
@@ -15,12 +15,51 @@ export class PatternList extends Component {
             negativePatterns: [],
             posSimpliferKey: 0,
             negSimpliferKey: 0,
+            entityParam: [],
+            phraseArray:[]
         }
+    }
+
+    getEntityForIntent = (props) =>{
+        let entityUrl = '?agent=' + props.agentName + '&intentId=' + props.intentId
+        console.log('get entity for intent url', entityUrl, )
+        this.props.dispatch(fetchEntity(entityUrl, data => {
+            for (let i = 0; i < data.length; i++) {
+                data[i].valuesF = [...data[i].values]
+                for (let j = 0; j < data[i].valuesF.length; j++) {
+                    let reg = /[\[\]]/g
+                    let labelReg = /\/L[0-9]/g
+                    data[i].valuesF[j] = data[i].valuesF[j].replace(reg, '').replace(labelReg, '')
+                }
+                data[i].valuesShow = [...data[i].valuesF.slice(0, 10)]
+            }
+            console.log('get  entity data', data)
+            this.setState({
+                entityParam: [...data]
+            })
+        }, error => {
+        }))
+    }
+
+    getPhraseForIntent = (props) =>{
+        let getUrl = '?agent=' + props.agentName + '&intentId=' + props.intentId
+        console.log('get phrase url is ', getUrl, props)
+        this.props.dispatch(getPhrase(getUrl
+            , data => {
+                console.log('get phrase data', data)
+                this.setState({
+                    phraseArray: [...data]
+                })
+            }, error => {
+                console.log(error)
+            }))
     }
 
     componentWillReceiveProps(props) {
         this.getPatternList(props, "positive")
         this.getPatternList(props, "negative")
+        this.getEntityForIntent(props)
+        this.getPhraseForIntent(props)
     }
 
     getPatternList = (props, corpusType) => {
@@ -178,11 +217,14 @@ export class PatternList extends Component {
 
 
     getPatternViews = (corpusType) => {
+        console.log('entity param', this.state.entityParam)
+        console.log('phrase array', this.state.phraseArray)
         let patternList = this.getPatternListBy(corpusType)
         return patternList.map((pattern, patternId) => {
             return (<PatternLine key={patternId} patternId={patternId} pattern={pattern}
                                  removePatternBy={this.removePatternBy} updateSelectLabel={this.updateSelectLabel}
                                  agent={this.props.agentName} intent={this.props.intent}
+                                 entityParam={this.state.entityParam} phraseArray={this.state.phraseArray}
                                  intentId={this.props.intentId} corpusType={corpusType} removeLabel={this.removeLabel}/>)
         })
     }

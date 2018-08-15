@@ -10,37 +10,8 @@ export class ColorDownList extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            phraseArray: [],
-            entityParam: [],
             current: ''
         }
-    }
-
-    componentWillMount() {
-        this.props.dispatch(fetchEntity('?agent=' + this.props.agent + '&intentId=' + this.props.intentId, data => {
-            for (let i = 0; i < data.length; i++) {
-                data[i].valuesF = [...data[i].values]
-                for (let j = 0; j < data[i].valuesF.length; j++) {
-                    let reg = /[\[\]]/g
-                    let labelReg = /\/L[0-9]/g
-                    data[i].valuesF[j] = data[i].valuesF[j].replace(reg, '').replace(labelReg, '')
-                }
-                data[i].valuesShow = [...data[i].valuesF.slice(0, 10)]
-            }
-            this.setState({
-                entityParam: [...data]
-            })
-        }, error => {
-
-        }))
-        this.props.dispatch(getPhrase('?agent=' + this.props.agent + '&intentId=' + this.props.intentId
-            , data => {
-                this.setState({
-                    phraseArray: [...data]
-                })
-            }, error => {
-                console.log(error)
-            }))
     }
 
     hideDownlist() {
@@ -60,7 +31,7 @@ export class ColorDownList extends Component {
     }
 
     updatePhraseLabel = (phraseId) => {
-      let item = this.state.phraseArray.find(item => item.phraseId === phraseId)
+      let item = this.props.phraseArray.find(item => item.phraseId === phraseId)
       let that = this
       this.props.dispatch(putPhrase({
           similars: [...item.similars, this.props.sentence],
@@ -115,11 +86,22 @@ export class ColorDownList extends Component {
       let menuStyle = {
         borderBottom: '1px solid #0099CC',
       }
-      this.state.entityParam.forEach(entity => {
+
+      this.props.entityParam.forEach(entity => {
+        if(that.props.hasLabel && that.props.label.type == 'entity'){
+          if(entity.id == that.props.label.id){
+            return
+          }
+        }
         subMenus.push(<Menu.Item style={menuStyle} key={entity.name + '###entity'}>{that.getEntityDisplay(entity)}</Menu.Item>)
       })
 
-      this.state.phraseArray.forEach(phrase => {
+      this.props.phraseArray.forEach(phrase => {
+        if(that.props.hasLabel && that.props.label.type == 'phrase'){
+          if(phrase.id == that.props.label.id){
+            return
+          }
+        }
         subMenus.push(<Menu.Item style={menuStyle}  key={phrase.phraseId + '###phrase'}>{that.getPhraseDisPlay(phrase)}</Menu.Item>)
       })
 
@@ -135,12 +117,12 @@ export class ColorDownList extends Component {
     findLabelDesc = ()=> {
       let label = this.props.label
       if (label.type == 'entity') {
-        let entity = this.state.entityParam.find((value)=> {
+        let entity = this.props.entityParam.find((value)=> {
           return value.id = label.id
         })
         return !entity ? '': this.getEntityDisplay(entity)
       } else {
-        let phrase = this.state.phraseArray.find((value) => {
+        let phrase = this.props.phraseArray.find((value) => {
           return value.id = label.id
         })
         return !phrase ? '': this.getPhraseDisPlay(phrase)
