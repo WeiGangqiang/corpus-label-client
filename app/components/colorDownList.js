@@ -154,11 +154,15 @@ export class ColorDownList extends Component {
 
       const style = {
         labelAction: {
-          height: '30px',
+          height: '40px',
           background: '#DDDDDD',
+          borderBottom: '1px solid #0099CC',
+          paddingLeft:'15px',
+          paddingTop:'3px'
         },
         detail: {
-          float: 'left'
+          float: 'left',
+          marginTop: '5px'
         },
         button: {
           float: 'right'
@@ -180,6 +184,7 @@ export class ColorDownList extends Component {
             },
             innerBox: {
                 position: 'absolute',
+                background: '#DDDDDD',
             },
             innerLi: {
                 display: 'inline-block'

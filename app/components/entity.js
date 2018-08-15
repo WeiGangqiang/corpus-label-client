@@ -59,7 +59,8 @@ export class EntityParameters extends Component {
                 background: '#fbfbfb',
                 borderRadius: '15px',
                 marginBottom: '15px',
-                padding: '0 15px'
+                padding: '0 15px',
+                paddingEnd: '10px'
             },
             flexBox: {
                 display: 'flex',
