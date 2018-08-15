@@ -112,12 +112,15 @@ export class ColorDownList extends Component {
     getSubMenu = () =>{
       let subMenus = []
       let that = this
+      let menuStyle = {
+        borderBottom: '1px solid #0099CC',
+      }
       this.state.entityParam.forEach(entity => {
-        subMenus.push(<Menu.Item key={entity.name + '###entity'}>{that.getEntityDisplay(entity)}</Menu.Item>)
+        subMenus.push(<Menu.Item style={menuStyle} key={entity.name + '###entity'}>{that.getEntityDisplay(entity)}</Menu.Item>)
       })
 
       this.state.phraseArray.forEach(phrase => {
-        subMenus.push(<Menu.Item key={phrase.phraseId + '###phrase'}>{that.getPhraseDisPlay(phrase)}</Menu.Item>)
+        subMenus.push(<Menu.Item style={menuStyle}  key={phrase.phraseId + '###phrase'}>{that.getPhraseDisPlay(phrase)}</Menu.Item>)
       })
 
       subMenus.push(<Menu.Item key={'453543###addNew'}>新增</Menu.Item>)
@@ -189,7 +192,7 @@ export class ColorDownList extends Component {
 
         return (
             <div style={style.colorContainer} onClick={this.hideDownlist.bind(this)}>
-                <div style={{...style.innerBox, left: this.props.left - 92 + 'px', top: this.props.top -(-10) + 'px'}}
+                <div style={{...style.innerBox, left: this.props.left - 42 + 'px', top: this.props.top -(-10) + 'px'}}
                      onClick={this.stop}>
                      {this.getCurLabelAction()}
                     <Menu style= {style.menu} onClick={this.entityOrPhrase}
