@@ -106,9 +106,13 @@ export class Simplifier extends Component {
     }
 
     getSimpliferCheckButtern = () => {
+        const styleButten = {
+            width: '100px'
+        }
+
         return <Row>
-                <Col span ={12}>  <Button type="primary" onClick = {this.addSimpliferSentence} icon ="check">正确</Button> </Col>
-                <Col span ={12}> <Button type="danger" onClick = {this.addOrignalSentence} icon ="close">错误</Button> </Col>
+                <Col span ={12}><Button type="primary" style={styleButten} onClick = {this.addSimpliferSentence} icon ="check">正确</Button> </Col>
+                <Col span ={12}><Button type="danger" style={styleButten} onClick = {this.addOrignalSentence} icon ="close">错误</Button> </Col>
                 </Row>
     }
 
@@ -116,7 +120,7 @@ export class Simplifier extends Component {
         const {getFieldDecorator} = this.props.form
         const style = {
             simplifyBox: {
-                width: '1000px',
+                width: '960px',
             },
             add:{
                 marginTop: '5px',
@@ -137,18 +141,18 @@ export class Simplifier extends Component {
                     <Form layout="inline">
                         <FormItem>
                             {getFieldDecorator('newCorpus', {})(
-                                <Input style={{ width: '1000px' }} placeholder="请输入新的语料" onPressEnter={this.onInputEnter}
+                                <Input style={{ width: '960px' }} placeholder="请输入新的语料" onPressEnter={this.onInputEnter}
                                     onChange={this.corpusInput} onBlur={this.corpusBlur} addonAfter={<Icon onClick={this.addCorpusToIntent} type="plus" />} />
                              )}
                         </FormItem>
                     </Form>
                 </Col>
-                <Col span={20}>
+                <Col span={19}>
                     {this.state.isSimplified ?
-                        <Input style={{ width: '800px' }} addonBefore="简化后：" value={this.state.simCorpus} disabled={true}/> : ''
+                        <Input style={{ width: '750px' }} addonBefore="简化后：" value={this.state.simCorpus} disabled={true}/> : ''
                     }
                 </Col>
-                <Col span={4}>
+                <Col span={5}>
                  {  this.state.isSimplified ?
                     this.getSimpliferCheckButtern() : ''}
                 </Col>

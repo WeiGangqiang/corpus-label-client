@@ -194,7 +194,7 @@ export class PatternList extends Component {
     render() {
         const style = {
             pBox: {
-                width: '1000px',
+                width: '960px',
                 height: '300px',
                 // marginTop: '15px',
                 border: '1px solid #dadada',
@@ -209,7 +209,7 @@ export class PatternList extends Component {
                 marginBottom: '15px'
             },
             corpusTab: {
-                width: '1000px',
+                width: '960px',
                 height: '450px',
             },
             corpusTabPane: {
