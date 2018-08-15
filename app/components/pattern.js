@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Button, Row, Col} from 'antd'
+import {Button, Row, Col, Icon} from 'antd'
 import {ColorDownList} from "./colorDownList";
 
 export class PatternLine extends Component {
@@ -181,11 +181,16 @@ export class PatternLine extends Component {
                 marginBottom: 0,
                 lineHeight: '40px',
                 fontSize: '14px'
+            },
+            delete:{
+                marginTop: '5px',
+                fontSize :'20px',
+                color: 'red'
             }
         }
         return (<Row style={style.corpusBox}>
             <Col style={style.colRight}>
-                <Button onClick={this.removePattern} icon="close"></Button>
+                <span onClick={this.removePattern}> <Icon type="close" style={style.delete} /></span>
             </Col>
             <Col >
                 <p style={style.corpusP} onMouseUp={this.selectWord}>{this.getSpans()}</p>
