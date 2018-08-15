@@ -221,7 +221,7 @@ export class PatternList extends Component {
 
         return (<div style={style.corpusBox}>
             {this.getTitle()}
-            <Tabs style={style.corpusTab} defaultActiveKey="1" onChange={this.updateTabPane}>
+            <Tabs type="card" style={style.corpusTab} defaultActiveKey="1" onChange={this.updateTabPane}>
                 <TabPane style={style.corpusTabPane} tab="正样本" key="positive">
                     <div style={style.pBox}> {this.getPatternViews("positive")}</div>
                     <Simplifier key={this.state.posSimpliferKey} corpusType="positive" addPattern={this.addPatternWithPredict}></Simplifier>

@@ -107,8 +107,8 @@ export class Simplifier extends Component {
 
     getSimpliferCheckButtern = () => {
         return <Row>
-                <Col span ={12}>  <Button onClick = {this.addSimpliferSentence} icon ="check">正确</Button> </Col>
-                <Col span ={12}> <Button onClick = {this.addOrignalSentence} icon ="close">错误</Button> </Col>
+                <Col span ={12}>  <Button type="primary" onClick = {this.addSimpliferSentence} icon ="check">正确</Button> </Col>
+                <Col span ={12}> <Button type="danger" onClick = {this.addOrignalSentence} icon ="close">错误</Button> </Col>
                 </Row>
     }
 
