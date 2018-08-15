@@ -44,7 +44,7 @@ export class Simplifier extends Component {
         let that = this
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log('update')
+                console.log('update', values.newCorpus)
                 that.setState({
                     newCorpus: values.newCorpus
                 })
