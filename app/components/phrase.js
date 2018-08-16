@@ -17,7 +17,7 @@ export class PhraseList extends Component {
         super(props)
         this.state = {
             showModalFlag: false,
-            phraseText: '',
+            inputKey: 0,
             phrase: {}
         }
     }
@@ -60,22 +60,16 @@ export class PhraseList extends Component {
 
     }
 
-    getPhraseText(e) {
-        this.setState({
-            phraseText: e.target.value
-        })
-        e.target.value = ''
-    }
-
-    addPhraseText(phrase) {
-        const phraseText = this.state.phraseText.replace(/，/g, ',').split(',');
+    addPhraseText(phrase, e) { 
+        console.log('get phrase test', e.target.value)
+        this.setState({inputKey: this.state.inputKey + 1})
+        const phraseText = e.target.value.replace(/，/g, ',').split(',');
         phrase.similars = phrase.similars.concat(phraseText)
         this.props.dispatch(putPhrase({
             ...phrase,
             intent: this.props.intent,
             agent: this.props.agent
         }, data => {
-            // this.hideAddPhrase()
             this.props.updatePhraseArray()
         }));
 
@@ -92,15 +86,30 @@ export class PhraseList extends Component {
     }
 
     columns = () => {
-        const {getFieldDecorator} = this.props.form
+        const style = {
+            phrase:{
+                display:'inline-block',
+                border: '1px solid #dadada',
+                margin:'7px 15px 7px 0',
+                padding:'5px 10px'
+            },
+            input:{
+                display:'inline-block',
+            },
+            delete:{
+                marginLeft: '5px'
+            }
+
+        }
         const that = this
         return [
             {
-                title: '近义词类名',
+                title: '序号',
                 dataIndex: 'phraseId',
                 key: 'phraseId',
+                width: '10%',
                 render(text, record, index) {
-                    return <span className='corpusSpan' style={{background: record.color}}>{record.similars[0]}</span>
+                    return <span className='corpusSpan' style={{background: record.color}}>{index+1}</span>
                 }
             },
             {
@@ -112,30 +121,19 @@ export class PhraseList extends Component {
                     return <div>
                         {
                             record.similars.map((item,i) => {
-                                return <div style={{display:'inline-block',border: '1px solid #dadada',margin:'7px 15px 7px 0',padding:'5px 10px'}} key={i}>{item}<Icon
-                                    onClick={that.delPhraseText.bind(that, record, i)} type="close"/></div>
+                                return <div style={style.phrase} key={i}>{item}<Icon style={style.delete} onClick={that.delPhraseText.bind(that, record, i)} type="close"/></div>
                             })
                         }
+                        <div style={style.input} >
+                            <Input placeholder="请输入" type="text" key={that.state.inputKey}
+                                onPressEnter={that.addPhraseText.bind(that, record)}
+                            />
+                        </div>
                     </div>
                 }
             },
             {
-                title: '添加',
-                dataIndex: 'add',
-                key: 'add',
-                render(text, record, index) {
-                    return <div style={{paddingRight: '80px'}}>
-                        <Input
-                            placeholder="请输入近义词"
-                            type="text"
-                            onBlur={that.getPhraseText.bind(that)}
-                        />
-                        <Button style={{float:'right',marginRight: '-80px'}} onClick={that.addPhraseText.bind(that, record)}>添加</Button>
-                        </div>
-                }
-            },
-            {
-                title: '删除',
+                title: '操作',
                 dataIndex: 'delete',
                 key: 'delete',
                 render(text, record, index) {
