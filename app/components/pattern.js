@@ -161,6 +161,7 @@ export class PatternLine extends Component {
             id: obj.id,
             type: obj.type
         }, this.props.corpusType)
+        
     }
 
     removeLabel = (labelIndex)=> {
