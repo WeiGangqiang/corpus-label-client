@@ -98,7 +98,7 @@ export class EntityParameters extends Component {
                     bordered
                     pagination={false}
                 />
-
+                <div style={{ height: '10px' }}> </div>
             </div>
 
         )
