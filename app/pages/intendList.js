@@ -143,8 +143,10 @@ export default class intendList extends Component {
             },
             headerStyle:{
                 background: '#0099CC',
-            }
-            
+            },
+            body: {
+                width: '80%'
+            }         
         };
         return <Spin spinning={intendResult.loading}>
             <div style={style.innerContainer}>
@@ -153,7 +155,7 @@ export default class intendList extends Component {
                     <IntentList originEntity={this.state.originEntity} intentId={this.state.intentId}
                                 getIntent={this.getIntent}/>
                     <div style={{height: '100%', overflow: 'auto'}}>
-                        {!intendResult.loading ? <div className="container">
+                        {!intendResult.loading ? <div className="container" style={style.body}>
                             <IntentDesc name={this.state.name} zhName={this.state.zhName}
                                         modelPath={this.state.modelPath}/>
                             <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues}

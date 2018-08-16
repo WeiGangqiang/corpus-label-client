@@ -206,7 +206,10 @@ export class PatternList extends Component {
     getTitle = () => {
         const subtitleCss = {
             fontSize: '20px',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            paddingLeft: '15px',
+            marginBottom: '0px',
+            lineHeight: '40px'
         }
         return <p style={subtitleCss}> 用户语料 </p>
     }
@@ -236,23 +239,21 @@ export class PatternList extends Component {
     render() {
         const style = {
             pBox: {
-                width: '960px',
-                height: '300px',
-                // marginTop: '15px',
+                height: '350px',
                 border: '1px solid #dadada',
                 overflow: 'auto'
             },
             corpusBox: {
                 background: '#fbfbfb',
-                padding: '15px',
+                padding: '10px, 15px',
                 width: '100%',
                 height: '100%',
                 borderRadius: '15px',
                 marginBottom: '15px'
             },
             corpusTab: {
-                width: '960px',
-                height: '450px',
+                padding: '10px 15px',
+                height: '500px',
             },
             corpusTabPane: {
                 // paddingTop: '20px'
@@ -262,7 +263,7 @@ export class PatternList extends Component {
         const TabPane = Tabs.TabPane;
 
         return (<div style={style.corpusBox}>
-            {this.getTitle()}
+               {this.getTitle()}
             <Tabs type="card" style={style.corpusTab} defaultActiveKey="1" onChange={this.updateTabPane}>
                 <TabPane style={style.corpusTabPane} tab="正样本" key="positive">
                     <div style={style.pBox}> {this.getPatternViews("positive")}</div>
