@@ -91,7 +91,6 @@ export class IntentList extends Component {
                     >
                         {this.renderTreeNodes(this.props.originEntity)}
                     </Tree>
-
                 </div>
                 <div style={{
                     ...style.corpusBox,

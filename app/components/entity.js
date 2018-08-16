@@ -32,6 +32,7 @@ export class EntityParameters extends Component {
             dataIndex: 'entity',
             key: 'entity',
             width: '20%',
+            className: 'tableIndex',
             render(text, record, index) {
                 return <span className='corpusSpan' style={{background: record.color}}>{text}</span>
             }

@@ -108,6 +108,7 @@ export class PhraseList extends Component {
                 dataIndex: 'phraseId',
                 key: 'phraseId',
                 width: '10%',
+                className: 'tableIndex',
                 render(text, record, index) {
                     return <span className='corpusSpan' style={{background: record.color}}>{index+1}</span>
                 }
