@@ -68,7 +68,7 @@ export default class intendList extends Component {
     componentDidMount() {
     }
 
-    getIntent(item, index) {
+    getIntent(item) {
         this.initData(item)
     }
 
@@ -146,7 +146,7 @@ export default class intendList extends Component {
             <div style={style.innerContainer}>
                 <Link className='bread-cruft' to={'/selectService'}><Icon type='left'></Icon>服务器选择</Link>
                 <div style={style.innerBox} className='intentContainer'>
-                    <IntentList originEntity={this.state.originEntity} intentId={this.state.intentId}
+                    <IntentList originEntity={[intendResult.data]} intentId={this.state.intentId}
                                 getIntent={this.getIntent}/>
                     <div style={{height: '100%', overflow: 'auto'}}>
                         {!intendResult.loading ? <div className="container">
