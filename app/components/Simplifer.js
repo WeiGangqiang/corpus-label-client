@@ -40,22 +40,11 @@ export class Simplifier extends Component {
         console.log('corpus input enter : ', e)
     }
 
-    corpusInput = () => {
-        let that = this
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                console.log('update', values.newCorpus)
-                that.setState({
-                    newCorpus: values.newCorpus
-                })
-            }
-        })
-    }
-
     corpusBlur = () => {
         let that = this
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                console.log('update by blur', values.newCorpus)
                 that.setState({
                     newCorpus: values.newCorpus
                 })
@@ -85,7 +74,6 @@ export class Simplifier extends Component {
         let that = this
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log('that is', )
                 that.doSimplifer(values.newCorpus)
             }
         })
@@ -146,7 +134,7 @@ export class Simplifier extends Component {
                         <FormItem style={{width: '100%'}} wrapperCol={style.wrapperCol}>
                             {getFieldDecorator('newCorpus', {})(
                                 <Input style={{ width: '100%' }} placeholder="请输入新的语料" onPressEnter={this.onInputEnter}
-                                    onChange={this.corpusInput} onBlur={this.corpusBlur} addonAfter={<Icon onClick={this.addCorpusToIntent} type="plus" />} />
+                                    onBlur={this.corpusBlur} addonAfter={<Icon onClick={this.addCorpusToIntent} type="plus" />} />
                              )}
                         </FormItem>
                     </Form>

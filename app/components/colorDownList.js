@@ -52,7 +52,8 @@ export class ColorDownList extends Component {
         intent: this.props.intent,
         agent: this.props.agent
       }, data => {
-        that.props.entityOrPhrase({ id: data.id, type: 'phrase' })
+        console.log('add phrase success rsp is', data)
+        that.props.entityOrPhrase({ id: data.phraseId, type: 'phrase' })
       }))
     }
 
@@ -89,6 +90,7 @@ export class ColorDownList extends Component {
       let noMargin = {
           margin: 0
       }
+      console.log('this phrase id', this.props.phraseArray)
 
       this.props.entityParam.forEach(entity => {
         if(that.props.hasLabel && that.props.label.type == 'entity'){
@@ -101,7 +103,7 @@ export class ColorDownList extends Component {
 
       this.props.phraseArray.forEach(phrase => {
         if(that.props.hasLabel && that.props.label.type == 'phrase'){
-          if(phrase.id == that.props.label.id){
+          if(phrase.phraseId == that.props.label.id){
             return
           }
         }
@@ -126,8 +128,9 @@ export class ColorDownList extends Component {
         return !entity ? '': this.getEntityDisplay(entity)
       } else {
         let phrase = this.props.phraseArray.find((value) => {
-          return value.id = label.id
+          return value.phraseId == label.id
         })
+        console.log('find label desc', phrase, label, this.props.phraseArray)
         return !phrase ? '': this.getPhraseDisPlay(phrase)
       }
     }

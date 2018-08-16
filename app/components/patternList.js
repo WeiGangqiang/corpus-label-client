@@ -15,8 +15,7 @@ export class PatternList extends Component {
             negativePatterns: [],
             posSimpliferKey: 0,
             negSimpliferKey: 0,
-            entityParam: [],
-            phraseArray:[]
+            entityParam: []
         }
     }
 
@@ -40,26 +39,11 @@ export class PatternList extends Component {
         }, error => {
         }))
     }
-
-    getPhraseForIntent = (props) =>{
-        let getUrl = '?agent=' + props.agentName + '&intentId=' + props.intentId
-        console.log('get phrase url is ', getUrl, props)
-        this.props.dispatch(getPhrase(getUrl
-            , data => {
-                console.log('get phrase data', data)
-                this.setState({
-                    phraseArray: [...data]
-                })
-            }, error => {
-                console.log(error)
-            }))
-    }
-
+    
     componentWillReceiveProps(props) {
         this.getPatternList(props, "positive")
         this.getPatternList(props, "negative")
         this.getEntityForIntent(props)
-        this.getPhraseForIntent(props)
     }
 
     getPatternList = (props, corpusType) => {
@@ -225,7 +209,7 @@ export class PatternList extends Component {
             return (<PatternLine key={patternId} patternId={patternId} pattern={pattern}
                                  removePatternBy={this.removePatternBy} updateSelectLabel={this.updateSelectLabel}
                                  agent={this.props.agentName} intent={this.props.intent}
-                                 entityParam={this.state.entityParam} phraseArray={this.state.phraseArray}
+                                 entityParam={this.state.entityParam} phraseArray={this.props.phraseArray}
                                  intentId={this.props.intentId} corpusType={corpusType} removeLabel={this.removeLabel}/>)
         })
     }

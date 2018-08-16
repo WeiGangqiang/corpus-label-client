@@ -161,7 +161,7 @@ export default class intendList extends Component {
                             <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues}
                                               showMoreValues={this.showMoreValues}/>
                             <PatternList agentName={agentName} intent={this.state.name} intentId={this.state.intentId}
-                                         corpusType={this.state.type} updatePhrase={this.getPhrase}/>
+                                         corpusType={this.state.type} updatePhrase={this.getPhrase} phraseArray={this.state.phraseArray}/>
 
                             <PhraseList intent={this.state.name} agent={agentName} phraseArray={this.state.phraseArray}
                                         updatePhraseArray={this.getPhrase}/>
