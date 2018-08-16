@@ -92,7 +92,7 @@ export class PhraseList extends Component {
             intent: this.props.intent,
             agent: this.props.agent
         }, data => {
-
+            this.props.updatePhraseArray()
         },error => {
             console.log(error)
         }))
