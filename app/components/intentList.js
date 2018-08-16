@@ -13,10 +13,6 @@ export class IntentList extends Component {
         }
     }
 
-    // getIntent(item) {
-    //     this.props.getIntent(item)
-    // }
-
     selectNode =(selectKey,e) => {
         if(e.selectedNodes.length && !e.selectedNodes[0].props.dataRef.children.length){
             this.props.getIntent(e.selectedNodes[0].props.dataRef)

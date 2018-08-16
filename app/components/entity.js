@@ -32,7 +32,6 @@ export class EntityParameters extends Component {
             dataIndex: 'entity',
             key: 'entity',
             width: '20%',
-            className: 'tableIndex',
             render(text, record, index) {
                 return <span className='corpusSpan' style={{background: record.color}}>{text}</span>
             }
@@ -46,7 +45,7 @@ export class EntityParameters extends Component {
                     return (<div> <span> {text.join()} </span></div>)
                 } else if(record.valuesShow.length <= 10){
                     return (<div> 
-                        <span>  {text.join()} </span>
+                        <span style={{margin: '7px 7px 7px 0',display: 'inline-block'}}>  {text.join()} </span>
                         <span style={{paddingLeft: '2px', fontWeight: 'bold', color:record.color}} onClick={that.showMoreValues.bind(that, index)}><Icon type='plus'/></span>
                         </div>)
                 } else {

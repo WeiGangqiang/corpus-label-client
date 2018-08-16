@@ -163,7 +163,7 @@ export default class intendList extends Component {
                             <PatternList agentName={agentName} intent={this.state.name} intentId={this.state.intentId}
                                          corpusType={this.state.type} updatePhrase={this.getPhrase} phraseArray={this.state.phraseArray}/>
 
-                            <PhraseList intent={this.state.name} agent={agentName} phraseArray={this.state.phraseArray}
+                            <PhraseList intent={this.state.name} agent={agentName} intentId={this.state.intentId} phraseArray={this.state.phraseArray}
                                         updatePhraseArray={this.getPhrase}/>
                         </div> : ''}
                     </div>

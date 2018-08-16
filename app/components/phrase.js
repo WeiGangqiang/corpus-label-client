@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {putPhrase, deletePhrase} from 'actions/intend'
+import {putPhrase, deletePhrase, postPhrase} from 'actions/intend'
 import {Table,Form,Button,Input,Icon} from 'antd'
 
 
@@ -85,6 +85,20 @@ export class PhraseList extends Component {
         return <p style={subtitleCss}> 近义词列表 </p>
     }
 
+    addNewPhrase = (e) => {
+        this.props.dispatch(postPhrase({
+            similars: e.target.value.replace('，',',').split(','),
+            intentId: this.props.intentId,
+            intent: this.props.intent,
+            agent: this.props.agent
+        }, data => {
+
+        },error => {
+            console.log(error)
+        }))
+        e.target.value = ''
+    }
+
     columns = () => {
         const style = {
             phrase:{
@@ -156,6 +170,31 @@ export class PhraseList extends Component {
 
             tableBox: {
                 marginBottom: '20px'
+            },
+
+            plus:{
+                height: '40px',
+                lineHeight: '40px',
+                border: '1px solid #dadada',
+                borderTop: 'none',
+                cursor: 'pointer'
+            },
+            plusDiv:{
+                width: '10%',
+                textAlign: 'center',
+                display: 'inline-block',
+                borderRight: '1px solid #dadada'
+            },
+            plusDivSpan:{
+                padding: '5px 10px',
+                borderRadius:'3px',
+                background: 'green',
+                fontSize: '14px',
+                color: '#fff'
+            },
+            plusInputDiv:{
+                display: 'inline-block',
+                paddingLeft: '5px'
             }
         }
         return (
@@ -167,6 +206,15 @@ export class PhraseList extends Component {
                     bordered
                     pagination={false}
                 />
+                <div style={style.plus}>
+                    <div style={style.plusDiv}>
+                        <span style={style.plusDivSpan}>{this.props.phraseArray.length + 1}</span>
+                    </div>
+                    <div style={style.plusInputDiv}>
+                        <Input type="text" onPressEnter={this.addNewPhrase}/>
+                    </div>
+
+                </div>
                 <div style = {{height: '10px'}}> </div>
             </div>)
 

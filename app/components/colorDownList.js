@@ -85,7 +85,7 @@ export class ColorDownList extends Component {
       let subMenus = []
       let that = this
       let menuStyle = {
-        borderBottom: '1px solid #0099CC',
+        borderTop: '1px solid #dadada',
       }
       let noMargin = {
           margin: 0
@@ -98,7 +98,7 @@ export class ColorDownList extends Component {
             return
           }
         }
-        subMenus.push(<Menu.Item className="corpusItem" style={{...menuStyle,...noMargin}} key={entity.name + '###entity'}>{that.getEntityDisplay(entity)}</Menu.Item>)
+        subMenus.push(<Menu.Item className="corpusItem" style={{...noMargin}} key={entity.name + '###entity'}>{that.getEntityDisplay(entity)}</Menu.Item>)
       })
 
       this.props.phraseArray.forEach(phrase => {
@@ -107,10 +107,10 @@ export class ColorDownList extends Component {
             return
           }
         }
-        subMenus.push(<Menu.Item style={{...menuStyle,...noMargin}} className="corpusItem" key={phrase.phraseId + '###phrase'}>{that.getPhraseDisPlay(phrase)}</Menu.Item>)
+        subMenus.push(<Menu.Item style={{...noMargin}} className="corpusItem" key={phrase.phraseId + '###phrase'}>{that.getPhraseDisPlay(phrase)}</Menu.Item>)
       })
 
-      subMenus.push(<Menu.Item style={{...noMargin}} className="corpusItem" key={'453543###addNew'}>新增</Menu.Item>)
+      subMenus.push(<Menu.Item style={{...menuStyle,...noMargin}} className="corpusItem" key={'453543###addNew'}>新增</Menu.Item>)
       return subMenus
     }
 
@@ -143,8 +143,8 @@ export class ColorDownList extends Component {
       const style = {
         labelAction: {
           height: '40px',
-          background: '#DDDDDD',
-          borderBottom: '1px solid #0099CC',
+          background: '#eee',
+          borderBottom: '1px solid #dadada',
           paddingLeft:'15px',
           paddingTop:'3px',
             lineHeight: '32px'
@@ -173,7 +173,7 @@ export class ColorDownList extends Component {
             },
             innerBox: {
                 position: 'absolute',
-                background: '#DDDDDD',
+                background: '#eee',
                 boxShadow: '0px 0px 5px 0px #ccc'
             },
             innerLi: {
@@ -181,7 +181,8 @@ export class ColorDownList extends Component {
             },
             menu: {
               background: '#eee',
-              float:'left'
+              float:'left',
+                width:'100%'
             }
         }
 
