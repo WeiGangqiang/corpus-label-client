@@ -12,8 +12,6 @@ export class PatternLine extends Component {
         }
     }
     getlabelColor = (label) => {
-        console.log('entity param', this.props.entityParam)
-        console.log('phrase array', this.props.phraseArray)
         if (label.type == 'entity') {
             let entity = this.props.entityParam.find((value)=> {
               return value.id = label.id
@@ -175,11 +173,10 @@ export class PatternLine extends Component {
             corpusBox:{
                 borderBottom: '1px solid #dadada',
                 paddingLeft: '15px',
-                paddingRight: '40px',
+                paddingRight: '10px',
             },
             colRight:{
                 float: 'right',
-                marginRight: '-40px',
                 marginTop: '4px'
             },
             corpusP:{
@@ -190,12 +187,11 @@ export class PatternLine extends Component {
             delete:{
                 marginTop: '5px',
                 fontSize :'20px',
-                color: 'red'
             }
         }
         return (<Row style={style.corpusBox}>
             <Col style={style.colRight}>
-                <span onClick={this.removePattern}> <Icon type="close" style={style.delete} /></span>
+                <span onClick={this.removePattern}> <Icon type="delete" style={style.delete} /></span>
             </Col>
             <Col >
                 <p style={style.corpusP} onMouseUp={this.selectWord}>{this.getSpans()}</p>
