@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Table } from 'antd'
+import { Table , Icon} from 'antd'
 
 export class EntityParameters extends Component {
     constructor(props) {
@@ -26,10 +26,12 @@ export class EntityParameters extends Component {
 
     columns = () => {
         const that = this
+
         return [{
             title: '槽位名',
             dataIndex: 'entity',
             key: 'entity',
+            width: '20%',
             render(text, record, index) {
                 return <span className='corpusSpan' style={{background: record.color}}>{text}</span>
             }
@@ -37,22 +39,27 @@ export class EntityParameters extends Component {
             title: '槽位值',
             dataIndex: 'valuesShow',
             key: 'valuesShow',
+            width: '80%',
             render(text, record, index) {
-                return text.join()
+                if(record.values.length < 10){
+                    return (<div> <span> {text.join()} </span></div>)
+                } else if(record.valuesShow.length <= 10){
+                    return (<div> 
+                        <span>  {text.join()} </span>
+                        <span style={{paddingLeft: '2px', fontWeight: 'bold', color:record.color}} onClick={that.showMoreValues.bind(that, index)}><Icon type='plus'/></span>
+                        </div>)
+                } else {
+                    return (<div> 
+                        <span>  {text.join()} </span>
+                        <span style={{paddingLeft: '2px', fontWeight: 'bold', color:record.color}}  onClick={that.showLessValues.bind(that, index)}><Icon type='minus'/></span>
+                        </div>)
+                }
             }
-        }, {
-            title: '展开',
-            dataIndex: 'address',
-            key: 'address',
-            render(text, record, index) {
-                return record.values.length > 10 ? record.valuesShow.length <= 10 ?
-                    <span onClick={that.showMoreValues.bind(that, index)}>···</span> : <span onClick={that.showLessValues.bind(that, index)}>-</span> : ''
-            }
-        }]
+        }
+    ]
     }
 
     render() {
-
         const style = {
             entityContainer: {
                 marginTop: '15px',
@@ -61,32 +68,7 @@ export class EntityParameters extends Component {
                 marginBottom: '15px',
                 padding: '0 15px',
                 paddingEnd: '10px'
-            },
-            flexBox: {
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'space-start',
-                flexDirection: 'column',
-                minHeight: '200px',
-                background: '#fbfbfb',
-                width: '100%',
-                height: '100%',
-                borderRadius: '15px',
-                marginBottom: '15px',
-                overflow: 'auto',
-            },
-            serveLi: {
-                fontSize: '14px',
-                borderBottom: '1px solid blue'
-            },
-            serveLiSpan: {
-                marginRight: '15px',
-                padding: '5px 10px',
-                borderRadius: '3px',
-                cursor: 'pointer',
-                display: 'inline-block',
-                margin: '7px 15px 7px 0px'
-            },
+            }
         }
 
         return (
