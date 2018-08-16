@@ -150,11 +150,12 @@ export class ColorDownList extends Component {
           background: '#DDDDDD',
           borderBottom: '1px solid #0099CC',
           paddingLeft:'15px',
-          paddingTop:'3px'
+          paddingTop:'3px',
+            lineHeight: '32px'
         },
         detail: {
           float: 'left',
-          marginTop: '5px'
+          margin: '0px'
         },
         button: {
           float: 'right'
@@ -177,6 +178,7 @@ export class ColorDownList extends Component {
             innerBox: {
                 position: 'absolute',
                 background: '#DDDDDD',
+                boxShadow: '0px 0px 5px 0px #ccc'
             },
             innerLi: {
                 display: 'inline-block'
