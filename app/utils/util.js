@@ -30,7 +30,7 @@ export const arrayToDisc = (arr, parentObj) => {
 
     if(keyPath){
         let sonObj = {
-            key:arr[0].modelPath.replace(/\:/g,'').match('(.*)'+keyPath)[0],
+            key:arr[0].modelPath.replace(/\:/g,'/').match('(.*)'+keyPath)[0],
             title:keyPath,
             children: [],
             intentId: arr[0].intentId,

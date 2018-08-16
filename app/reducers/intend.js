@@ -16,7 +16,7 @@ export const intendResult = handleActions({
     },
     'receive intend list'(state, action) {
         let {req, res} = action.payload;
-        res = getDisc(res)
+        res = getDisc(res).children[0]
         return {data: {...res.children[0]}, loading: false}
     },
 }, intendState)

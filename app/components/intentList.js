@@ -8,7 +8,8 @@ export class IntentList extends Component {
     constructor(props) {
         super(props);
         this.state={
-            expandedKeys: []
+            expandedKeys: [],
+            beforeKey: ''
         }
     }
 
@@ -17,31 +18,36 @@ export class IntentList extends Component {
     // }
 
     selectNode =(selectKey,e) => {
-        if(!e.selectedNodes[0].props.dataRef.children.length){
+        if(e.selectedNodes.length && !e.selectedNodes[0].props.dataRef.children.length){
             this.props.getIntent(e.selectedNodes[0].props.dataRef)
         }else{
+            if(!selectKey.length){
+                var arr = this.state.beforeKey.split('/');
+                arr.pop();
+                var str = arr.join('/')
+            }
+
             this.setState({
-                expandedKeys:[selectKey]
+                expandedKeys:!selectKey.length ? [str] : selectKey,
+                beforeKey: !selectKey.length ? str : selectKey[0]
             })
         }
     }
 
     renderTreeNodes = (data) => {
-        return data.map((item) => {
+        return data.map((item,index) => {
             if (item.children) {
                 return (
-                    <TreeNode title={item.title} key={item.key} dataRef={item}>
+                    <TreeNode key={index} title={item.title} key={item.key} dataRef={item}>
                         {this.renderTreeNodes(item.children)}
                     </TreeNode>
                 );
             }
-            return <TreeNode {...item} />;
+            return <TreeNode key={index} {...item} />;
         });
     }
 
     render() {
-
-        console.log(this.props.originEntity)
 
         const style = {
             corpusBox: {
@@ -77,7 +83,7 @@ export class IntentList extends Component {
         return (
             <div className='intentSlide' style={style.intendBox}>
                 <div style={{...style.corpusBox, display: this.props.originEntity.length ? 'block' : 'none'}}>
-                    <div style={style.headerTitle}>请选择所属意图</div>
+                    <div style={style.headerTitle}>意图列表</div>
                     <Tree
                         autoExpandParent={true}
                         onSelect={this.selectNode}
