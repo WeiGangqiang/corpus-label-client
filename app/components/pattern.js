@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Button, Row, Col} from 'antd'
+import {Button, Row, Col, Icon} from 'antd'
 import {ColorDownList} from "./colorDownList";
 
 export class PatternLine extends Component {
@@ -11,30 +11,50 @@ export class PatternLine extends Component {
             left: 0
         }
     }
+    getlabelColor = (label) => {
+        console.log('entity param', this.props.entityParam)
+        console.log('phrase array', this.props.phraseArray)
+        if (label.type == 'entity') {
+            let entity = this.props.entityParam.find((value)=> {
+              return value.id = label.id
+            })
+            return !entity ? 'blue': entity.color
+          } else {
+            let phrase = this.props.phraseArray.find((value) => {
+              return value.id = label.id
+            })
+            return !phrase ? 'green': phrase.color
+          }
+    }
 
-    getSpanStyleBy = (type) => {
-        const style = {
-            entity: {
-                background: 'blue',
-                color: '#fff',
-                padding: '5px 10px',
-                borderRadius: '3px'
-            },
-            similar: {
-                background: 'green',
-                color: '#fff',
-                padding: '5px 10px',
-                borderRadius: '3px'
-            }
+    getSpanStyleBy = (label) => {
+        return {
+            background: this.getlabelColor(label),
+            color: '#fff',
+            padding: '1px 1px',
         }
-        return (type == 'entity') ? style.entity : style.similar
     }
 
     labelSpanSelected = (e) => {
         console.log('span is clicked', e)
         let selection = (window.getSelection) ? window.getSelection() : document.getSelection()
         console.log('selection is ',selection)
-        let label = this.getLabelBy(selection.anchorNode.parentNode.id)
+        let labelIndex = this.getLabelIndexBy(selection.anchorNode.parentNode.id)
+        let label = this.props.pattern.labels[labelIndex]
+        if(labelIndex != -1){
+            this.setState({
+                showDownlist: true,
+                top: e.pageY,
+                left: e.pageX,
+                selectStartPos: label.startPos,
+                selectEndPos: label.startPos + label.length,
+                length: label.length,
+                sentence: this.props.pattern.sentence.slice(label.startPos, label.startPos + label.length),
+                hasLabel: true,
+                labelIndex: labelIndex,
+                label: label
+            })
+        }
         console.log('select label is ', label)
     }
 
@@ -45,35 +65,35 @@ export class PatternLine extends Component {
         let spans = []
         labels.forEach(label => {
             if (startPos < label.startPos) {
-                spans.push(<span className='corpusBlock' key={spans.length} id={spans.length}>{sentence.slice(startPos, label.startPos)}</span>)
+                spans.push(<span  key={spans.length} id={spans.length}>{sentence.slice(startPos, label.startPos)}</span>)
             }
-            spans.push(<span className='corpusBlock' key={spans.length} id={spans.length}
-                             style={this.getSpanStyleBy(label.type)} onClick={this.labelSpanSelected} >{sentence.slice(label.startPos, label.startPos + label.length)}</span>)
+            spans.push(<span key={spans.length} id={spans.length}
+                             style={this.getSpanStyleBy(label)} onClick={this.labelSpanSelected} >{sentence.slice(label.startPos, label.startPos + label.length)}</span>)
             startPos = label.startPos + label.length
         })
         if (startPos < sentence.length) {
-            spans.push(<span className='corpusBlock' key={spans.length} id={spans.length}>{sentence.slice(startPos)}</span>)
+            spans.push(<span key={spans.length} id={spans.length}>{sentence.slice(startPos)}</span>)
         }
         return spans
     }
 
-    getLabelBy = (id) => {
+    getLabelIndexBy = (id) => {
         let labels = this.props.pattern.labels
         let startPos = 0
         let index = 0
         for (let i in labels){
             let label = labels[i]
             if (startPos < label.startPos) {
-                if(index == id) return null
+                if(index == id) return -1
                 index = index + 1
             }
             if( index == id){
-                return label
+                return i
             }
             index = index + 1
             startPos = label.startPos + label.length
         }
-        return null
+        return -1
     }
 
     getSpanStartPos = () => {
@@ -120,7 +140,8 @@ export class PatternLine extends Component {
                 selectStartPos: selectStartPos,
                 selectEndPos: selectEndPos,
                 length: selection.toString().length,
-                sentence: selection.toString()
+                sentence: selection.toString(),
+                hasLabel: false
             })
         }
     }
@@ -144,6 +165,11 @@ export class PatternLine extends Component {
         }, this.props.corpusType)
     }
 
+    removeLabel = (labelIndex)=> {
+        console.log('remove label for', labelIndex)
+        this.props.removeLabel(this.props.patternId, labelIndex, this.props.corpusType)
+    }
+
     render() {
         const style={
             corpusBox:{
@@ -158,13 +184,18 @@ export class PatternLine extends Component {
             },
             corpusP:{
                 marginBottom: 0,
-                lineHeight: '40px',
-                fontSize: '14px'
+                lineHeight: '45px',
+                fontSize: '16px'
+            },
+            delete:{
+                marginTop: '5px',
+                fontSize :'20px',
+                color: 'red'
             }
         }
         return (<Row style={style.corpusBox}>
             <Col style={style.colRight}>
-                <Button onClick={this.removePattern} icon="close"></Button>
+                <span onClick={this.removePattern}> <Icon type="close" style={style.delete} /></span>
             </Col>
             <Col >
                 <p style={style.corpusP} onMouseUp={this.selectWord}>{this.getSpans()}</p>
@@ -172,7 +203,9 @@ export class PatternLine extends Component {
             {
                 this.state.showDownlist ?
                     <ColorDownList top={this.state.top} sentence={this.state.sentence} left={this.state.left}
+                                   hasLabel={this.state.hasLabel} labelIndex={this.state.labelIndex} label={this.state.label} removeLabel={this.removeLabel}
                                    intent={this.props.intent} agent={this.props.agent} intentId={this.props.intentId}
+                                   entityParam={this.props.entityParam} phraseArray={this.props.phraseArray}
                                    hideDownlist={this.hideDownlist} entityOrPhrase={this.entityOrPhrase}/> : ''
             }
         </Row>)

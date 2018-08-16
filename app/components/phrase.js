@@ -146,85 +146,29 @@ export class PhraseList extends Component {
     }
 
     render() {
-
-        const {getFieldDecorator} = this.props.form
         const style = {
             phraseContainer: {
                 marginTop: '15px',
                 background: '#fbfbfb',
                 borderRadius: '15px',
-                padding: '0 15px'
+                padding: '10px 15px',
+                marginBottom: '50px',
             },
-            serveLi: {
-                padding: '5px 0px',
-                fontSize: '14px',
-            },
-            serveLiSpan: {
-                marginRight: '15px',
-                padding: '5px 10px',
-                borderRadius: '3px',
-                cursor: 'pointer',
-                display: 'inline-block',
-                marginBottom: '15px'
-            },
-            phraseItem: {
-                background: '#fbfbfb',
-                borderBottom: '1px solid green'
-            },
-            phraseText: {
-                display: 'inline-block',
-                padding: '5px 10px',
-                margin: '7px 15px 7px 0',
-                background: 'green',
-                color: '#fff',
-                fontSize: '14px',
-                borderRadius: '3px'
-            },
-            phraseBox: {
-                background: '#fbfbfb',
-                width: '100%',
-                height: '100%',
-                borderRadius: '15px'
+
+            tableBox: {
+                marginBottom: '20px'
             }
         }
         return (
             <div style={style.phraseContainer}>
                 {this.getTitle()}
-                {/*<ul style={style.phraseBox}>*/}
-                    {/*{this.props.phraseArray.map((phrase, index) => {*/}
-                        {/*return <li key={index}*/}
-                                   {/*style={{...style.phraseItem, background: index % 2 === 0 ? '#fbfbfb' : '#fff'}}>*/}
-                            {/*<div style={style.phraseText}>{phrase.phraseId}</div>*/}
-                            {/*{*/}
-                                {/*phrase.similars.map((item, i) => {*/}
-                                    {/*return <div style={style.phraseText} key={i}>{item}<Icon*/}
-                                        {/*onClick={this.delPhraseText.bind(this, phrase, i)} type="close"/></div>*/}
-                                {/*})*/}
-                            {/*}*/}
-                            {/*<div onClick={this.showAddPhrase.bind(this, phrase)} style={style.phraseText}>添加</div>*/}
-                            {/*<div onClick={this.delPhraseItem.bind(this, phrase)} style={style.phraseText}>删除</div>*/}
-                        {/*</li>*/}
-                    {/*})}*/}
-                {/*</ul>*/}
-                {/*<Modal*/}
-                    {/*title="添加近义词"*/}
-                    {/*centered*/}
-                    {/*visible={this.state.showModalFlag}*/}
-                    {/*onOk={() => this.addPhraseText()}*/}
-                    {/*onCancel={() => this.hideAddPhrase()}*/}
-                    {/*destroyOnClose={true}*/}
-                {/*>*/}
-                    {/*<Input onBlur={this.getPhraseText.bind(this)}></Input>*/}
-                    {/*<span>如果添加多个中间用逗号隔开，如：漂亮，美丽</span>*/}
-                {/*</Modal>*/}
-
                 <Table
                     dataSource={this.props.phraseArray}
                     columns={this.columns()}
                     bordered
                     pagination={false}
                 />
-
+                <div style = {{height: '10px'}}> </div>
             </div>)
 
     }

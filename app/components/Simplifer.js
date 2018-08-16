@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Form, AutoComplete, Button} from 'antd'
+import {Form, Input, Icon, Row, Col, Button} from 'antd'
 import { simplifier } from 'actions/intend'
 
 const FormItem = Form.Item
@@ -15,9 +15,9 @@ export class Simplifier extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            dataSource: [],
-            orginal:'',
-            simplify:''
+            simCorpus:'',
+            newCorpus:'',
+            isSimplified: false
         }
     }
 
@@ -28,50 +28,139 @@ export class Simplifier extends Component {
         })
     }
 
-    handleSearch = (value) => { 
-        console.log('update input value', value)
-        this.props.dispatch(simplifier({x: value}, data => {
-            this.setState({
-                dataSource: !value && data.y!=value ? [] : [
-                    data.y
-                ],
-                orginal: value,
-                simplify: value
-            })
-        }))
-    }
-
     isSimplified = () => {
-        return this.state.simplify != ''
+        return this.state.simCorpus != ''
     }
 
-    addCorpusToIntent = ()=> {   
-        this.props.addPattern(this.state.simplify, this.props.corpusType)
-        this.setState({
-            dataSource: [],
-            orginal: '',
-            simplify: ''
+    addCorpusToIntent = ()=> {  
+        this.doSimplifer(this.state.newCorpus)
+    }
+
+    corpusAddEnter = (e) => {
+        console.log('corpus input enter : ', e)
+    }
+
+    corpusInput = () => {
+        let that = this
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                console.log('update', values.newCorpus)
+                that.setState({
+                    newCorpus: values.newCorpus
+                })
+            }
         })
     }
 
+    corpusBlur = () => {
+        let that = this
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                that.setState({
+                    newCorpus: values.newCorpus
+                })
+            }
+        })
+    }
+
+    doSimplifer = (newCorpus) => {
+        this.props.dispatch(simplifier({x: newCorpus}, data => {
+            let isSimplified = data.y != newCorpus
+            if (!isSimplified) {
+                this.props.addPattern(newCorpus, this.props.corpusType)
+            }
+            else{
+                this.setState({
+                    newCorpus: newCorpus,
+                    simCorpus: data.y,
+                    isSimplified: isSimplified
+                })
+            }
+        }, err => {
+            console.log(err)
+        }))
+    }
+
+    onInputEnter = () => {
+        let that = this
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                console.log('that is', )
+                that.doSimplifer(values.newCorpus)
+            }
+        })
+    }
+
+    addOrignalSentence = () =>{
+        this.props.addPattern(this.state.newCorpus, this.props.corpusType)
+        this.setState({
+            simCorpus: ''
+        })
+    }
+
+    addSimpliferSentence = () => {
+        this.props.addPattern(this.state.simCorpus, this.props.corpusType)
+        this.setState({
+            simCorpus: ''
+        })
+    }
+
+    getSimpliferCheckButtern = () => {
+        const styleButten = {
+            width: '100%'
+        }
+
+        return <Row>
+                <Col span ={12}><Button type="primary" style={styleButten} onClick = {this.addSimpliferSentence} icon ="check">正确</Button> </Col>
+                <Col span ={12}><Button type="danger" style={styleButten} onClick = {this.addOrignalSentence} icon ="close">错误</Button> </Col>
+                </Row>
+    }
+
     render(){
+        const {getFieldDecorator} = this.props.form
+        const style = {
+            simplifyBox: {
+                width: '100%',
+            },
+            add:{
+                marginTop: '5px',
+                fontSize :'20px',
+                color: 'green',
+                paddingLeft: '10px'
+            },
+            button: {
+                border: '1px solid #dadada',
+            },
+            prompt:{
+                border: '1px solid #dadada',
+            },
+            wrapperCol:{
+                xs: { span: 24, offset: 0 },
+                sm: { span: 24, offset: 0 },
+            }
+        }
         return (
-            <Form style={{marginTop: '15px'}} layout="inline">
-                <FormItem>
-                    <AutoComplete
-                        dataSource={this.state.dataSource}
-                        style={{ width: 500 }}
-                        onSelect={this.onSelect}
-                        onSearch={this.handleSearch}
-                        placeholder="请输入语料"
-                    />
-                </FormItem>
-                <FormItem>
-                    <Button type="primary"  onClick={this.addCorpusToIntent}>
-                        添加
-                    </Button>
-                </FormItem>
-            </Form>
+            <Row style={style.simplifyBox}>
+                <Col span={24}>
+                    <Form style={{ width: '100%' }} layout="inline">
+                        <FormItem style={{width: '100%'}} wrapperCol={style.wrapperCol}>
+                            {getFieldDecorator('newCorpus', {})(
+                                <Input style={{ width: '100%' }} placeholder="请输入新的语料" onPressEnter={this.onInputEnter}
+                                    onChange={this.corpusInput} onBlur={this.corpusBlur} addonAfter={<Icon onClick={this.addCorpusToIntent} type="plus" />} />
+                             )}
+                        </FormItem>
+                    </Form>
+                </Col>
+                <Col span={18}>
+                    {this.state.isSimplified ?
+                        <Input style={{ width: '100%' }} addonBefore="简化后：" value={this.state.simCorpus} disabled={true}/> : ''
+                    }
+                </Col>
+                <Col span={6}>
+                 {  this.state.isSimplified ?
+                    this.getSimpliferCheckButtern() : ''}
+                </Col>
+            </Row>
         )
     }
 }

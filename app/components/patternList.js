@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {PatternLine} from 'components/pattern'
-import {getPattern, deletePattern, putPattern, predict, postPattern} from 'actions/intend'
+import {getPattern, deletePattern, putPattern, predict, postPattern, fetchEntity, getPhrase} from 'actions/intend'
 import {Simplifier} from 'components/Simplifer'
 import { Tabs } from 'antd';
 
@@ -15,12 +15,51 @@ export class PatternList extends Component {
             negativePatterns: [],
             posSimpliferKey: 0,
             negSimpliferKey: 0,
+            entityParam: [],
+            phraseArray:[]
         }
+    }
+
+    getEntityForIntent = (props) =>{
+        let entityUrl = '?agent=' + props.agentName + '&intentId=' + props.intentId
+        console.log('get entity for intent url', entityUrl, )
+        this.props.dispatch(fetchEntity(entityUrl, data => {
+            for (let i = 0; i < data.length; i++) {
+                data[i].valuesF = [...data[i].values]
+                for (let j = 0; j < data[i].valuesF.length; j++) {
+                    let reg = /[\[\]]/g
+                    let labelReg = /\/L[0-9]/g
+                    data[i].valuesF[j] = data[i].valuesF[j].replace(reg, '').replace(labelReg, '')
+                }
+                data[i].valuesShow = [...data[i].valuesF.slice(0, 10)]
+            }
+            console.log('get  entity data', data)
+            this.setState({
+                entityParam: [...data]
+            })
+        }, error => {
+        }))
+    }
+
+    getPhraseForIntent = (props) =>{
+        let getUrl = '?agent=' + props.agentName + '&intentId=' + props.intentId
+        console.log('get phrase url is ', getUrl, props)
+        this.props.dispatch(getPhrase(getUrl
+            , data => {
+                console.log('get phrase data', data)
+                this.setState({
+                    phraseArray: [...data]
+                })
+            }, error => {
+                console.log(error)
+            }))
     }
 
     componentWillReceiveProps(props) {
         this.getPatternList(props, "positive")
         this.getPatternList(props, "negative")
+        this.getEntityForIntent(props)
+        this.getPhraseForIntent(props)
     }
 
     getPatternList = (props, corpusType) => {
@@ -145,10 +184,32 @@ export class PatternList extends Component {
         }))
     }
 
+    removeLabel = (patternId, labelIndex, corpusType) => {
+        let patternList = this.getPatternListBy(corpusType)
+        let pattern = patternList[patternId]
+        let newLabels =  pattern.labels.filter((value, index)=>{
+            return index != labelIndex
+        })
+        pattern.labels = newLabels
+        let that = this
+        this.props.dispatch(putPattern({
+            "patternId": patternId,
+            "type": corpusType,
+            "intentId": this.props.intentId,
+            "agent": this.props.agentName,
+            "pattern": pattern
+        }, data => {
+            that.getPatternList(that.props, corpusType)
+        }))
+    }
+
     getTitle = () => {
         const subtitleCss = {
             fontSize: '20px',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            paddingLeft: '15px',
+            marginBottom: '0px',
+            lineHeight: '40px'
         }
         return <p style={subtitleCss}> 用户语料 </p>
     }
@@ -164,7 +225,8 @@ export class PatternList extends Component {
             return (<PatternLine key={patternId} patternId={patternId} pattern={pattern}
                                  removePatternBy={this.removePatternBy} updateSelectLabel={this.updateSelectLabel}
                                  agent={this.props.agentName} intent={this.props.intent}
-                                 intentId={this.props.intentId} corpusType={corpusType}/>)
+                                 entityParam={this.state.entityParam} phraseArray={this.state.phraseArray}
+                                 intentId={this.props.intentId} corpusType={corpusType} removeLabel={this.removeLabel}/>)
         })
     }
 
@@ -175,23 +237,21 @@ export class PatternList extends Component {
     render() {
         const style = {
             pBox: {
-                width: '1000px',
-                height: '300px',
-                // marginTop: '15px',
+                height: '350px',
                 border: '1px solid #dadada',
                 overflow: 'auto'
             },
             corpusBox: {
                 background: '#fbfbfb',
-                padding: '15px',
+                padding: '10px, 15px',
                 width: '100%',
                 height: '100%',
                 borderRadius: '15px',
                 marginBottom: '15px'
             },
             corpusTab: {
-                width: '1000px',
-                height: '450px',
+                padding: '10px 15px',
+                height: '500px',
             },
             corpusTabPane: {
                 // paddingTop: '20px'
@@ -201,8 +261,8 @@ export class PatternList extends Component {
         const TabPane = Tabs.TabPane;
 
         return (<div style={style.corpusBox}>
-            {this.getTitle()}
-            <Tabs style={style.corpusTab} defaultActiveKey="1" onChange={this.updateTabPane}>
+               {this.getTitle()}
+            <Tabs type="card" style={style.corpusTab} defaultActiveKey="1" onChange={this.updateTabPane}>
                 <TabPane style={style.corpusTabPane} tab="正样本" key="positive">
                     <div style={style.pBox}> {this.getPatternViews("positive")}</div>
                     <Simplifier key={this.state.posSimpliferKey} corpusType="positive" addPattern={this.addPatternWithPredict}></Simplifier>

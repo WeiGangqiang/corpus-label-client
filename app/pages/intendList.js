@@ -140,16 +140,22 @@ export default class intendList extends Component {
             },
             innerBox: {
                 height: '100%'
-            }
+            },
+            headerStyle:{
+                background: '#0099CC',
+            },
+            body: {
+                width: '80%'
+            }         
         };
         return <Spin spinning={intendResult.loading}>
             <div style={style.innerContainer}>
-                <Link className='bread-cruft' to={'/selectService'}><Icon type='left'></Icon>服务器选择</Link>
+                <Link className='bread-cruft' style={style.headerStyle} to={'/selectService'}><Icon style={{fontWeight:'bold'}} type='left'></Icon>机器人选择</Link>
                 <div style={style.innerBox} className='intentContainer'>
                     <IntentList originEntity={[intendResult.data]} intentId={this.state.intentId}
                                 getIntent={this.getIntent}/>
                     <div style={{height: '100%', overflow: 'auto'}}>
-                        {!intendResult.loading ? <div className="container">
+                        {!intendResult.loading ? <div className="container" style={style.body}>
                             <IntentDesc name={this.state.name} zhName={this.state.zhName}
                                         modelPath={this.state.modelPath}/>
                             <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues}
