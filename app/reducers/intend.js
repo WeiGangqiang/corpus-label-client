@@ -1,22 +1,23 @@
 import {handleActions} from 'redux-actions'
 import {hasResponseError} from 'utils'
+import {getDisc} from 'utils/util'
 import {message} from 'antd'
 
 
 // const intendState = () => []
 
 const intendState = {
-    data: [],
+    data: {},
     loading: true,
 }
-
 export const intendResult = handleActions({
     'request intend list'(state, action) {
         return {...state}
     },
     'receive intend list'(state, action) {
-        const {req, res} = action.payload;
-        return {data: res, loading: false}
+        let {req, res} = action.payload;
+        res = getDisc(res)
+        return {data: {...res.children[0]}, loading: false}
     },
 }, intendState)
 

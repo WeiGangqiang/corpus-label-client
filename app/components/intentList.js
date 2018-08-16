@@ -1,15 +1,47 @@
 import React, {Component} from 'react';
 
+import { Tree } from 'antd';
+
+const TreeNode = Tree.TreeNode;
+
 export class IntentList extends Component {
     constructor(props) {
         super(props);
+        this.state={
+            expandedKeys: []
+        }
     }
 
-    getIntent(item, index) {
-        this.props.getIntent(item, index)
+    // getIntent(item) {
+    //     this.props.getIntent(item)
+    // }
+
+    selectNode =(selectKey,e) => {
+        if(!e.selectedNodes[0].props.dataRef.children.length){
+            this.props.getIntent(e.selectedNodes[0].props.dataRef)
+        }else{
+            this.setState({
+                expandedKeys:[selectKey]
+            })
+        }
+    }
+
+    renderTreeNodes = (data) => {
+        return data.map((item) => {
+            if (item.children) {
+                return (
+                    <TreeNode title={item.title} key={item.key} dataRef={item}>
+                        {this.renderTreeNodes(item.children)}
+                    </TreeNode>
+                );
+            }
+            return <TreeNode {...item} />;
+        });
     }
 
     render() {
+
+        console.log(this.props.originEntity)
 
         const style = {
             corpusBox: {
@@ -45,19 +77,15 @@ export class IntentList extends Component {
         return (
             <div className='intentSlide' style={style.intendBox}>
                 <div style={{...style.corpusBox, display: this.props.originEntity.length ? 'block' : 'none'}}>
-                    {this.props.originEntity.length ? this.props.intentId.length && this.props.originEntity.length == 1 ?
-                        <div style={style.headerTitle}>选择的意图</div> : <div style={style.headerTitle}>请选择所属意图</div> : ''}
-                    <div style={{height: '100%', overflowY: 'auto'}}>
-                        <ul style={style.flexBox}>
-                            {
-                                this.props.originEntity.map((item, index) => {
-                                    return <li className={item.intentId == this.props.intentId ? 'active-btn' : ''}
-                                               onClick={this.getIntent.bind(this, item, index)} style={style.serveLi}
-                                               key={item.intentId}>{item.zhName || item.name}</li>
-                                })
-                            }
-                        </ul>
-                    </div>
+                    <div style={style.headerTitle}>请选择所属意图</div>
+                    <Tree
+                        autoExpandParent={true}
+                        onSelect={this.selectNode}
+                        expandedKeys={this.state.expandedKeys}
+                    >
+                        {this.renderTreeNodes(this.props.originEntity)}
+                    </Tree>
+
                 </div>
                 <div style={{
                     ...style.corpusBox,
