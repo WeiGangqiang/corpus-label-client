@@ -33,6 +33,10 @@ export class ColorDownList extends Component {
     updatePhraseLabel = (phraseId) => {
       let item = this.props.phraseArray.find(item => item.phraseId === phraseId)
       let that = this
+      if(item.similars.includes(this.props.sentence)){
+        that.props.entityOrPhrase({id:phraseId, type: 'phrase'})
+        return
+      }
       this.props.dispatch(putPhrase({
           similars: [...item.similars, this.props.sentence],
           phraseId: item.phraseId,
