@@ -184,8 +184,8 @@ export class PatternLine extends Component {
             },
             corpusP:{
                 marginBottom: 0,
-                lineHeight: '40px',
-                fontSize: '14px'
+                lineHeight: '45px',
+                fontSize: '16px'
             },
             delete:{
                 marginTop: '5px',

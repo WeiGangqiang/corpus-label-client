@@ -220,8 +220,6 @@ export class PatternList extends Component {
 
 
     getPatternViews = (corpusType) => {
-        console.log('entity param', this.state.entityParam)
-        console.log('phrase array', this.state.phraseArray)
         let patternList = this.getPatternListBy(corpusType)
         return patternList.map((pattern, patternId) => {
             return (<PatternLine key={patternId} patternId={patternId} pattern={pattern}
