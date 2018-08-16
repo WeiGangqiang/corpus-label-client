@@ -86,6 +86,9 @@ export class ColorDownList extends Component {
       let menuStyle = {
         borderBottom: '1px solid #0099CC',
       }
+      let noMargin = {
+          margin: 0
+      }
 
       this.props.entityParam.forEach(entity => {
         if(that.props.hasLabel && that.props.label.type == 'entity'){
@@ -93,7 +96,7 @@ export class ColorDownList extends Component {
             return
           }
         }
-        subMenus.push(<Menu.Item style={menuStyle} key={entity.name + '###entity'}>{that.getEntityDisplay(entity)}</Menu.Item>)
+        subMenus.push(<Menu.Item className="corpusItem" style={{...menuStyle,...noMargin}} key={entity.name + '###entity'}>{that.getEntityDisplay(entity)}</Menu.Item>)
       })
 
       this.props.phraseArray.forEach(phrase => {
@@ -102,10 +105,10 @@ export class ColorDownList extends Component {
             return
           }
         }
-        subMenus.push(<Menu.Item style={menuStyle}  key={phrase.phraseId + '###phrase'}>{that.getPhraseDisPlay(phrase)}</Menu.Item>)
+        subMenus.push(<Menu.Item style={{...menuStyle,...noMargin}} className="corpusItem" key={phrase.phraseId + '###phrase'}>{that.getPhraseDisPlay(phrase)}</Menu.Item>)
       })
 
-      subMenus.push(<Menu.Item key={'453543###addNew'}>新增</Menu.Item>)
+      subMenus.push(<Menu.Item style={{...noMargin}} className="corpusItem" key={'453543###addNew'}>新增</Menu.Item>)
       return subMenus
     }
 
@@ -172,7 +175,7 @@ export class ColorDownList extends Component {
                 display: 'inline-block'
             },
             menu: {
-              background: '#DDDDDD',
+              background: '#eee',
               float:'left'
             }
         }

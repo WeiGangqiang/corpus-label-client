@@ -189,7 +189,7 @@ export class PatternLine extends Component {
                 fontSize :'20px',
             }
         }
-        return (<Row style={style.corpusBox}>
+        return (<Row className="corpusItem" style={style.corpusBox}>
             <Col style={style.colRight}>
                 <span onClick={this.removePattern}> <Icon type="delete" style={style.delete} /></span>
             </Col>
