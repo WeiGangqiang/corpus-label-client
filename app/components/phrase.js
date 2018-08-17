@@ -92,19 +92,33 @@ export class PhraseList extends Component {
 
     }
 
-    addPhraseText(phrase, e) { 
+    addPhraseText(phrase, e) {
+        console.log(phrase)
         console.log('get phrase test', e.target.value)
-        this.setState({inputKey: this.state.inputKey + 1})
-        const phraseText = e.target.value.replace(/，/g, ',').split(',');
-        phrase.similars = phrase.similars.concat(phraseText)
-        this.props.dispatch(putPhrase({
-            ...phrase,
-            intent: this.props.intent,
-            agent: this.props.agent
-        }, data => {
-            this.props.updatePhraseArray()
-        }));
-
+        if(phrase.intentId){
+            this.setState({inputKey: this.state.inputKey + 1})
+            const phraseText = e.target.value.replace(/，/g, ',').split(',');
+            phrase.similars = phrase.similars.concat(phraseText)
+            this.props.dispatch(putPhrase({
+                ...phrase,
+                intent: this.props.intent,
+                agent: this.props.agent
+            }, data => {
+                this.props.updatePhraseArray()
+            }));
+        }else{
+            this.props.dispatch(postPhrase({
+                similars: e.target.value.replace('，',',').split(','),
+                intentId: this.props.intentId,
+                intent: this.props.intent,
+                agent: this.props.agent
+            }, data => {
+                this.props.updatePhraseArray()
+            },error => {
+                console.log(error)
+            }))
+            e.target.value = ''
+        }
     }
 
     getTitle = () => {
@@ -184,7 +198,7 @@ export class PhraseList extends Component {
                 dataIndex: 'delete',
                 key: 'delete',
                 render(text, record, index) {
-                    return <Button onClick={that.delPhraseItem.bind(that, record)}>删除</Button>
+                    return record.intentId?<Button onClick={that.delPhraseItem.bind(that, record)}>删除</Button>:<Button disabled>删除</Button>
                 }
             }
         ]
@@ -238,15 +252,15 @@ export class PhraseList extends Component {
                     bordered
                     pagination={false}
                 />
-                <div style={style.plus}>
-                    <div style={style.plusDiv}>
-                        <span style={style.plusDivSpan}>{this.props.phraseArray.length + 1}</span>
-                    </div>
-                    <div style={style.plusInputDiv}>
-                        <Input type="text" onPressEnter={this.addNewPhrase}/>
-                    </div>
+                {/*<div style={style.plus}>*/}
+                    {/*<div style={style.plusDiv}>*/}
+                        {/*<span style={style.plusDivSpan}>{this.props.phraseArray.length + 1}</span>*/}
+                    {/*</div>*/}
+                    {/*<div style={style.plusInputDiv}>*/}
+                        {/*<Input type="text" onPressEnter={this.addNewPhrase}/>*/}
+                    {/*</div>*/}
 
-                </div>
+                {/*</div>*/}
                 <div style = {{height: '10px'}}> </div>
             </div>)
 
