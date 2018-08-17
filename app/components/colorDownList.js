@@ -98,7 +98,7 @@ export class ColorDownList extends Component {
 
       this.props.entityParam.forEach(entity => {
         if(that.props.hasLabel && that.props.label.type == 'entity'){
-          if(entity.id == that.props.label.id){
+          if(entity.name == that.props.label.id){
             return
           }
         }
@@ -114,7 +114,7 @@ export class ColorDownList extends Component {
         subMenus.push(<Menu.Item style={{...noMargin}} className="corpusItem" key={phrase.phraseId + '###phrase'}>{that.getPhraseDisPlay(phrase)}</Menu.Item>)
       })
 
-      subMenus.push(<Menu.Item style={{...menuStyle,...noMargin}} className="corpusItem" key={'453543###addNew'}>新增</Menu.Item>)
+      subMenus.push(<Menu.Item style={{...menuStyle,...noMargin}} className="corpusItem" key={'453543###addNew'}>添加同义词</Menu.Item>)
       return subMenus
     }
 
@@ -127,7 +127,7 @@ export class ColorDownList extends Component {
       let label = this.props.label
       if (label.type == 'entity') {
         let entity = this.props.entityParam.find((value)=> {
-          return value.id = label.id
+          return value.name == label.id
         })
         return !entity ? '': this.getEntityDisplay(entity)
       } else {
