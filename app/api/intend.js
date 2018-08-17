@@ -31,4 +31,6 @@ export const predict = ajax.fetchJSONByPost('/label/predict', mockUrl, 'postJson
 
 export const generate = ajax.fetchJSONByPost('/generate', mockUrl, 'postJson');
 
+export const patternsSync = ajax.fetchJSONByPost('/pattern/sync', mockUrl, 'postJson');
+
 

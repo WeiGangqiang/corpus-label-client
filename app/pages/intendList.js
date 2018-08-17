@@ -42,6 +42,7 @@ export default class intendList extends Component {
             modelPath: '',
             entityParam: [],
             phraseArray: [],
+            pattenListKey: 0,
             type: 'positive'
         };
         this.initData = this.initData.bind(this);
@@ -116,6 +117,10 @@ export default class intendList extends Component {
             }))
     }
 
+    reloadPatterns = () => {
+        this.setState({pattenListKey: this.state.pattenListKey + 1})
+    }
+
     showMoreValues(i) {
         this.state.entityParam[i].valuesShow = [...this.state.entityParam[i].valuesF]
         this.setState({
@@ -160,11 +165,11 @@ export default class intendList extends Component {
                                         modelPath={this.state.modelPath}/>
                             <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues}
                                               showMoreValues={this.showMoreValues}/>
-                            <PatternList agentName={agentName} intent={this.state.name} intentId={this.state.intentId}
+                            <PatternList key={this.state.pattenListKey} agentName={agentName} intent={this.state.name} intentId={this.state.intentId}
                                          corpusType={this.state.type} updatePhrase={this.getPhrase} phraseArray={this.state.phraseArray}/>
 
                             <PhraseList intent={this.state.name} agent={agentName} intentId={this.state.intentId} phraseArray={this.state.phraseArray}
-                                        updatePhraseArray={this.getPhrase}/>
+                                        updatePhraseArray={this.getPhrase}  reloadPatterns={this.reloadPatterns}/>
                         </div> : ''}
                     </div>
                 </div>

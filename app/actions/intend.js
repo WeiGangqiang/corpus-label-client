@@ -64,3 +64,5 @@ export const deletePhrase = createAjaxAction(intend.deletePhrase);
 
 export const generate = createAjaxAction(intend.generate);
 
+export const patternsSync = createAjaxAction(intend.patternsSync)
+
