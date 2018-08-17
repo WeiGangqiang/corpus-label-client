@@ -14,20 +14,27 @@ export class IntentList extends Component {
     }
 
     selectNode =(selectKey,e) => {
-        if(e.selectedNodes.length && !e.selectedNodes[0].props.dataRef.children.length){
+        console.log(e)
+        if(e.selectedNodes.length){
             this.props.getIntent(e.selectedNodes[0].props.dataRef)
         }else{
-            if(!selectKey.length){
-                var arr = this.state.beforeKey.split('/');
-                arr.pop();
-                var str = arr.join('/')
-            }
 
-            this.setState({
-                expandedKeys:!selectKey.length ? [str] : selectKey,
-                beforeKey: !selectKey.length ? str : selectKey[0]
-            })
         }
+
+        // if(e.selectedNodes.length && !e.selectedNodes[0].props.dataRef.children.length){
+        //     this.props.getIntent(e.selectedNodes[0].props.dataRef)
+        // }else{
+        //     if(!selectKey.length){
+        //         var arr = this.state.beforeKey.split('/');
+        //         arr.pop();
+        //         var str = arr.join('/')
+        //     }
+        //
+        //     this.setState({
+        //         expandedKeys:!selectKey.length ? [str] : selectKey,
+        //         beforeKey: !selectKey.length ? str : selectKey[0]
+        //     })
+        // }
     }
 
     renderTreeNodes = (data) => {
@@ -83,7 +90,7 @@ export class IntentList extends Component {
                     <Tree
                         autoExpandParent={true}
                         onSelect={this.selectNode}
-                        expandedKeys={this.state.expandedKeys}
+                        // expandedKeys={this.state.expandedKeys}
                     >
                         {this.renderTreeNodes(this.props.originEntity)}
                     </Tree>

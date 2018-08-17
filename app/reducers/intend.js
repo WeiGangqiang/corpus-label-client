@@ -21,7 +21,8 @@ export const intendResult = handleActions({
     },
 }, intendState)
 
-const colorArray = ['#4c32e8', '#0000FF', '#5c6bc0', '#4169E1', '#1E90FF', '#87CEFA', '#00BFFF', '#0288d1', '#4b4fd0', '#0d47a1'];
+// const colorArray = ['#4c32e8', '#0000FF', '#5c6bc0', '#4169E1', '#1E90FF', '#87CEFA', '#00BFFF', '#0288d1', '#4b4fd0', '#0d47a1'];
+const colorArray = ['#f3a42d', '#fbb20e', '#f7a324', '#FF9800', '#ffcc33'];
 const entityState = () => [];
 export const entityResult = handleActions({
     'request entity list'(state, action) {
@@ -30,7 +31,7 @@ export const entityResult = handleActions({
     'receive entity list'(state, action) {
         const {req, res} = action.payload;
         res.map((item, index) => {
-            item.color = colorArray[index > 9 ? index - 9 : index]
+            item.color = colorArray[index >= colorArray.length ? index - colorArray.length : index]
         });
         return [...res]
     },
@@ -46,7 +47,7 @@ export const phraseResult = handleActions({
     'receive phrase list'(state, action) {
         const {req, res} = action.payload;
         res.map((item, index) => {
-            item.color = colorGreenArray[index > 9 ? index - 9 : index]
+            item.color = colorGreenArray[index >= colorGreenArray.length ? index - colorGreenArray.length : index]
         });
         return [...res]
     },
