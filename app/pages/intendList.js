@@ -136,6 +136,8 @@ export default class intendList extends Component {
     }
 
     render() {
+        const agentName = sessionStorage.getItem('agentName');
+        console.log('agent name is ', agentName)
         const {intendResult} = this.props;
         const style = {
             innerContainer: {
