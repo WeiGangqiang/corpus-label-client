@@ -11,8 +11,6 @@ export class PatternList extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            positivePatterns: [],
-            negativePatterns: [],
             posSimpliferKey: 0,
             negSimpliferKey: 0
         }
@@ -173,7 +171,7 @@ export class PatternList extends Component {
     }
 
     getPatternListBy = (corpusType) => {
-       return  (corpusType == 'positive') ? this.state.positivePatterns : this.state.negativePatterns 
+       return  (corpusType == 'positive') ? this.props.positivePatterns : this.props.negativePatterns
     }
 
 

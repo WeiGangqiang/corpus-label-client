@@ -18,7 +18,7 @@ import {
 
 import {PatternList, PhraseList, EntityParameters, IntentList, IntentDesc} from "components/index";
 
-const agentName = sessionStorage.getItem('agentName');
+let agentName = sessionStorage.getItem('agentName');
 
 @connect((state, dispatch) => ({
     config: state.config,
@@ -56,7 +56,7 @@ export default class intendList extends Component {
     }
 
     componentWillMount() {
-        const agentName = sessionStorage.getItem('agentName');
+        agentName = sessionStorage.getItem('agentName');
         this.props.dispatch(fetchIntend('?agent=' + agentName, data => {
             if (data.length) {
                 this.setState({
