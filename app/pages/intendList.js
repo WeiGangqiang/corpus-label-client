@@ -107,7 +107,7 @@ export default class intendList extends Component {
             }, error => {
                 console.log(error)
             }))
-        this.props.dispatch(getPattern('?agent=' + agentName + '&intentId=' + this.state.intentId + '&type=positive',
+        this.props.dispatch(getPattern('?agent=' + agentName + '&intentId=' + obj.intentId + '&type=positive',
                 data => {
                     this.setState({
                         positivePatterns: data
@@ -115,7 +115,7 @@ export default class intendList extends Component {
         },error => {
             console.log(error)
         }))
-        this.props.dispatch(getPattern('?agent=' + agentName + '&intentId=' + this.state.intentId + '&type=negative',
+        this.props.dispatch(getPattern('?agent=' + agentName + '&intentId=' + obj.intentId + '&type=negative',
             data => {
                 this.setState({
                     negativePatterns: data
