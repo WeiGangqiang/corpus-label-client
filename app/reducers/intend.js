@@ -51,6 +51,13 @@ export const phraseResult = handleActions({
         res.map((item, index) => {
             item.color = colorGreenArray[index >= colorGreenArray.length ? index - colorGreenArray.length : index]
         });
+        res.push({
+            color: "green",
+            intentId: "",
+            phraseId: "",
+            similars: []
+        })
+        console.log(res)
         return [...res]
     },
 }, phraseState())

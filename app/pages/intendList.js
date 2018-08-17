@@ -151,7 +151,9 @@ export default class intendList extends Component {
     }
 
     reloadPatterns = () => {
-        this.setState({pattenListKey: this.state.pattenListKey + 1})
+        this.getPatternList({agentName: agentName, intentId: this.state.intentId}, 'positive')
+        this.getPatternList({agentName: agentName, intentId: this.state.intentId}, 'negative')
+        // this.setState({pattenListKey: this.state.pattenListKey + 1})
     }
 
     showMoreValues(i) {
