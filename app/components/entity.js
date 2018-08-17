@@ -39,21 +39,24 @@ export class EntityParameters extends Component {
             title: '槽位值',
             dataIndex: 'valuesShow',
             key: 'valuesShow',
-            width: '80%',
+            width: '70%',
             render(text, record, index) {
+                return <span> {text.join()} </span>
+            }
+        }, {
+            title: '操作',
+            dataIndex: 'operate',
+            key: 'oparete',
+            width: '10%',
+            render(text, record, index) { 
                 if(record.values.length < 10){
-                    return (<div> <span> {text.join()} </span></div>)
+                    return (<span> </span>)
                 } else if(record.valuesShow.length <= 10){
-                    return (<div> 
-                        <span style={{margin: '7px 7px 7px 0',display: 'inline-block'}}>  {text.join()} </span>
-                        <span style={{paddingLeft: '2px', fontWeight: 'bold', color:record.color}} onClick={that.showMoreValues.bind(that, index)}><Icon type='plus'/></span>
-                        </div>)
+                    return ( <span style={{paddingLeft: '10px', fontWeight: 'bold', color:'#0099CC'}} onClick={that.showMoreValues.bind(that, index)}>详情<Icon type='caret-down'/></span>)
                 } else {
-                    return (<div> 
-                        <span>  {text.join()} </span>
-                        <span style={{paddingLeft: '2px', fontWeight: 'bold', color:record.color}}  onClick={that.showLessValues.bind(that, index)}><Icon type='minus'/></span>
-                        </div>)
+                    return (<span style={{paddingLeft: '10px', fontWeight: 'bold', color:'#0099CC'}}  onClick={that.showLessValues.bind(that, index)}>简要<Icon type='caret-up'/></span>)
                 }
+
             }
         }
     ]
