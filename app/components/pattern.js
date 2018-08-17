@@ -20,7 +20,7 @@ export class PatternLine extends Component {
             return !entity ? 'blue': entity.color
           } else {
             let phrase = this.props.phraseArray.find((value) => {
-              return value.phraseId = label.id
+              return value.phraseId == label.id
             })
             return !phrase ? 'green': phrase.color
           }
