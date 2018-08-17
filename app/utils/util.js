@@ -27,7 +27,7 @@ export const arrayToDisc = (arr, parentObj) => {
     rightArray.sort(function (obj1,obj2) {
         return obj1.modelWord.length >= obj2.modelWord.length
     })
-    
+
     let wrongArray = arr.filter(item => (item.modelWord[0] != keyPath && item.modelWord[0]))
 
     rightArray.map(item => item.modelWord.shift())
@@ -37,10 +37,10 @@ export const arrayToDisc = (arr, parentObj) => {
             key:rightArray[0].modelPath.replace(/\:/g,'/').match('(.*)'+keyPath)[0],
             title:keyPath,
             children: [],
-            intentId: rightArray[0].intentId,
-            modelPath: rightArray[0].modelPath,
-            name: rightArray[0].name,
-            zhName: rightArray[0].zhName
+            intentId: rightArray[0].modelWord.length?'':rightArray[0].intentId,
+            modelPath: rightArray[0].modelWord.length?'':rightArray[0].modelPath,
+            name: rightArray[0].modelWord.length?'':rightArray[0].name,
+            zhName: rightArray[0].modelWord.length?'':rightArray[0].zhName
         }
         if (parentObj) {
             parentObj.children.push(sonObj);
