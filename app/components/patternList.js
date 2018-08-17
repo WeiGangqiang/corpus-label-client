@@ -14,14 +14,13 @@ export class PatternList extends Component {
             positivePatterns: [],
             negativePatterns: [],
             posSimpliferKey: 0,
-            negSimpliferKey: 0,
-            entityParam: []
+            negSimpliferKey: 0
         }
     }
 
     getEntityForIntent = (props) =>{
         let entityUrl = '?agent=' + props.agentName + '&intentId=' + props.intentId
-        console.log('get entity for intent url', entityUrl, )
+        // console.log('get entity for intent url', entityUrl, )
         this.props.dispatch(fetchEntity(entityUrl, data => {
             for (let i = 0; i < data.length; i++) {
                 data[i].valuesF = [...data[i].values]
@@ -32,43 +31,17 @@ export class PatternList extends Component {
                 }
                 data[i].valuesShow = [...data[i].valuesF.slice(0, 10)]
             }
-            console.log('get  entity data', data)
+            // console.log('get  entity data', data)
             this.setState({
                 entityParam: [...data]
             })
         }, error => {
         }))
     }
-    
-    componentWillReceiveProps(props) {
-        this.getPatternList(props, "positive")
-        this.getPatternList(props, "negative")
-        this.getEntityForIntent(props)
-    }
 
-    getPatternList = (props, corpusType) => {
-        let url = '?agent=' + props.agentName + '&intentId=' + props.intentId + '&type=' + corpusType
-        if (this.props.intentId === '1') {
-            console.log('intent id is invalid')
-            return
-        }
-        this.props.dispatch(getPattern(url,
-            (data) => {
-                console.log('reading pattern data is', data)
-                if(corpusType == "positive"){
-                    this.setState({positivePatterns: data})
-                }
-                else{
-                    this.setState({negativePatterns: data})
-                }
-            },
-            (err) => {
-                console.log(err)
-            }))
-    }
 
     removePatternBy = (patternId, corpusType) => {
-        console.log('patternId', patternId, 'removed')
+        // console.log('patternId', patternId, 'removed')
         let that = this
         this.props.dispatch(deletePattern({
             "patternId": patternId,
@@ -76,13 +49,13 @@ export class PatternList extends Component {
             "intentId": this.props.intentId,
             "agent": this.props.agentName
         }, data => {
-            that.getPatternList(that.props, corpusType)
+            that.props.getPatternList(that.props, corpusType)
         }))
     }
 
     updateSelectLabel = (patternId, selectLoc, corpusType) => {
         this.props.updatePhrase()
-        console.log('patternId', patternId, selectLoc)
+        // console.log('patternId', patternId, selectLoc)
         this.updatePatternLabels(patternId, selectLoc, corpusType)
     }
 
@@ -119,7 +92,8 @@ export class PatternList extends Component {
             "agent": this.props.agentName,
             "pattern": pattern
         }, data => {
-            that.getPatternList(that.props, corpusType)
+            that.props.getPatternList(that.props, corpusType)
+
         }))
 
     }
@@ -137,7 +111,7 @@ export class PatternList extends Component {
     }
 
     addPattern = (newCorpus, labels, corpusType) => {
-        console.log('add pattern for', newCorpus, labels, corpusType)
+        // console.log('add pattern for', newCorpus, labels, corpusType)
         this.updateSimpliferKey(corpusType)
         let that = this
         this.props.dispatch(postPattern({
@@ -149,8 +123,8 @@ export class PatternList extends Component {
             intentId: this.props.intentId,
             agent: this.props.agentName
         }, data => {
-            console.log('add pattern result', data)
-            that.getPatternList(that.props, corpusType)
+            // console.log('add pattern result', data)
+            that.props.getPatternList(that.props, corpusType)
         }))
     }
 
@@ -161,7 +135,7 @@ export class PatternList extends Component {
             "intentId": this.props.intentId,
             "agent": this.props.agentName
         }, data => {
-            console.log('predict labels is', data)
+            // console.log('predict labels is', data)
             that.addPattern(sentence, data, corpusType)
         }, error => {
             console.log(error)
@@ -183,7 +157,7 @@ export class PatternList extends Component {
             "agent": this.props.agentName,
             "pattern": pattern
         }, data => {
-            that.getPatternList(that.props, corpusType)
+            that.props.getPatternList(that.props, corpusType)
         }))
     }
 
@@ -209,13 +183,13 @@ export class PatternList extends Component {
             return (<PatternLine key={patternId} patternId={patternId} pattern={pattern}
                                  removePatternBy={this.removePatternBy} updateSelectLabel={this.updateSelectLabel}
                                  agent={this.props.agentName} intent={this.props.intent}
-                                 entityParam={this.state.entityParam} phraseArray={this.props.phraseArray}
+                                 entityParam={this.props.entityParam} phraseArray={this.props.phraseArray}
                                  intentId={this.props.intentId} corpusType={corpusType} removeLabel={this.removeLabel}/>)
         })
     }
 
     updateTabPane = (key)=> {
-        console.log('change key', key)
+        // console.log('change key', key)
     }
 
     render() {

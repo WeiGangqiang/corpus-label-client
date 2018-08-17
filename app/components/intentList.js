@@ -14,7 +14,6 @@ export class IntentList extends Component {
     }
 
     selectNode =(selectKey,e) => {
-        console.log(e)
         if(e.selectedNodes.length){
             if(e.selectedNodes[0].props.dataRef.intentId){
                 this.props.getIntent(e.selectedNodes[0].props.dataRef)

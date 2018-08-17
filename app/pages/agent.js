@@ -107,7 +107,7 @@ export default class Agent extends Component {
                         <ul style={style.flexBox}>
                             {
                                 agentResult.data.map(item => {
-                                    return <li className={item.id == this.state.agentId ? 'active-btn' : ''}
+                                    return <li key={item.id} className={item.id == this.state.agentId ? 'active-btn' : ''}
                                                style={style.serveLi} key={item.id}
                                                onClick={this.selectAgent.bind(this, item)}>{item.name}</li>
                                 })

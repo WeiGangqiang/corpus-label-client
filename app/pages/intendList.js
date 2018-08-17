@@ -12,7 +12,8 @@ import {
     getPhrase,
     putPhrase,
     deletePhrase,
-    postPhrase
+    postPhrase,
+    getPattern
 } from 'actions/intend'
 
 import {PatternList, PhraseList, EntityParameters, IntentList, IntentDesc} from "components/index";
@@ -43,7 +44,9 @@ export default class intendList extends Component {
             entityParam: [],
             phraseArray: [],
             pattenListKey: 0,
-            type: 'positive'
+            type: 'positive',
+            positivePatterns: [],
+            negativePatterns:[]
         };
         this.initData = this.initData.bind(this);
         this.getIntent = this.getIntent.bind(this)
@@ -104,6 +107,22 @@ export default class intendList extends Component {
             }, error => {
                 console.log(error)
             }))
+        this.props.dispatch(getPattern('?agent=' + agentName + '&intentId=' + this.state.intentId + '&type=positive',
+                data => {
+                    this.setState({
+                        positivePatterns: data
+                    })
+        },error => {
+            console.log(error)
+        }))
+        this.props.dispatch(getPattern('?agent=' + agentName + '&intentId=' + this.state.intentId + '&type=negative',
+            data => {
+                this.setState({
+                    negativePatterns: data
+                })
+            },error => {
+                console.log(error)
+            }))
     }
 
     getPhrase() {
@@ -113,6 +132,20 @@ export default class intendList extends Component {
                     phraseArray: [...data]
                 })
             }, error => {
+                console.log(error)
+            }))
+    }
+
+    getPatternList = (prop, type) => {
+        this.props.dispatch(getPattern('?agent=' + prop.agentName + '&intentId=' + prop.intentId + '&type=' + type,
+            data => {
+                if(type == "positive"){
+                    this.setState({positivePatterns: data})
+                }
+                else{
+                    this.setState({negativePatterns: data})
+                }
+            },error => {
                 console.log(error)
             }))
     }
@@ -137,7 +170,7 @@ export default class intendList extends Component {
 
     render() {
         const agentName = sessionStorage.getItem('agentName');
-        console.log('agent name is ', agentName)
+        // console.log('agent name is ', agentName)
         const {intendResult} = this.props;
         const style = {
             innerContainer: {
@@ -168,7 +201,7 @@ export default class intendList extends Component {
                             <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues}
                                               showMoreValues={this.showMoreValues}/>
                             <PatternList key={this.state.pattenListKey} agentName={agentName} intent={this.state.name} intentId={this.state.intentId}
-                                         corpusType={this.state.type} updatePhrase={this.getPhrase} phraseArray={this.state.phraseArray}/>
+                                         corpusType={this.state.type} updatePhrase={this.getPhrase} phraseArray={this.state.phraseArray} entityParam={this.state.entityParam} positivePatterns={this.state.positivePatterns} negativePatterns={this.state.negativePatterns} getPatternList={this.getPatternList}/>
 
                             <PhraseList intent={this.state.name} agent={agentName} intentId={this.state.intentId} phraseArray={this.state.phraseArray}
                                         updatePhraseArray={this.getPhrase}  reloadPatterns={this.reloadPatterns}/>
