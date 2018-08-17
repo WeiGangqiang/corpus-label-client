@@ -23,7 +23,7 @@ export class PatternLine extends Component {
             let phrase = this.props.phraseArray.find((value) => {
               return value.phraseId == label.id
             })
-            return !phrase ? '2px dashed green' : '2px dashed' + phrase.color
+            return !phrase ? '2px solid green' : '2px solid' + phrase.color
             return !phrase ? 'green': phrase.color
           }
     }
@@ -34,11 +34,11 @@ export class PatternLine extends Component {
             color: '#fff',
             // padding: '1px 1px',
             // border: this.getlabelColor(label),
-            padding: '5px',
+            padding: '2px',
             borderRadius:'5px'
         } : {
             border: this.getlabelColor(label),
-            padding: '5px',
+            padding: '2px',
             borderRadius:'5px'
         }
     }
