@@ -21,7 +21,7 @@ export const intendResult = handleActions({
     },
 }, intendState)
 
-const colorArray = ['#3d5afe', '#42a5f5', '#1e88e5', '#448aff', '#29b6f6', '#0288d1', '#00b0ff'];
+const colorArray = ['#4c32e8', '#0000FF', '#5c6bc0', '#4169E1', '#1E90FF', '#87CEFA', '#00BFFF', '#0288d1', '#4b4fd0', '#0d47a1'];
 const entityState = () => [];
 export const entityResult = handleActions({
     'request entity list'(state, action) {
@@ -37,7 +37,7 @@ export const entityResult = handleActions({
 }, entityState())
 
 
-const colorGreenArray = ['#81c784', '#66bb6a', '#4caf50', '#43a047', '#388e3c', '#2e7f32', '#aed581', '#9ccc65', '#8bc34a'];
+const colorGreenArray = ['#80cbc4', '#009688', '#00695c', '#00bfa5', '#81c784', '#43a047', '#2e7d32', '#00e676', '#8bc34a', '#64dd17'];
 const phraseState = () => [];
 export const phraseResult = handleActions({
     'request phrase list'(state, action) {
