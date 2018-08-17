@@ -14,7 +14,7 @@ export class PatternLine extends Component {
     getlabelColor = (label) => {
         if (label.type == 'entity') {
             let entity = this.props.entityParam.find((value)=> {
-              return value.id = label.id
+              return value.name == label.id
             })
             return !entity ? 'blue': entity.color
           } else {
@@ -53,7 +53,6 @@ export class PatternLine extends Component {
                 label: label
             })
         }
-        console.log('select label is ', label)
     }
 
     getSpans = () => {
