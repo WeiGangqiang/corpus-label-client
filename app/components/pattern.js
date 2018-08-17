@@ -12,6 +12,7 @@ export class PatternLine extends Component {
         }
     }
     getlabelColor = (label) => {
+        console.log('phrase list', this.props.phraseArray, 'label is', label)
         if (label.type == 'entity') {
             let entity = this.props.entityParam.find((value)=> {
               return value.name == label.id
@@ -19,7 +20,7 @@ export class PatternLine extends Component {
             return !entity ? 'blue': entity.color
           } else {
             let phrase = this.props.phraseArray.find((value) => {
-              return value.id = label.id
+              return value.phraseId == label.id
             })
             return !phrase ? 'green': phrase.color
           }
