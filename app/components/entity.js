@@ -52,9 +52,9 @@ export class EntityParameters extends Component {
                 if(record.values.length < 10){
                     return (<span> </span>)
                 } else if(record.valuesShow.length <= 10){
-                    return ( <span style={{paddingLeft: '10px', color:'#0099CC'}} onClick={that.showMoreValues.bind(that, index)}>详情<Icon type='caret-down'/></span>)
+                    return ( <span style={{paddingLeft: '10px', color:'#0099CC'}} onClick={that.showMoreValues.bind(that, index)}>详情 <Icon type='caret-down'/></span>)
                 } else {
-                    return (<span style={{paddingLeft: '10px', color:'#0099CC'}}  onClick={that.showLessValues.bind(that, index)}>简要<Icon type='caret-up'/></span>)
+                    return (<span style={{paddingLeft: '10px', color:'#0099CC'}}  onClick={that.showLessValues.bind(that, index)}>简要 <Icon type='caret-up'/></span>)
                 }
 
             }
