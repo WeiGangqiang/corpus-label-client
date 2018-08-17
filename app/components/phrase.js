@@ -35,14 +35,24 @@ export class PhraseList extends Component {
         }))
 
         item.similars.splice(i, 1)
-        this.props.dispatch(putPhrase({
-            ...item,
-            intent: this.props.name,
-            agent: this.props.agent
-        }, data => {
-            this.props.updatePhraseArray()
-        }))
-
+        if (item.similars.length == 0) {
+            this.props.dispatch(deletePhrase({
+                phraseId: item.phraseId,
+                intentId: item.intentId,
+                intent: this.props.intent,
+                agent: this.props.agent
+            }, data => {
+                this.props.updatePhraseArray()
+            }))
+        } else {
+            this.props.dispatch(putPhrase({
+                ...item,
+                intent: this.props.name,
+                agent: this.props.agent
+            }, data => {
+                this.props.updatePhraseArray()
+            }))
+        }
     }
 
     showAddPhrase(phrase) {
