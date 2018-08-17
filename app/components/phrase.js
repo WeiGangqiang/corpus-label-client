@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {putPhrase, deletePhrase, postPhrase} from 'actions/intend'
+import {putPhrase, deletePhrase, postPhrase, patternsSync} from 'actions/intend'
 import {Table,Form,Button,Input,Icon} from 'antd'
 
 
@@ -23,6 +23,17 @@ export class PhraseList extends Component {
     }
 
     delPhraseText(item, i) {
+        let phrase = item.similars[i]
+        this.props.dispatch(patternsSync({
+            phrase   : phrase,
+            phraseId : item.phraseId,
+            intentId : item.intentId,
+            intent   : this.props.intent,
+            agent    : this.props.agent
+        }, data => {
+            this.props.reloadPatterns()
+        }))
+
         item.similars.splice(i, 1)
         this.props.dispatch(putPhrase({
             ...item,
@@ -31,6 +42,7 @@ export class PhraseList extends Component {
         }, data => {
             this.props.updatePhraseArray()
         }))
+
     }
 
     showAddPhrase(phrase) {
@@ -56,6 +68,16 @@ export class PhraseList extends Component {
             agent: this.props.agent
         }, data => {
             this.props.updatePhraseArray()
+        }))
+
+        this.props.dispatch(patternsSync({
+            phrase   : '',
+            phraseId : phrase.phraseId,
+            intentId : phrase.intentId,
+            intent   : this.props.intent,
+            agent    : this.props.agent
+        }, data => {
+            this.props.reloadPatterns()
         }))
 
     }
