@@ -17,20 +17,29 @@ export class PatternLine extends Component {
             let entity = this.props.entityParam.find((value)=> {
               return value.name == label.id
             })
+            // return !entity ? '2px solid blue' : '2px solid' + entity.color
             return !entity ? 'blue': entity.color
           } else {
             let phrase = this.props.phraseArray.find((value) => {
               return value.phraseId == label.id
             })
+            return !phrase ? '2px dashed green' : '2px dashed' + phrase.color
             return !phrase ? 'green': phrase.color
           }
     }
 
     getSpanStyleBy = (label) => {
-        return {
+        return label.type == 'entity' ? {
             background: this.getlabelColor(label),
             color: '#fff',
-            padding: '1px 1px',
+            // padding: '1px 1px',
+            // border: this.getlabelColor(label),
+            padding: '5px',
+            borderRadius:'5px'
+        } : {
+            border: this.getlabelColor(label),
+            padding: '5px',
+            borderRadius:'5px'
         }
     }
 
