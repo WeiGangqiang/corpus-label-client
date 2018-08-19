@@ -27,6 +27,7 @@ export class PatternLine extends Component {
             return !phrase ? 'green': phrase.color
           }
     }
+    绑定
 
     getSpanStyleBy = (label) => {
         return label.type == 'entity' ? {

@@ -56,7 +56,6 @@ export class EntityParameters extends Component {
                 } else {
                     return (<span style={{paddingLeft: '10px', color:'#0099CC'}}  onClick={that.showLessValues.bind(that, index)}>简要 <Icon type='caret-up'/></span>)
                 }
-
             }
         }
     ]
