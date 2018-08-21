@@ -99,8 +99,8 @@ export class Simplifier extends Component {
         }
 
         return <Row>
-                <Col span ={12}><Button type="primary" style={styleButten} onClick = {this.addSimpliferSentence} icon ="check">正确</Button> </Col>
-                <Col span ={12}><Button type="danger" style={styleButten} onClick = {this.addOrignalSentence} icon ="close">错误</Button> </Col>
+                <Col span ={12}><Button type="primary" style={styleButten} onClick = {this.addSimpliferSentence} icon ="check">接受</Button> </Col>
+                <Col span ={12}><Button type="danger" style={styleButten} onClick = {this.addOrignalSentence} icon ="close">拒绝</Button> </Col>
                 </Row>
     }
 
@@ -141,7 +141,7 @@ export class Simplifier extends Component {
                 </Col>
                 <Col style={{boxShadow: '0px 0px 15px 0px #999', borderRadius: '4px'}} span={18}>
                     {this.state.isSimplified ?
-                        <Input style={{ width: '100%' }} addonBefore="简化后：" value={this.state.simCorpus} disabled={true}/> : ''
+                        <Input style={{ width: '100%' }} addonBefore="建议：" value={this.state.simCorpus} disabled={true}/> : ''
                     }
                 </Col>
                 <Col span={6}>
