@@ -111,10 +111,12 @@ export class ColorDownList extends Component {
             return
           }
         }
-        subMenus.push(<Menu.Item style={{...noMargin}} className="corpusItem" key={phrase.phraseId + '###phrase'}>{that.getPhraseDisPlay(phrase)}</Menu.Item>)
+        if(phrase.intentId) {
+            subMenus.push(<Menu.Item style={{...noMargin}} className="corpusItem" key={phrase.phraseId + '###phrase'}>{that.getPhraseDisPlay(phrase)}</Menu.Item>)
+        }
       })
 
-      subMenus.push(<Menu.Item style={{...menuStyle,...noMargin}} className="corpusItem" key={'453543###addNew'}>添加同义词</Menu.Item>)
+      subMenus.push(<Menu.Item style={{...menuStyle,...noMargin}} className="corpusItem" key={'453543###addNew'}>添加近义词</Menu.Item>)
       return subMenus
     }
 

@@ -176,6 +176,12 @@ export class PatternList extends Component {
 
 
     getPatternViews = (corpusType) => {
+        const that = this
+        if(this.refs.div){
+            setTimeout(function(){
+                that.refs.div.scrollTop = that.refs.div.scrollHeight
+            })
+        }
         let patternList = this.getPatternListBy(corpusType)
         return patternList.map((pattern, patternId) => {
             return (<PatternLine key={patternId} patternId={patternId} pattern={pattern}
@@ -220,11 +226,11 @@ export class PatternList extends Component {
                {this.getTitle()}
             <Tabs type="card" style={style.corpusTab} defaultActiveKey="1" onChange={this.updateTabPane}>
                 <TabPane style={style.corpusTabPane} tab="正样本" key="positive">
-                    <div style={style.pBox}> {this.getPatternViews("positive")}</div>
+                    <div ref="div" style={style.pBox}> {this.getPatternViews("positive")}</div>
                     <Simplifier key={this.state.posSimpliferKey} corpusType="positive" addPattern={this.addPatternWithPredict}></Simplifier>
                 </TabPane>
                 <TabPane style={style.corpusTabPane} tab="负样本" key="negative">
-                    <div style={style.pBox}> {this.getPatternViews("negative")}</div>
+                    <div  ref="div" style={style.pBox}> {this.getPatternViews("negative")}</div>
                     <Simplifier key={this.state.posSimpliferKey} corpusType="negative" addPattern={this.addPatternWithPredict}></Simplifier>
                 </TabPane>
             </Tabs>
