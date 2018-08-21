@@ -141,7 +141,7 @@ export class Simplifier extends Component {
                 </Col>
                 <Col style={{boxShadow: '0px 0px 15px 0px #999', borderRadius: '4px'}} span={18}>
                     {this.state.isSimplified ?
-                        <Input style={{ width: '100%' }} addonBefore="简化后：" value={this.state.simCorpus} disabled={true}/> : ''
+                        <Input style={{ width: '100%' }} addonBefore="推荐使用：" value={this.state.simCorpus} disabled={true}/> : ''
                     }
                 </Col>
                 <Col span={6}>

@@ -1,18 +1,23 @@
 import React, {Component} from 'react'
-import {Button, Row, Col, Icon} from 'antd'
+import {connect} from 'react-redux'
+import {Button, Row, Col, Icon, Modal} from 'antd'
 import {ColorDownList} from "./colorDownList";
+import {generate} from 'actions/intend'
 
+@connect((state, dispatch) => ({}))
 export class PatternLine extends Component {
     constructor(props) {
         super(props)
         this.state = {
             showDownlist: false,
             top: 0,
-            left: 0
+            left: 0,
+            detailVisible:false,
+            sentenceArray: []
         }
     }
     getlabelColor = (label) => {
-        console.log('phrase list', this.props.phraseArray, 'label is', label)
+        // console.log('phrase list', this.props.phraseArray, 'label is', label)
         if (label.type == 'entity') {
             let entity = this.props.entityParam.find((value)=> {
               return value.name == label.id
@@ -44,9 +49,9 @@ export class PatternLine extends Component {
     }
 
     labelSpanSelected = (e) => {
-        console.log('span is clicked', e)
+        // console.log('span is clicked', e)
         let selection = (window.getSelection) ? window.getSelection() : document.getSelection()
-        console.log('selection is ',selection)
+        // console.log('selection is ',selection)
         let labelIndex = this.getLabelIndexBy(selection.anchorNode.parentNode.id)
         let label = this.props.pattern.labels[labelIndex]
         if(labelIndex != -1){
@@ -136,7 +141,7 @@ export class PatternLine extends Component {
 
     selectWord = (e) => {
         let selection = (window.getSelection) ? window.getSelection() : document.getSelection()
-        console.log('select word is called........')
+        // console.log('select word is called........')
         if (selection.toString().length > 0) {
             let selectStartPos = this.calcShiftPos(selection.anchorNode.parentNode.id, selection.anchorOffset)
             let selectEndPos = this.calcShiftPos(selection.focusNode.parentNode.id, selection.focusOffset)
@@ -164,7 +169,7 @@ export class PatternLine extends Component {
     }
 
     entityOrPhrase = (obj) => {
-        console.log('add entity phrase list', obj)
+        // console.log('add entity phrase list', obj)
         this.props.updateSelectLabel(this.props.patternId, {
             ...this.calcLabelPos(this.state.selectStartPos, this.state.selectEndPos),
             id: obj.id,
@@ -174,8 +179,37 @@ export class PatternLine extends Component {
     }
 
     removeLabel = (labelIndex)=> {
-        console.log('remove label for', labelIndex)
+        // console.log('remove label for', labelIndex)
         this.props.removeLabel(this.props.patternId, labelIndex, this.props.corpusType)
+    }
+
+    showPattern = () => {
+        // console.log(this.props.pattern)
+        this.setState({
+            detailVisible: true
+        })
+        this.props.dispatch(generate({
+            "pattern"  : this.props.pattern,
+            "intentId" : this.props.intentId,
+            "agent"    : this.props.agent
+        },data => {
+            let reg = /[\[\]]/g
+            let labelReg = /\/L[0-9]/g
+            for(let i = 0; i < data.length; i++){
+                data[i] = data[i].replace(reg,'').replace(labelReg,'')
+            }
+            this.setState({
+                sentenceArray: [...data]
+            })
+        }, error => {
+            console.log(error)
+        }))
+    }
+
+    turnOff = () => {
+        this.setState({
+            detailVisible: false
+        })
     }
 
     render() {
@@ -187,7 +221,9 @@ export class PatternLine extends Component {
             },
             colRight:{
                 float: 'right',
-                marginTop: '4px'
+                marginTop: '4px',
+                marginLeft: '10px',
+                cursor:'pointer'
             },
             corpusP:{
                 marginBottom: 0,
@@ -197,11 +233,18 @@ export class PatternLine extends Component {
             delete:{
                 marginTop: '5px',
                 fontSize :'20px',
+            },
+            sentenceDiv:{
+                lineHeight: '32px',
+                borderBottom: '1px solid #dadada'
             }
         }
         return (<Row className="corpusItem" style={style.corpusBox}>
             <Col style={style.colRight}>
                 <span onClick={this.removePattern}> <Icon type="delete" style={style.delete} /></span>
+            </Col>
+            <Col style={style.colRight}>
+                <span onClick={this.showPattern}> <Icon type="appstore-o" style={style.delete}/></span>
             </Col>
             <Col >
                 <p style={style.corpusP} onMouseUp={this.selectWord}>{this.getSpans()}</p>
@@ -214,6 +257,19 @@ export class PatternLine extends Component {
                                    entityParam={this.props.entityParam} phraseArray={this.props.phraseArray}
                                    hideDownlist={this.hideDownlist} entityOrPhrase={this.entityOrPhrase}/> : ''
             }
+            <Modal
+                title="详情"
+                visible={this.state.detailVisible}
+                onCancel={this.turnOff}
+                destroyOnClose={true}
+                footer={null}
+            >
+                {
+                    this.state.sentenceArray.map((item, index) => {
+                        return <div style={style.sentenceDiv} key={index}>{item}</div>
+                    })
+                }
+            </Modal>
         </Row>)
     }
 }
