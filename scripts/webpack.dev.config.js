@@ -5,7 +5,7 @@ const merge = require('webpack-merge')
 const webpackConfigBase = require('./webpack.base.config')
 const OpenBrowserPlugin = require('open-browser-webpack-plugin')
 
-const PORT = 3010
+const PORT = 8081
 function resolve(relatedPath) {
   return path.join(__dirname, relatedPath)
 }
