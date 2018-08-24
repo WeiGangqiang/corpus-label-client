@@ -94,7 +94,7 @@ export default class Agent extends Component {
         }
         return (
             <div style={{marginTop:'55px'}}>
-                <div className='bread-cruft' ><img style={{height: '100%'}} src="../images/logo.png" alt=""/></div>
+                <div className='bread-cruft' ><img style={{height: '100%'}} src="images/logo.png" alt=""/></div>
                 <Spin spinning={agentResult.loading}>
                     {!agentResult.loading ? <div style={style.container} className="container">
                         {/*<div>服务器列表</div>*/}
