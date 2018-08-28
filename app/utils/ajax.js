@@ -139,6 +139,16 @@ const ajaxHttp = {
                 'Content-Type': 'application/json',
             },
         })
+    },
+    deleteForm: function (url, data) {
+        return axios({
+            method: 'delete',
+            url: url + data,
+            timeout: 10000,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+        })
     }
 }
 
@@ -165,6 +175,8 @@ function axiosPost(url, reqData, target, sign, handleCancel) {
             return ajaxHttp.putJson(newUrl, reqData);
         case 'deleteJson':
             return ajaxHttp.deleteJson(newUrl, reqData);
+        case 'deleteForm':
+            return ajaxHttp.deleteForm(newUrl, reqData);
         default:
             return ajaxHttp.postJson(newUrl, reqData)
     }

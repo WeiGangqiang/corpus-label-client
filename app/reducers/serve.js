@@ -34,13 +34,13 @@ export const agentResult = handleActions({
     },
     'receive agent list'(state, action) {
         const {req, res} = action.payload;
-        let arr = [];
-        res.map((item, index) => {
-            arr[index] = {};
-            arr[index].name = item;
-            arr[index].id = index - (-1)
-        })
-        return {data: arr, loading: false}
+        // let arr = [];
+        // res.map((item, index) => {
+        //     arr[index] = {};
+        //     arr[index].name = item;
+        //     arr[index].id = index - (-1)
+        // })
+        return {data: res, loading: false}
     },
     'set agent name'(state, action) {
         return

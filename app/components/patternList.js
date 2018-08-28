@@ -34,6 +34,7 @@ export class PatternList extends Component {
                 entityParam: [...data]
             })
         }, error => {
+            console.log(error)
         }))
     }
 

@@ -22,3 +22,7 @@ export const fetchAgent = createAjaxAction(
 
 export const agentName = createAction('set agent name');
 export const setAgentName = createLocalAction('', agentName);
+
+export const deleteAgent = createAjaxAction(serve.deleteAgent)
+
+export const addAgent = createAjaxAction(serve.addAgent)
