@@ -26,3 +26,5 @@ export const setAgentName = createLocalAction('', agentName);
 export const deleteAgent = createAjaxAction(serve.deleteAgent)
 
 export const addAgent = createAjaxAction(serve.addAgent)
+
+export const updateAgent = createAjaxAction(serve.updateAgent)

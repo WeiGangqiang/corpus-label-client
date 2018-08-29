@@ -66,6 +66,9 @@ export default class intendList extends Component {
             }
         }, error => {
         }))
+
+
+
     }
 
     componentDidMount() {
@@ -170,7 +173,7 @@ export default class intendList extends Component {
     }
 
     render() {
-        const agentName = sessionStorage.getItem('agentName');
+        const agentName = this.props.location.query.agent;
         // console.log('agent name is ', agentName)
         const {intendResult} = this.props;
         const style = {

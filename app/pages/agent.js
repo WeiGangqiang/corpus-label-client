@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {hashHistory, Link} from 'react-router'
 import {Spin, message, Form, Icon, Input, Button, Row, Col, Table, Modal, Checkbox} from 'antd'
-import {fetchServe, fetchAgent, setAgentName, deleteAgent, addAgent} from 'actions/serve'
+import {fetchServe, fetchAgent, setAgentName, deleteAgent, addAgent, updateAgent} from 'actions/serve'
 
 import {AgentTable} from "components/index";
 
@@ -27,7 +27,13 @@ export default class Agent extends Component {
             servePath: '',
             serveId: 1,
             agentId: 1,
-            addVisible: false
+            addVisible: false,
+            shareAgents: [],
+            newAgent: '',
+            newGateWay: '',
+            newIntroduced: '',
+            newUnknown: '',
+            editOrAdd: ''
         }
     }
 
@@ -54,13 +60,35 @@ export default class Agent extends Component {
 
     showAddAgent = () => {
         this.setState({
-            addVisible: true
+            addVisible: true,
+            editOrAdd: 'add'
         })
     }
 
     hideAddModal = () => {
         this.setState({
-            addVisible: false
+            addVisible: false,
+            shareAgents: [],
+            newAgent: '',
+            newGateWay: '',
+            newIntroduced: '',
+            newUnknown: '',
+            agentId: '',
+            editOrAdd: ''
+        })
+    }
+
+    showEditAgent = (agent) => {
+        this.setState({
+            shareAgents: agent.shareAgents,
+            newAgent: agent.name,
+            newGateWay: agent.gateWay,
+            newIntroduced: agent.introduced,
+            newUnknown: agent.unknownReplies.join(';'),
+            agentId: agent.agentId,
+            addVisible: true,
+            editOrAdd: 'edit',
+
         })
     }
 
@@ -69,11 +97,57 @@ export default class Agent extends Component {
     }
 
     onChange = (value) => {
-        console.log(value)
+        this.setState({
+            shareAgents: value
+        })
     }
 
-    submit = () => {
+    handleSubmit = (e) => {
+        e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                // console.log(values)
+                // console.log(this.state.shareAgents)
+                if (this.state.editOrAdd == 'add'){
+                    this.props.dispatch(addAgent({
+                        name: values.agentName,
+                        gateWay: values.gateWay,
+                        introduced: values.introduce,
+                        shareAgents: this.state.shareAgents,
+                        unknownReplies: values.unknown.replace(/；/g,";").split(';')
+                    }, data => {
+                        console.log(data)
+                        this.hideAddModal()
+                        this.props.dispatch(fetchAgent('', data => {
+                            // console.log(data);
+                        }, error => {
+                            console.log(error)
+                        }))
+                    }, error => {
+                        console.log(error)
+                    }))
+                } else if (this.state.editOrAdd == 'edit') {
+                    this.props.dispatch(updateAgent({
+                        name: values.agentName,
+                        gateWay: values.gateWay,
+                        introduced: values.introduce,
+                        shareAgents: this.state.shareAgents,
+                        unknownReplies: values.unknown.replace(/；/g,";").split(';'),
+                        agentId: this.state.agentId
+                    }, data => {
+                        this.hideAddModal()
+                        this.props.dispatch(fetchAgent('', data => {
+                            // console.log(data);
+                        }, error => {
+                            console.log(error)
+                        }))
+                    }, error => {
+                        console.log(error)
+                    }))
+                }
 
+            }
+        });
     }
 
     render() {
@@ -109,7 +183,9 @@ export default class Agent extends Component {
             },
             agentHead: {
                 lineHeight: '40px',
-                marginTop: '-40px'
+                marginTop: '-40px',
+                borderBottom: '1px solid #dadada',
+                marginBottom: '10px'
             },
             addApp:{
                 float:'right',
@@ -122,6 +198,16 @@ export default class Agent extends Component {
                 textAlign: 'center',
                 marginTop: '4px',
                 cursor: 'pointer'
+            },
+            modalFoot:{
+                height: '52px',
+                lineHeight: '32px',
+                textAlign: 'right',
+                padding: '10px 16px',
+                borderTop: '1px solid #e8e8e8'
+            },
+            modalFootBtn:{
+                marginLeft: '8px'
             }
         }
         return (
@@ -144,66 +230,84 @@ export default class Agent extends Component {
                                 <ul style={style.flexBox}>
                                     {
                                         agentResult.data.map(item => {
-                                            return <AgentTable agent={item} key={item.agentId} deleteAgent={this.deleteAgent}/>
+                                            return <AgentTable agent={item} key={item.agentId} deleteAgent={this.deleteAgent} showEditModal={this.showEditAgent}/>
                                         })
                                     }
                                 </ul>
                             </div>
+
                         </div> : <div>数据正在加载中，您可以先去嗑瓜子</div>}
                     </Spin>
                 </div>
                 <Modal
-                    title="新增"
+                    title={this.state.editOrAdd == 'add'? '新增' : '编辑'}
                     visible={this.state.addVisible}
+                    centered
                     destroyOnClose="true"
+                    footer={null}
                     onCancel={this.hideAddModal}
-                    onOk={this.submit}
+                    bodyStyle={{padding:0}}
                 >
-                    <Form onSubmit={this.submit}>
-                        <FormItem>
+                    <Form onSubmit={this.handleSubmit}>
+                        <FormItem className="modalFormItem">
                             {getFieldDecorator('agentName', {
                                 rules: [
                                     {required: true, message: '请输入应用名字'},
                                 ],
+                                initialValue: this.state.newAgent
                             })(<Input
                                 placeholder="请输入应用名字"
                                 type="text"
                             />)}
                         </FormItem>
-                        <FormItem>
+                        <FormItem className="modalFormItem">
                             {getFieldDecorator('gateWay', {
                                 rules: [
                                     {required: true, message: '请输入网关地址'},
                                 ],
+                                initialValue: this.state.newGateWay
                             })(<Input
                                 placeholder="请输入网关地址"
                                 type="text"
                             />)}
                         </FormItem>
-                        <FormItem>
+                        <FormItem className="modalFormItem">
                             {getFieldDecorator('introduce', {
                                 rules: [
                                     {required: true, message: '请输入应用简介'},
                                 ],
+                                initialValue: this.state.newIntroduced
                             })(<Input
                                 placeholder="请输入应用简介"
                                 type="text"
                             />)}
                         </FormItem>
-                        <FormItem>
-                            <Checkbox.Group style={{ width: '100%' }} onChange={this.onChange}>
+                        <FormItem className="modalFormItem">
+                            <span>依赖的应用:</span>
+                            <Checkbox.Group style={{ width: '100%' }} defaultValue={this.state.shareAgents} onChange={this.onChange}>
                                 <Row>
-                                    <Col span={8}><Checkbox value="A">A</Checkbox></Col>
-                                    <Col span={8}><Checkbox value="B">B</Checkbox></Col>
-                                    <Col span={8}><Checkbox value="C">C</Checkbox></Col>
-                                    <Col span={8}><Checkbox value="D">D</Checkbox></Col>
-                                    <Col span={8}><Checkbox value="E">E</Checkbox></Col>
+                                    {
+                                        agentResult.data.map(item => {
+                                            return item.name == this.state.newAgent ? '' : <Col key={item.agentId} span={8}><Checkbox value={item.name}>{item.name}</Checkbox></Col>
+                                        })
+                                    }
                                 </Row>
                             </Checkbox.Group>
                         </FormItem>
-                        <FormItem>
+                        <FormItem className="modalFormItem">
+                            <span>未识别回复:</span>
                             {getFieldDecorator('unknown', {
-                            })(<TextArea placeholder="请输入未知回复语，用分号(;)隔开"/>)}
+                                initialValue: this.state.newUnknown
+                            })(<TextArea style={{resize: 'none',height: '90px'}} placeholder="请输入未知回复语"/>)}
+                            <span style={{color:'#aaa'}}>如设置多条，中间用分号（；）隔开</span>
+                        </FormItem>
+                        <FormItem>
+                            <div style={style.modalFoot}>
+                                <Button onClick={this.hideAddModal}>Cancel</Button>
+                                <Button style={style.modalFootBtn} type="primary" htmlType="submit">
+                                    OK
+                                </Button>
+                            </div>
                         </FormItem>
                     </Form>
                 </Modal>

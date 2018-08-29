@@ -13,7 +13,6 @@ export class AgentTable extends Component {
     }
 
     showDeleteModal = () => {
-        console.log(this.props.agent)
         this.setState({
             deleteVisible: true,
             agentId: this.props.agent.agentId,
@@ -31,6 +30,10 @@ export class AgentTable extends Component {
 
     delete = () => {
         this.props.deleteAgent(this.state.agentId)
+    }
+
+    editAgent = () => {
+        this.props.showEditModal(this.props.agent)
     }
 
     render() {
@@ -96,7 +99,7 @@ export class AgentTable extends Component {
                     <Col style={style.col} span={12}><span style={style.label}>网关</span><pre style={style.pre}>{this.props.agent.gateWay}</pre></Col>
                 </Row>
                 <Row style={style.row}>
-                    <Col style={style.col} span={24}><span style={style.label}>介绍语</span><pre style={style.pre}>{this.props.agent.agentId}</pre></Col>
+                    <Col style={style.col} span={24}><span style={style.label}>介绍语</span><pre style={style.pre}>{this.props.agent.introduced}</pre></Col>
                 </Row>
                 <Row style={style.row}>
                     <Col style={style.col} span={24}><span style={style.label}>依赖</span><pre style={style.pre}>{this.props.agent.shareAgents.join(',')}</pre></Col>
@@ -105,19 +108,24 @@ export class AgentTable extends Component {
                     <Col style={style.col} span={24}><span style={style.label}>未识别回复</span><pre style={style.pre}>{this.props.agent.unknownReplies.join('\n')}</pre></Col>
                 </Row>
                 <Row style={style.row}>
-                    <Col style={style.col} span={8}>
+                    <Col style={style.col} span={6}>
                         <Link style={style.link} to={{
                             pathname: '/intendList',
                             search: '?agent=' + this.props.agent.name,
                         }}>配置语料</Link>
                     </Col>
-                    <Col style={style.col} span={8}>
+                    <Col style={style.col} span={6}>
                         <Link style={style.link} to={{
                             pathname: '/unknown',
                             search: '?agent=' + this.props.agent.name
                         }}>未识别语料</Link>
                     </Col>
-                    <Col style={style.col} span={8}>
+                    <Col style={style.col} span={6}>
+                        <Link onClick={this.editAgent} style={style.link}>
+                            编辑应用
+                        </Link>
+                    </Col>
+                    <Col style={style.col} span={6}>
                         <Link style={style.link}>发布</Link>
                     </Col>
                 </Row>
@@ -125,6 +133,7 @@ export class AgentTable extends Component {
                 <Modal
                     title="删除提示"
                     visible={this.state.deleteVisible}
+                    centered
                     onOk={this.delete}
                     onCancel={this.hideDeleteModal}
                 >

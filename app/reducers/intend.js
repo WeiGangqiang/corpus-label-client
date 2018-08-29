@@ -1,10 +1,6 @@
 import {handleActions} from 'redux-actions'
 import {hasResponseError} from 'utils'
 import {getDisc} from 'utils/util'
-import {message} from 'antd'
-
-
-// const intendState = () => []
 
 const intendState = {
     data: {},
@@ -16,14 +12,56 @@ export const intendResult = handleActions({
     },
     'receive intend list'(state, action) {
         let {req, res} = action.payload;
-        res = getDisc(res).children[0]
-        return {data: {...res.children[0]}, loading: false}
+        if (res.length) {
+            res = getDisc(res).children[0]
+            console.log(res)
+            res.key = '意图'
+            res.title = '意图'
+            return {data: {...res}, loading: false}
+        } else {
+            return {data:
+                    {
+                        key:'意图',
+                        title:'意图',
+                        intentId: '',
+                        modelPath: "",
+                        name: '',
+                        zhName: '',
+                        children: []
+
+                }, loading: false}
+        }
     },
 }, intendState)
 
-// const colorArray = ['#4c32e8', '#0000FF', '#5c6bc0', '#4169E1', '#1E90FF', '#87CEFA', '#00BFFF', '#0288d1', '#4b4fd0', '#0d47a1'];
-// const colorArray = ['#f3a42d', '#fbb20e', '#f7a324', '#FF9800', '#ffcc33'];
-// const colorArray = ['#b9721c', '#b2b91c', '#64b91c', '#721cb9', '#ffcc33'];
+const entityListState = {
+    data: {}
+}
+export const entitySlideResult = handleActions({
+    'request entity slide list'(state, action) {
+        return {...state}
+    },
+    'receive entity slide list'(state, action) {
+        let {req, res} = action.payload;
+        if (res.length) {
+            // res = getDisc(res).children[0]
+            console.log(res)
+            res.key = '实体'
+            res.title = '实体'
+            return {data: {...res}}
+        } else {
+            return {data:
+                    {
+                        key:'实体',
+                        title:'实体',
+                        children: []
+
+                    }, loading: false}
+        }
+    }
+}, entityListState)
+
+
 const colorArray = ['#64B8CF', '#FAB900', '#90BB23', '#EE7008', '#1AB39F'];
 const entityState = () => [];
 export const entityResult = handleActions({
@@ -39,9 +77,6 @@ export const entityResult = handleActions({
     },
 }, entityState())
 
-
-// const colorGreenArray = ['#80cbc4', '#009688', '#00695c', '#00bfa5', '#81c784', '#43a047', '#2e7d32', '#00e676', '#8bc34a', '#64dd17'];
-// const colorGreenArray = ['#0080ff', '#1cb2b9', '#b91c63', '#00bfa5', '#81c784'];
 const colorGreenArray = ['#90C226', '#54A021', '#E6B91E', '#E76618', '#C42F1A'];
 const phraseState = () => [];
 export const phraseResult = handleActions({

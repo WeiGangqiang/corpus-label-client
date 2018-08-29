@@ -12,7 +12,7 @@ import {
 } from './common'
 
 import {serveResult, agentResult, hostResult} from './serve'
-import {intendResult, entityResult, phraseResult} from './intend';
+import {intendResult, entitySlideResult, entityResult, phraseResult} from './intend';
 import {patternResult, predictResult} from './pattern'
 
 const rootReducer = combineReducers({
@@ -23,6 +23,7 @@ const rootReducer = combineReducers({
     serveResult,
     agentResult,
     intendResult,
+    entitySlideResult,
     entityResult,
     phraseResult,
     hostResult,
