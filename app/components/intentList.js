@@ -23,6 +23,14 @@ export class IntentList extends Component {
         }
     }
 
+    selectNodeEntity = (selectKey, e) => {
+        if(e.selectedNodes.length){
+            if(e.selectedNodes[0].props.dataRef.entityId){
+                this.props.getEntity(e.selectedNodes[0].props.dataRef)
+            }
+        }
+    }
+
     renderTreeNodes = (data) => {
         return data.map((item,index) => {
             if (item.children) {
@@ -69,12 +77,10 @@ export class IntentList extends Component {
             }
         }
 
-        console.log(this.props.originEntity)
-
         return (
             <div className='intentSlide' style={style.intendBox}>
-                <div style={{...style.corpusBox, display: this.props.originEntity.length ? 'block' : 'none'}}>
-                    <div style={style.headerTitle}>意图列表</div>
+                <div style={style.corpusBox}>
+                    <div style={style.headerTitle}>操作</div>
                     <Tree
                         autoExpandParent={true}
                         onSelect={this.selectNode}
@@ -82,12 +88,12 @@ export class IntentList extends Component {
                     >
                         {this.renderTreeNodes(this.props.originEntity)}
                     </Tree>
-                </div>
-                <div style={{
-                    ...style.corpusBox,
-                    fontSize: '14px',
-                    display: this.props.originEntity.length ? 'none' : 'block',
-                }}>没有意图
+                    <Tree
+                        autoExpandParent={true}
+                        onSelect={this.selectNodeEntity}
+                    >
+                        {this.renderTreeNodes(this.props.entityList)}
+                    </Tree>
                 </div>
             </div>
         )

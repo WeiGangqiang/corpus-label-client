@@ -37,6 +37,7 @@ export class AgentTable extends Component {
     }
 
     render() {
+
         const style = {
             li:{
                 borderLeft: '1px solid #dadada',

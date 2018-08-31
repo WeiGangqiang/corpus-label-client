@@ -5,6 +5,7 @@ import {IntentList} from "./intentList";
 import {PatternList} from "./patternList";
 import {IntentDesc} from "./IntentDesc";
 import {AgentTable} from "./agnetTable";
+import {EntityTable} from "./entityTable";
 
 export {
     PatternLine,
@@ -13,5 +14,6 @@ export {
     IntentList,
     PatternList,
     IntentDesc,
-    AgentTable
+    AgentTable,
+    EntityTable
 }

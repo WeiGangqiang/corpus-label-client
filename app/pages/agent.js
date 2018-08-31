@@ -253,6 +253,10 @@ export default class Agent extends Component {
                             {getFieldDecorator('agentName', {
                                 rules: [
                                     {required: true, message: '请输入应用名字'},
+                                    {
+                                        pattern: /^[0-9a-zA-Z\u4E00-\u9FFF]+$/,
+                                        message: '不能有非法字符串'
+                                    }
                                 ],
                                 initialValue: this.state.newAgent
                             })(<Input
@@ -263,7 +267,7 @@ export default class Agent extends Component {
                         <FormItem className="modalFormItem">
                             {getFieldDecorator('gateWay', {
                                 rules: [
-                                    {required: true, message: '请输入网关地址'},
+                                    {required: true, message: '请输入网关地址'}
                                 ],
                                 initialValue: this.state.newGateWay
                             })(<Input

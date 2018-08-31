@@ -14,7 +14,6 @@ export const intendResult = handleActions({
         let {req, res} = action.payload;
         if (res.length) {
             res = getDisc(res).children[0]
-            console.log(res)
             res.key = '意图'
             res.title = '意图'
             return {data: {...res}, loading: false}
@@ -42,22 +41,22 @@ export const entitySlideResult = handleActions({
         return {...state}
     },
     'receive entity slide list'(state, action) {
-        let {req, res} = action.payload;
-        if (res.length) {
-            // res = getDisc(res).children[0]
-            console.log(res)
-            res.key = '实体'
-            res.title = '实体'
-            return {data: {...res}}
-        } else {
-            return {data:
-                    {
-                        key:'实体',
-                        title:'实体',
-                        children: []
-
-                    }, loading: false}
-        }
+        let {res} = action.payload;
+        let rootObj = {
+            key: '实体',
+            title: '实体',
+            children: [],
+            entityId: ''
+        };
+        res.map((item, index) => {
+            rootObj.children.push({
+                key: item,
+                title: item,
+                children: [],
+                entityId: 'entity' + index
+            })
+        });
+        return {...rootObj}
     }
 }, entityListState)
 
@@ -94,7 +93,6 @@ export const phraseResult = handleActions({
             phraseId: "",
             similars: []
         })
-        console.log(res)
         return [...res]
     },
 }, phraseState())
