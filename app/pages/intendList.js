@@ -63,7 +63,7 @@ export default class intendList extends Component {
         this.props.dispatch(fetchIntend('?agent=' + agentName, data => {
             if (data.length) {
                 this.setState({
-                    originEntity: [...data]
+                    originEfetchEntityListntity: [...data]
                 })
                 this.initData(data[0])
             }
@@ -104,7 +104,7 @@ export default class intendList extends Component {
                 for (let j = 0; j < data[i].valuesF.length; j++) {
                     let reg = /[\[\]]/g
                     let labelReg = /\/L[0-9]/g
-                    data[i].valuesF[j] = data[i].valuesF[j].replace(reg, '').replace(labelReg, '')
+                    data[i].valuesF[j] = data[i].valuesF[j].replace(reg, '').replace(labelReg, '').replace(' ','')
                 }
                 data[i].valuesShow = [...data[i].valuesF.slice(0, 10)]
             }
@@ -290,7 +290,7 @@ export default class intendList extends Component {
 
         return <Spin spinning={intendResult.loading}>
             <div style={style.innerContainer}>
-                <Link className='bread-cruft' style={style.headerStyle} to={'/selectService'}><Icon style={{fontWeight:'bold'}} type='left'></Icon>机器人选择</Link>
+                <Link className='bread-cruft' style={style.headerStyle} to={'/selectService'}><Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择</Link>
                 <div style={style.innerBox} className='intentContainer'>
                     <IntentList originEntity={[intendResult.data]} intentId={this.state.intentId}
                                 getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity}/>

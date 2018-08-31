@@ -95,6 +95,7 @@ export class ColorDownList extends Component {
           margin: 0
       }
       console.log('this phrase id', this.props.phraseArray)
+        console.log(this.props.entityParam)
 
       this.props.entityParam.forEach(entity => {
         if(that.props.hasLabel && that.props.label.type == 'entity'){
