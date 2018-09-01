@@ -215,7 +215,7 @@ export default class Agent extends Component {
                 <div className='bread-cruft' ><img style={{height: '100%'}} src="images/logo.png" alt=""/></div>
                 <div className="container-of-index">
                     <ul className="slideBar-of-index">
-                        <li>操作</li>
+                        <div>操作</div>
                         <li>我的应用</li>
                         <li>公共应用</li>
                         <li>帮助文档</li>

@@ -178,7 +178,7 @@ ul,li{
   display: block;
   margin-top: -55px;
   float: left;
-  background: #6300FF;
+  background: #283535;
   color: #fff;
 }
 .intentSlide{
@@ -216,22 +216,25 @@ ul,li{
   font-size: 16px!important;
 }
 .container-of-index{
-  padding-left: @g-slidebar-width ;
+  padding-left: @g-slide-margin;
   height: 100%;
 }
 .slideBar-of-index{
   float: left;
-  width: @g-slidebar-width;
-  margin-left: -@g-slidebar-width;
+  width: @g-slide-width;
+  margin-left: -@g-slide-margin;
+  background: #fbfbfb;
+  height: 100%;
+  border-radius: 15px;
 }
-.slideBar-of-index>li{
+.slideBar-of-index>li, .slideBar-of-index>div{
   line-height: 40px;
   height: 40px;
   cursor: pointer;
   padding-left: 20px;
 }
 .slideBar-of-index>li:hover{
-  background: #6300FF;
+  background: #188ae2;
   color: #fff;
 }
 .content-of-index{

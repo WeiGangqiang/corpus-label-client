@@ -17,7 +17,7 @@ export default (() => {
                 url: '',
                 children: [
                     {
-                        id: 10000101, name: 'agent列表', url: 'agnet', icon: 'user',
+                        id: 10000101, name: 'agent列表', url: 'agent', icon: 'user',
                     }
                 ],
             },

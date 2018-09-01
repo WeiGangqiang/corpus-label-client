@@ -291,7 +291,7 @@ export default class intendList extends Component {
 
         return <Spin spinning={intendResult.loading}>
             <div style={style.innerContainer}>
-                <Link className='bread-cruft' style={style.headerStyle} to={'/selectService'}><Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择</Link>
+                <Link className='bread-cruft' to={'/selectService'}><Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择</Link>
                 <div style={style.innerBox} className='intentContainer'>
                     <IntentList originEntity={[intendResult.data]} intentId={this.state.intentId}
                                 getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity}/>
