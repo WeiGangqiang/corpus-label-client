@@ -26,7 +26,7 @@ let agent = '';
 
 @connect((state, dispatch) => ({
     config: state.config,
-    intendResult: state.intendResult,
+    intentResult: state.intentResult,
     entityResult: state.entityResult,
     unknownResult: state.unknownResult,
     entitySlideResult: state.entitySlideResult
@@ -180,7 +180,7 @@ export default class unknownSays extends Component {
     }
 
     render() {
-        const {unknownResult, intendResult, entitySlideResult} = this.props
+        const {unknownResult, intentResult, entitySlideResult} = this.props
         const style = {
             innerContainer: {
                 width: '100%',
@@ -198,11 +198,11 @@ export default class unknownSays extends Component {
             }
         };
         return (
-            <Spin spinning={intendResult.loading}>
+            <Spin spinning={intentResult.loading}>
                 <div style={style.innerContainer}>
                     <Link className='bread-cruft' style={style.headerStyle} to={'/selectService'}><Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择</Link>
                     <div style={style.innerBox} className='intentContainer'>
-                        <IntentList originEntity={[intendResult.data]} intentId={this.state.intentId}
+                        <IntentList originEntity={[intentResult.data]} intentId={this.state.intentId}
                                     getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity}/>
 
                         <div style={{height: '100%', overflow: 'auto'}}>
