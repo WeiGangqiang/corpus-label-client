@@ -68,6 +68,7 @@ export default class intendList extends Component {
                 this.initData(data[0])
             }
         }, error => {
+            console.log(error)
         }))
 
         this.props.dispatch(fetchEntityList('?agent=' + agentName, data => {
@@ -112,7 +113,7 @@ export default class intendList extends Component {
                 entityParam: [...data]
             })
         }, error => {
-
+            console.log(error)
         }))
         this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + obj.intentId
             , data => {
@@ -247,7 +248,7 @@ export default class intendList extends Component {
                             console.log(error)
                         }))
                     }, error => {
-
+                        console.log(error)
                     }
                 ))
             }

@@ -95,7 +95,7 @@ export default class unknownSays extends Component {
                 entityParam: [...data]
             })
         }, error => {
-
+            console.log(error)
         }))
         this.props.dispatch(getPhrase('?agent=' + agent + '&intentId=' + obj.intentId
             , data => {
