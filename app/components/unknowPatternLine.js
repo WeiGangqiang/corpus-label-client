@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Row, Col, Icon, Modal} from 'antd'
 import {UnknownColorDownList} from "./unknownColorDownList";
-import {generate} from 'actions/intend'
+import {generate} from 'actions/intent'
 
 @connect((state, dispatch) => ({}))
 export class UnknownPatternLine extends Component {

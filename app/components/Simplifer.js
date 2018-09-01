@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Form, Input, Icon, Row, Col, Button} from 'antd'
-import { simplifier } from 'actions/intend'
+import { simplifier } from 'actions/intent'
 
 const FormItem = Form.Item
 
@@ -32,7 +32,7 @@ export class Simplifier extends Component {
         return this.state.simCorpus != ''
     }
 
-    addCorpusToIntent = ()=> {  
+    addCorpusToIntent = ()=> {
         this.doSimplifer(this.state.newCorpus)
     }
 

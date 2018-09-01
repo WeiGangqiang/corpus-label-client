@@ -4,7 +4,7 @@ import {Link} from 'react-router'
 import {Spin, Icon, Form, Row, Col, Modal, Input, Button} from 'antd'
 import {isArrayDomain} from 'utils/util'
 import {
-    fetchIntend,
+    fetchintent,
     fetchEntity,
     postPattern,
     postCorpus,
@@ -14,7 +14,7 @@ import {
     deletePhrase,
     postPhrase,
     getPattern
-} from 'actions/intend'
+} from 'actions/intent'
 
 import {fetchEntityList, certainEntity, updateEntity, deleteEntity, addEntity} from 'actions/entity'
 
@@ -26,7 +26,7 @@ const FormItem = Form.Item
 
 @connect((state, dispatch) => ({
     config: state.config,
-    intendResult: state.intendResult,
+    intentResult: state.intentResult,
     entityResult: state.entityResult,
     entitySlideResult: state.entitySlideResult
 }))
@@ -35,7 +35,7 @@ const FormItem = Form.Item
     onFieldsChange(props, items) {
     },
 })
-export default class intendList extends Component {
+export default class intentList extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -60,7 +60,7 @@ export default class intendList extends Component {
 
     componentWillMount() {
         agentName = this.props.location.query.agent;
-        this.props.dispatch(fetchIntend('?agent=' + agentName, data => {
+        this.props.dispatch(fetchintent('?agent=' + agentName, data => {
             if (data.length) {
                 this.setState({
                     originEfetchEntityListntity: [...data]
@@ -260,7 +260,7 @@ export default class intendList extends Component {
         const {getFieldDecorator} = this.props.form
 
         const agentName = this.props.location.query.agent;
-        const {intendResult, entitySlideResult} = this.props;
+        const {intentResult, entitySlideResult} = this.props;
 
         const style = {
             innerContainer: {
@@ -289,16 +289,16 @@ export default class intendList extends Component {
             }
         };
 
-        return <Spin spinning={intendResult.loading}>
+        return <Spin spinning={intentResult.loading}>
             <div style={style.innerContainer}>
                 <Link className='bread-cruft' style={style.headerStyle} to={'/selectService'}><Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择</Link>
                 <div style={style.innerBox} className='intentContainer'>
-                    <IntentList originEntity={[intendResult.data]} intentId={this.state.intentId}
+                    <IntentList originEntity={[intentResult.data]} intentId={this.state.intentId}
                                 getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity}/>
 
                     {
                         this.state.intentOrEntity == 'intent' ? <div style={{height: '100%', overflow: 'auto'}}>
-                            {!intendResult.loading ? <div className="container" style={style.body}>
+                            {!intentResult.loading ? <div className="container" style={style.body}>
                                 <IntentDesc name={this.state.name} zhName={this.state.zhName}
                                             modelPath={this.state.modelPath}/>
                                 <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues}

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {PatternLine} from 'components/pattern'
-import {getPattern, deletePattern, putPattern, predict, postPattern, fetchEntity, getPhrase} from 'actions/intend'
+import {getPattern, deletePattern, putPattern, predict, postPattern, fetchEntity, getPhrase} from 'actions/intent'
 import {Simplifier} from 'components/Simplifer'
 import { Tabs } from 'antd';
 
@@ -76,7 +76,7 @@ export class PatternList extends Component {
         newLabels.sort((left, right) => {
             return left.startPos > right.startPos
         })
-        return  newLabels      
+        return  newLabels
     }
 
     updatePatternLabels = (patternId, newLabel, corpusType) => {
@@ -101,11 +101,11 @@ export class PatternList extends Component {
         if(corpusType == 'positive'){
             this.setState({
                 posSimpliferKey: this.state.posSimpliferKey + 1
-            })        
+            })
         }else{
             this.setState({
                 posSimpliferKey: this.state.negSimpliferKey + 1
-            })  
+            })
         }
     }
 

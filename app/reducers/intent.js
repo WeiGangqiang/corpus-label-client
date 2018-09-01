@@ -2,15 +2,15 @@ import {handleActions} from 'redux-actions'
 import {hasResponseError} from 'utils'
 import {getDisc} from 'utils/util'
 
-const intendState = {
+const intentState = {
     data: {},
     loading: true,
 }
-export const intendResult = handleActions({
-    'request intend list'(state, action) {
+export const intentResult = handleActions({
+    'request intent list'(state, action) {
         return {...state}
     },
-    'receive intend list'(state, action) {
+    'receive intent list'(state, action) {
         let {req, res} = action.payload;
         if (res.length) {
             res = getDisc(res).children[0]
@@ -31,7 +31,7 @@ export const intendResult = handleActions({
                 }, loading: false}
         }
     },
-}, intendState)
+}, intentState)
 
 const entityListState = {
     data: {}

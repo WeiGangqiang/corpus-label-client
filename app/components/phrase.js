@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {putPhrase, deletePhrase, postPhrase, patternsSync} from 'actions/intend'
+import {putPhrase, deletePhrase, postPhrase, patternsSync} from 'actions/intent'
 import {Table,Form,Button,Input,Icon} from 'antd'
 
 

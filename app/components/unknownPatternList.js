@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {UnknownPatternLine} from "./unknowPatternLine";
-import {getPattern, deletePattern, putPattern, predict, postPattern, fetchEntity, getPhrase} from 'actions/intend'
+import {getPattern, deletePattern, putPattern, predict, postPattern, fetchEntity, getPhrase} from 'actions/intent'
 import {Simplifier} from 'components/Simplifer'
 
 @connect((state, dispatch) => ({}))

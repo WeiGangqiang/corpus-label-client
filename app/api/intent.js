@@ -1,7 +1,7 @@
 import {ajax} from 'utils'
 import {mockUrl} from '../config'
 
-export const intendList = ajax.fetchJSONByPost('/intents', mockUrl, 'getJson');
+export const intentList = ajax.fetchJSONByPost('/intents', mockUrl, 'getJson');
 
 export const entityList = ajax.fetchJSONByPost('/parameters', mockUrl, 'getJson');
 

@@ -25,10 +25,10 @@ const selectService = (location, cb) => {
     }, 'selectService')
 };
 
-const intendList = (location, cb) => {
+const intentList = (location, cb) => {
     require.ensure([], (require) => {
-        cb(null, require('./pages/intendList').default)
-    }, 'intendList')
+        cb(null, require('./pages/intentList').default)
+    }, 'intentList')
 };
 
 const unknownSays = (location, cb) => {
@@ -52,7 +52,7 @@ export default () => (
         <Route path="/" component={App}>
             <IndexRoute getComponent={selectService}/>
             <Route path="/selectService" getComponent={selectService}/>
-            <Route path="/intendList" getComponent={intendList}></Route>
+            <Route path="/intentList" getComponent={intentList}></Route>
             <Route path="/unknown" getComponent={unknownSays}></Route>
         </Route>
         {/*<Route path="/login" getComponent={Login} />*/}

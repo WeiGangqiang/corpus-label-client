@@ -4,7 +4,7 @@ import {Link} from 'react-router'
 import {Spin, Icon, Form, Row, Col} from 'antd'
 import {isArrayDomain} from 'utils/util'
 import {
-    fetchIntend,
+    fetchintent,
     fetchEntity,
     postPattern,
     postCorpus,
@@ -14,7 +14,7 @@ import {
     deletePhrase,
     postPhrase,
     getPattern
-} from 'actions/intend'
+} from 'actions/intent'
 
 import {unknownList} from 'actions/unknown'
 
@@ -55,7 +55,7 @@ export default class unknownSays extends Component {
         this.setState({
             agent: agent
         })
-        this.props.dispatch(fetchIntend('?agent=' + agent, data => {
+        this.props.dispatch(fetchintent('?agent=' + agent, data => {
             if (data.length) {
                 this.initData(agent, data[0])
             }
