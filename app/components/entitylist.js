@@ -46,7 +46,7 @@ export class IntentList extends Component {
                 height: '100%',
                 borderRadius: '15px'
             },
-            intendBox: {
+            intentBox: {
                 height: '100%',
                 float: 'left',
             },
@@ -72,7 +72,7 @@ export class IntentList extends Component {
         console.log(this.props.originEntity)
 
         return (
-            <div className='intentSlide' style={style.intendBox}>
+            <div className='intentSlide' style={style.intentBox}>
                 <div style={{...style.corpusBox, display: this.props.originEntity.length ? 'block' : 'none'}}>
                     <div style={style.headerTitle}>意图列表</div>
                     <Tree

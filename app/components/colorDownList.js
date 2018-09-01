@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import {Menu, Icon, Button} from 'antd';
-import {fetchEntity, getPhrase, putPhrase, postPhrase} from 'actions/intend'
+import {fetchEntity, getPhrase, putPhrase, postPhrase} from 'actions/intent'
 
 const SubMenu = Menu.SubMenu;
 
@@ -84,7 +84,7 @@ export class ColorDownList extends Component {
     getPhraseDisPlay = (phrase) => {
       return '近义词：' + phrase.similars.slice(0,2).join(',')
     }
-    
+
     getSubMenu = () =>{
       let subMenus = []
       let that = this

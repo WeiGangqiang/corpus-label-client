@@ -1,13 +1,13 @@
 import * as common from './common'
 import * as serve from './serve'
-import * as intend from './intend'
+import * as intent from './intent'
 import * as entity from './entity'
 import * as unknown from './unknown'
 
 export {
     common,
     serve,
-    intend,
+    intent,
     entity,
     unknown
 }

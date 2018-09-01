@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button, Row, Col, Icon, Modal} from 'antd'
 import {ColorDownList} from "./colorDownList";
-import {generate} from 'actions/intend'
+import {generate} from 'actions/intent'
 
 @connect((state, dispatch) => ({}))
 export class PatternLine extends Component {
@@ -176,7 +176,7 @@ export class PatternLine extends Component {
             id: obj.id,
             type: obj.type
         }, this.props.corpusType)
-        
+
     }
 
     removeLabel = (labelIndex)=> {

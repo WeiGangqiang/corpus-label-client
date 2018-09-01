@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import {Menu, Icon, Button} from 'antd';
-import {fetchEntity, getPhrase, putPhrase, postPhrase} from 'actions/intend'
+import {fetchEntity, getPhrase, putPhrase, postPhrase} from 'actions/intent'
 
 const SubMenu = Menu.SubMenu;
 
