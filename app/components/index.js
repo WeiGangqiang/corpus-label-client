@@ -8,6 +8,7 @@ import {AgentTable} from "./agnetTable";
 import {EntityTable} from "./entityTable";
 import {UnknownPatternLine} from "./unknowPatternLine";
 import {UnknownPatternList} from "./unknownPatternList";
+import {ActionsList} from "./actionsList";
 
 export {
     PatternLine,
@@ -19,5 +20,6 @@ export {
     AgentTable,
     EntityTable,
     UnknownPatternList,
-    UnknownPatternLine
+    UnknownPatternLine,
+    ActionsList
 }
