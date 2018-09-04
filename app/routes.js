@@ -52,8 +52,8 @@ export default () => (
         <Route path="/" component={App}>
             <IndexRoute getComponent={selectService}/>
             <Route path="/selectService" getComponent={selectService}/>
-            <Route path="/intentList" getComponent={intentList}></Route>
-            <Route path="/unknown" getComponent={unknownSays}></Route>
+            <Route path="/intentList" query='agent' getComponent={intentList}></Route>
+            <Route path="/unknown"  query='agent' getComponent={unknownSays}></Route>
         </Route>
         {/*<Route path="/login" getComponent={Login} />*/}
         {/*<Route path="/register" getComponent={Register} />*/}

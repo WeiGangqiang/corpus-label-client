@@ -268,7 +268,7 @@ export default class intentList extends Component {
             innerContainer: {
                 width: '100%',
                 height: '100%',
-                paddingTop: '55px',
+                paddingTop: '50px',
             },
             innerBox: {
                 height: '100%'

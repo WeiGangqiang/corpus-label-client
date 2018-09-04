@@ -92,7 +92,7 @@ export class AgentTable extends Component {
                         <span style={style.label}>name</span><pre style={style.pre}>{this.props.agent.name}</pre>
                     </Col>
                     <Col style={style.col} span={12}>
-                        <span style={style.label}>zhName</span><pre style={style.pre}>{this.props.agent.zhName}</pre>
+                        <span style={style.label}>中文名字</span><pre style={style.pre}>{this.props.agent.zhName}</pre>
                     </Col>
                 </Row>
                 <Row style={style.row}>

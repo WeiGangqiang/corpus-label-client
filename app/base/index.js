@@ -6,7 +6,7 @@ import 'style/base.less'
 
 import Header from './header'
 import BreadcrumbBack from './breadcrumb'
-
+import SliderBar from './sliderBar'
 
 @connect((state, props) => ({}))
 export default class App extends Component {
@@ -14,40 +14,26 @@ export default class App extends Component {
     constructor(props, context) {
         super(props)
         this.state = {
-            pageHeight: 0,
-            isLeftNavMini: false, // 左侧导航菜单是否mini模式
+            pathname: ''
         }
-        this.isLeftNavMini = this.isLeftNavMini.bind(this)
     }
 
-    // 组件已经加载到dom中
-    componentDidMount() {
-        // antd的message组件 的全局配置
-        message.config({
-            duration: 3,
+    componentWillMount () {
+        this.props.router.listen(route => {
+            this.setState({
+                pathname: route.pathname
+            })
         })
     }
 
-    componentWillMount() {
-        // 初始化左侧菜单是mini模式还是正常模式
-        if (sessionStorage.getItem('isLeftNavMini') == 'false') {
-            this.setState({
-                isLeftNavMini: false,
-            })
-        }
-        if (sessionStorage.getItem('isLeftNavMini') == 'true') {
-            this.setState({
-                isLeftNavMini: true,
-            })
-        }
-    }
-
-    // 左侧是否mini
-    isLeftNavMini(val) {
+    componentDidMount () {
         this.setState({
-            isLeftNavMini: val,
-        }, () => {
-            sessionStorage.setItem('isLeftNavMini', val)
+            pathname: this.props.location.pathname
+        })
+        this.props.router.listen(route => {
+            this.setState({
+                pathname: route.pathname
+            })
         })
     }
 
@@ -59,10 +45,16 @@ export default class App extends Component {
             },
         }
         return (
-            <div id="container" className="effect easeInOutBack mainnav-lg aside-bright">
-                {/*<BreadcrumbBack/>*/}
+            <div id="container" className={`effect easeInOutBack ${(this.state.pathname == '/intentList' || this.state.pathname == '/unknown') ? "" : "slider-padding header-padding"}`}
+            >
+                {
+                    (this.state.pathname == '/intentList' || this.state.pathname == '/unknown') ? '' : <Header pathname={this.state.pathname}/>
+                }
+                {
+                    (this.state.pathname == '/intentList' || this.state.pathname == '/unknown') ? '' : <SliderBar/>
+                }
                 <div className="boxed">
-                    <div className={this.state.isLeftNavMini ? 'boxed boxed-mini' : 'boxed'}>
+                    <div className='boxed'>
                         <div id="content-container" className="content-container">
                             <div style={style.pageContent} id="page-content">
                                 {children}
