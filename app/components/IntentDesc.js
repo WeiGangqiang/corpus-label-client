@@ -36,8 +36,9 @@ export class IntentDesc extends Component {
         return (<div>
             <Row style={style.baseInfo}>
                 {this.getTitle()}
-                <Col style={style.col} span={12}>意图名字 ： {this.props.name}</Col>
-                <Col style={style.col} span={12}>中文名字 ： {this.props.zhName}</Col>
+                <Col style={style.col} span={10}>意图名字 ： {this.props.name}</Col>
+                <Col style={style.col} span={10}>中文名字 ： {this.props.zhName}</Col>
+                <Col style={style.col} span={4}>类型 ： {this.props.mode}</Col>
                 <Col style={style.col} span={24}>模型路径 ： {this.props.modelPath}</Col>
             </Row></div>)
     }

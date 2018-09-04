@@ -27,38 +27,47 @@ export class EntityParameters extends Component {
     columns = () => {
         const that = this
 
-        return [{
-            title: '槽位名',
-            dataIndex: 'entity',
-            key: 'entity',
-            width: '20%',
-            render(text, record, index) {
-                return <span className='corpusSpan' style={{background: record.color}}>{text}</span>
-            }
-        }, {
-            title: '槽位值',
-            dataIndex: 'valuesShow',
-            key: 'valuesShow',
-            width: '70%',
-            render(text, record, index) {
-                return <span> {text.join()} </span>
-            }
-        }, {
-            title: '操作',
-            dataIndex: 'operate',
-            key: 'oparete',
-            width: '10%',
-            render(text, record, index) { 
-                if(record.values.length < 10){
-                    return (<span> </span>)
-                } else if(record.valuesShow.length <= 10){
-                    return ( <span style={{paddingLeft: '10px', color:'#0099CC'}} onClick={that.showMoreValues.bind(that, index)}>详情 <Icon type='caret-down'/></span>)
-                } else {
-                    return (<span style={{paddingLeft: '10px', color:'#0099CC'}}  onClick={that.showLessValues.bind(that, index)}>简要 <Icon type='caret-up'/></span>)
+        return [
+            {
+                title: '变量名',
+                dataIndex: 'name',
+                key: 'name',
+                width: '15%',
+            },
+            {
+                title: '实体名',
+                dataIndex: 'entity',
+                key: 'entity',
+                width: '15%',
+                render(text, record, index) {
+                    return <span className='corpusSpan' style={{background: record.color}}>{text}</span>
+                }
+            },
+            {
+                title: '槽位值',
+                dataIndex: 'valuesShow',
+                key: 'valuesShow',
+                width: '60%',
+                render(text, record, index) {
+                    return <span> {text.join()} </span>
+                }
+            },
+            {
+                title: '操作',
+                dataIndex: 'operate',
+                key: 'oparete',
+                width: '10%',
+                render(text, record, index) {
+                    if(record.values.length < 10){
+                        return (<span> </span>)
+                    } else if(record.valuesShow.length <= 10){
+                        return ( <span style={{paddingLeft: '10px', color:'#0099CC'}} onClick={that.showMoreValues.bind(that, index)}>详情 <Icon type='caret-down'/></span>)
+                    } else {
+                        return (<span style={{paddingLeft: '10px', color:'#0099CC'}}  onClick={that.showLessValues.bind(that, index)}>简要 <Icon type='caret-up'/></span>)
+                    }
                 }
             }
-        }
-    ]
+        ]
     }
 
     render() {

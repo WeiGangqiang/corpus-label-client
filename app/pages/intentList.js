@@ -5,6 +5,8 @@ import {Spin, Icon, Form, Row, Col, Modal, Input, Button} from 'antd'
 import {isArrayDomain} from 'utils/util'
 import {
     fetchintent,
+    postIntent,
+    deleteIntent,
     fetchEntity,
     postPattern,
     postCorpus,
@@ -66,7 +68,8 @@ export default class intentList extends Component {
                 this.setState({
                     originEfetchEntityListntity: [...data]
                 })
-                this.initData(data[0])
+                // console.log(this.props.intentResult.data.children[0])
+                this.initData(this.props.intentResult.data.children[0])
             }
         }, error => {
             console.log(error)
@@ -94,7 +97,6 @@ export default class intentList extends Component {
     }
 
     initData = (obj) => {
-        console.log('init data', obj)
         this.setState({
             name: obj.name,
             zhName: obj.zhName,
@@ -256,6 +258,39 @@ export default class intentList extends Component {
                 ))
             }
         });
+    };
+
+    addintent = (obj) => {
+        this.props.dispatch(postIntent({agent: agentName,...obj},data => {
+            this.props.dispatch(fetchintent('?agent=' + agentName, data => {
+                if (data.length) {
+                    this.setState({
+                        originEfetchEntityListntity: [...data]
+                    })
+                }
+            }, error => {
+                console.log(error)
+            }))
+        }, error => {
+            console.log(error)
+        }))
+    };
+
+    deleteIntent = (intentId) => {
+        this.props.dispatch(deleteIntent('?agent=' + agentName + '&intentId=' + intentId,data => {
+            this.props.dispatch(fetchintent('?agent=' + agentName, data => {
+                if (data.length) {
+                    this.setState({
+                        originEfetchEntityListntity: [...data]
+                    })
+                    this.initData(this.props.intentResult.data.children[0])
+                }
+            }, error => {
+                console.log(error)
+            }))
+        }, error => {
+            console.log(error)
+        }))
     }
 
     render() {
@@ -297,14 +332,14 @@ export default class intentList extends Component {
                 <Link className='bread-cruft' to={'/selectService'}><Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择</Link>
                 <div style={style.innerBox} className='intentContainer'>
                     <IntentList originEntity={[intentResult.data]} intentId={this.state.intentId}
-                                getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity}/>
+                                getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity} addintent={this.addintent} deleteIntent={this.deleteIntent}/>
 
                     {
                         this.state.intentOrEntity == 'intent' ? 
                         <div style={{height: '100%', overflow: 'auto'}}>
                             {!intentResult.loading ? <div className="container" style={style.body}>
                                 <IntentDesc name={this.state.name} zhName={this.state.zhName}
-                                            modelPath={this.state.modelPath}/>
+                                            modelPath={this.state.modelPath} mode={this.state.intentMode}/>
                                 <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues}
                                                   showMoreValues={this.showMoreValues}/>
                                 <PatternList key={this.state.pattenListKey} agentName={agentName} intent={this.state.name} intentId={this.state.intentId}

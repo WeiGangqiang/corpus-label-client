@@ -1,8 +1,15 @@
 import React, {Component} from 'react';
 
-import { Tree } from 'antd';
+import { Tree, Modal, message, Radio, Form, Input, Button } from 'antd';
 
+const RadioGroup = Radio.Group;
+const FormItem = Form.Item;
 const TreeNode = Tree.TreeNode;
+
+@Form.create({
+    onFieldsChange(props, items) {
+    },
+})
 
 export class IntentList extends Component {
     constructor(props) {
@@ -12,7 +19,14 @@ export class IntentList extends Component {
             beforeKey: '',
             top: 0,
             left: 0,
-            showUl: 'none'
+            showUl: 'none',
+            addIntentVisible: false,
+            delIntentVisible: false,
+            intentId: '',
+            intentName: '',
+            modelPath: '',
+            defaultModelPath: '',
+            mode: ''
         }
     }
 
@@ -26,18 +40,22 @@ export class IntentList extends Component {
         }
     };
 
-    clickNode = (e, node) => {
-        console.log(e,node.props)
-    };
-
     rightClickNode =({event, node}) => {
-        // console.log(event.clientX, event.clientY)
         this.setState({
             showUl: 'block',
             top: event.pageY + 14,
-            left: event.pageX
+            left: event.pageX,
+            intentId: node.props.dataRef && node.props.dataRef.intentId,
+            modelPath: node.props.dataRef && node.props.dataRef.modelPath,
+            defaultModelPath:  node.props.dataRef && node.props.dataRef.modelPath,
+            mode: node.props.dataRef && node.props.dataRef.mode
         })
-        // console.log(event.pageX, event.pageY)
+    };
+
+    hideUl = () => {
+        this.setState({
+            showUl: 'none'
+        })
     };
 
     selectNodeEntity = (selectKey, e) => {
@@ -46,7 +64,7 @@ export class IntentList extends Component {
                 this.props.getEntity(e.selectedNodes[0].props.dataRef)
             }
         }
-    }
+    };
 
     renderTreeNodes = (data) => {
         return data.map((item,index) => {
@@ -59,9 +77,78 @@ export class IntentList extends Component {
             }
             return <TreeNode key={index} {...item} />;
         });
+    };
+
+    showAddIntent = (e) => {
+        // e.stopPropagation();
+        if(this.state.intentId.length && this.state.mode != 'local'){
+            this.setState({
+                addIntentVisible: true
+            })
+        }else{
+            message.info('该目录下不能添加子意图')
+        }
+    };
+
+    hideAddIntent = () => {
+        this.setState({
+            addIntentVisible: false
+        })
     }
 
+    onChange = (e) => {
+        this.setState({
+            intentName: e.target.value
+        })
+    };
+
+    intentInput = (e) => {
+        this.setState({
+            modelPath: this.state.defaultModelPath + '/' + e.target.value
+        })
+    }
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                this.props.addintent({intent:{
+                    "name": values.name,
+                    "zhName": values.zhName,
+                    "modelPath": values.modelPath,
+                    "parameters": []
+                }})
+                this.hideAddIntent()
+            }
+        });
+    };
+
+    showDelIntent = (e) => {
+        // e.stopPropagation()
+        if (this.state.intentId.length && this.state.mode != 'local') {
+            this.setState({
+                delIntentVisible: true
+            })
+        }else{
+            message.info('不允许删除该意图')
+        }
+    };
+
+    hideDelIntent = () => {
+        this.setState({
+            delIntentVisible: false
+        })
+    };
+
+    delIntent = () => {
+        this.props.deleteIntent(this.state.intentId)
+        this.hideDelIntent()
+    };
+
     render() {
+
+        const {getFieldDecorator} = this.props.form;
+
         const style = {
             corpusBox: {
                 background: '#fbfbfb',
@@ -116,6 +203,16 @@ export class IntentList extends Component {
                 width: '100%',
                 textAlign: 'center',
                 cursor: 'pointer'
+            },
+            modalFoot:{
+                height: '52px',
+                lineHeight: '32px',
+                textAlign: 'right',
+                padding: '10px 16px',
+                borderTop: '1px solid #e8e8e8'
+            },
+            modalFootBtn:{
+                marginLeft: '8px'
             }
         }
 
@@ -139,12 +236,88 @@ export class IntentList extends Component {
                         {this.renderTreeNodes(this.props.entityList)}
                     </Tree>
                 </div>
-                <div style={{...style.positionDiv, display: this.state.showUl}}>
+                <div onClick={this.hideUl} style={{...style.positionDiv, display: this.state.showUl}}>
                     <ul style={{...style.positionUl, top:this.state.top, left: this.state.left}}>
-                        <li className="hoverLi" style={style.positionLi}>增加子意图</li>
-                        <li className="hoverLi" style={style.positionLi}>删除此意图</li>
+                        <li onClick={this.showAddIntent} className="hoverLi" style={style.positionLi}>增加子意图</li>
+                        <li onClick={this.showDelIntent} className="hoverLi" style={style.positionLi}>删除此意图</li>
                     </ul>
                 </div>
+                <Modal
+                    title='新增'
+                    visible={this.state.addIntentVisible}
+                    centered
+                    destroyOnClose="true"
+                    onCancel={this.hideAddIntent}
+                    footer={null}
+                    bodyStyle={{padding:0}}
+                >
+                    {/*<RadioGroup onChange={this.onChange}>*/}
+                        {/*{*/}
+                            {/*this.props.entityList.length&&this.props.entityList[0].children&&this.props.entityList[0].children.map((item,index) => {*/}
+                                {/*return <Radio key={index} value={item.title}>{item.title}</Radio>*/}
+                            {/*})*/}
+                        {/*}*/}
+                    {/*</RadioGroup>*/}
+
+                    <Form onSubmit={this.handleSubmit}>
+                        <FormItem className="modalFormItem">
+                            {getFieldDecorator('name', {
+                                rules: [
+                                    {required: true, message: '请输入意图名字'},
+                                    {
+                                        pattern: /^[0-9a-zA-Z-\u4E00-\u9FFF]+$/,
+                                        message: '不能有非法字符串'
+                                    }
+                                ]
+                            })(<Input
+                                placeholder="请输入意图名字"
+                                type="text"
+                                onInput={this.intentInput}
+                            />)}
+                        </FormItem>
+                        <FormItem className="modalFormItem">
+                            {getFieldDecorator('zhName', {
+                                rules: [
+                                    {required: true, message: '请输入意图中文名'}
+                                ]
+                            })(<Input
+                                placeholder="请输入意图中文名"
+                                type="text"
+                            />)}
+                        </FormItem>
+                        <FormItem className="modalFormItem">
+                            {getFieldDecorator('modelPath', {
+                                rules: [
+                                    {required: true, message: '请输入modelPath'},
+                                ],
+                                initialValue: this.state.modelPath
+                            })(<Input
+                                placeholder="请输入modelPath"
+                                type="text"
+                            />)}
+                        </FormItem>
+                        <FormItem>
+                            <div style={style.modalFoot}>
+                                <Button onClick={this.hideAddIntent}>Cancel</Button>
+                                <Button style={style.modalFootBtn} type="primary" htmlType="submit">
+                                    OK
+                                </Button>
+                            </div>
+                        </FormItem>
+                    </Form>
+
+                </Modal>
+
+                <Modal
+                    title='删除提示'
+                    visible={this.state.delIntentVisible}
+                    centered
+                    destroyOnClose="true"
+                    onCancel={this.hideDelIntent}
+                    onOk={this.delIntent}
+                >
+                    删除此意图，他的子意图也会被删掉，确定删除吗？
+                </Modal>
             </div>
         )
     }

@@ -185,7 +185,6 @@ export class PatternList extends Component {
         }
         let patternList = this.getPatternListBy(corpusType)
         return patternList.map((pattern, patternId) => {
-            console.log(pattern, patternId)
             return (<PatternLine key={patternId} patternId={patternId} pattern={pattern}
                                  removePatternBy={this.removePatternBy} updateSelectLabel={this.updateSelectLabel}
                                  agent={this.props.agentName} intent={this.props.intent}
