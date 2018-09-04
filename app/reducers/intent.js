@@ -98,3 +98,19 @@ export const phraseResult = handleActions({
         return [...res]
     },
 }, phraseState())
+
+
+export const actionsResult = handleActions({
+    'request actions list'(state, action) {
+        console.log('handle actions request phrase list')
+        return [...state]
+    },
+    'receive actions list'(state, action) {
+        const {req, res} = action.payload;
+        console.log('handle actions receive phrase list',res)
+        let newRes = res.data.map( (item) => {
+            item.type = "文本"
+        })
+        return [...newRes]
+    },
+}, [])

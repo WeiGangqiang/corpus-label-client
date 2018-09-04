@@ -70,3 +70,11 @@ export const generate = createAjaxAction(intent.generate);
 
 export const patternsSync = createAjaxAction(intent.patternsSync)
 
+export const requestActionsList = createAction('request actions list');
+export const receiveActionsList = createAction('receive actions list');
+export const  getIntentActions = createAjaxAction(intent.getIntentActions)
+
+export const  updateIntentActions = createAjaxAction(intent.updateIntentActions)
+
+
+

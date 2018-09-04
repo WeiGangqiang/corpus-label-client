@@ -37,4 +37,10 @@ export const generate = ajax.fetchJSONByPost('/generate', mockUrl, 'postJson');
 
 export const patternsSync = ajax.fetchJSONByPost('/pattern/sync', mockUrl, 'postJson');
 
+export const getIntentActions = ajax.fetchJSONByPost('/intent/actions', mockUrl, 'getJson');
+
+export const updateIntentActions = ajax.fetchJSONByPost('/intent/actions', mockUrl, 'postJson');
+
+
+
 
