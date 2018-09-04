@@ -94,7 +94,6 @@ export default class intentList extends Component {
     }
 
     initData = (obj) => {
-        console.log('init data', obj)
         this.setState({
             name: obj.name,
             zhName: obj.zhName,
@@ -313,7 +312,7 @@ export default class intentList extends Component {
                                 <PhraseList intent={this.state.name} agent={agentName} intentId={this.state.intentId} phraseArray={this.state.phraseArray}
                                             updatePhraseArray={this.getPhrase}  reloadPatterns={this.reloadPatterns}/>
 
-                                <ActionsList agent={agentName} intentId={this.state.intentId} intentMode={this.state.intentMode}/>
+                                <ActionsList agentName={agentName} intentId={this.state.intentId} intentMode={this.state.intentMode}/>
                             </div> : ''}
                         </div> : 
                         <div>

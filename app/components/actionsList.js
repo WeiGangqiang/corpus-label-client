@@ -1,6 +1,13 @@
 import React, {Component} from 'react'
 import {Table, Button} from 'antd'
 
+import {getIntentActions, updateIntentActions} from 'actions/intent'
+
+import {connect} from 'react-redux'
+
+@connect((state, dispatch) => ({
+}))
+
 export class ActionsList extends Component {
     constructor(props) {
         super(props)
@@ -11,6 +18,22 @@ export class ActionsList extends Component {
             ]
         }
     }
+
+    componentWillReceiveProps(props){
+        this.retreiveActions(props)
+    }
+    
+    retreiveActions = (props) => {
+        let entityUrl = '?agent=' + props.agentName + '&intentId=' + props.intentId
+        console.log('get actions for intent url', entityUrl, )
+        this.props.dispatch(getIntentActions(entityUrl, rsp => {
+            console.log('receive intent actions', rsp.data)
+            this.setState({actions: rsp.data})
+        }, err=> {
+
+        }))
+    }
+
     getTitle = () => {
         const subtitleCss = {
             fontSize: '20px',
