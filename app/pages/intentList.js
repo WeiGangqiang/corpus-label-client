@@ -18,7 +18,7 @@ import {
 
 import {fetchEntityList, certainEntity, updateEntity, deleteEntity, addEntity} from 'actions/entity'
 
-import {PatternList, PhraseList, EntityParameters, IntentList, IntentDesc, EntityTable} from "components/index";
+import {PatternList, PhraseList, EntityParameters, IntentList, IntentDesc, EntityTable, ActionsList} from "components/index";
 
 let agentName = '';
 
@@ -54,7 +54,8 @@ export default class intentList extends Component {
             negativePatterns:[],
             intentOrEntity: 'intent',
             certainEntity: {},
-            entityAddVisible: false
+            entityAddVisible: false,
+            intentMode: "local"
         }
     }
 
@@ -93,11 +94,13 @@ export default class intentList extends Component {
     }
 
     initData = (obj) => {
+        console.log('init data', obj)
         this.setState({
             name: obj.name,
             zhName: obj.zhName,
             modelPath: obj.modelPath,
-            intentId: obj.intentId
+            intentId: obj.intentId,
+            intentMode: obj.mode
         });
         this.props.dispatch(fetchEntity('?agent=' + agentName + '&intentId=' + obj.intentId, data => {
             for (let i = 0; i < data.length; i++) {
@@ -297,7 +300,8 @@ export default class intentList extends Component {
                                 getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity}/>
 
                     {
-                        this.state.intentOrEntity == 'intent' ? <div style={{height: '100%', overflow: 'auto'}}>
+                        this.state.intentOrEntity == 'intent' ? 
+                        <div style={{height: '100%', overflow: 'auto'}}>
                             {!intentResult.loading ? <div className="container" style={style.body}>
                                 <IntentDesc name={this.state.name} zhName={this.state.zhName}
                                             modelPath={this.state.modelPath}/>
@@ -308,8 +312,11 @@ export default class intentList extends Component {
 
                                 <PhraseList intent={this.state.name} agent={agentName} intentId={this.state.intentId} phraseArray={this.state.phraseArray}
                                             updatePhraseArray={this.getPhrase}  reloadPatterns={this.reloadPatterns}/>
+
+                                <ActionsList agent={agentName} intentId={this.state.intentId} intentMode={this.state.intentMode}/>
                             </div> : ''}
-                        </div> : <div>
+                        </div> : 
+                        <div>
                             <div>
                                 <span>实体</span>
                                 <span onClick={this.showAddEntity}>新增</span>

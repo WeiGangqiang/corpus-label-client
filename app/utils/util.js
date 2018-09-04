@@ -40,7 +40,8 @@ export const arrayToDisc = (arr, parentObj) => {
             intentId: rightArray[0].modelWord.length?'':rightArray[0].intentId,
             modelPath: rightArray[0].modelWord.length?'':rightArray[0].modelPath,
             name: rightArray[0].modelWord.length?'':rightArray[0].name,
-            zhName: rightArray[0].modelWord.length?'':rightArray[0].zhName
+            zhName: rightArray[0].modelWord.length?'':rightArray[0].zhName,
+            mode: rightArray[0].modelWord.length?'':rightArray[0].mode
         }
         if (parentObj) {
             parentObj.children.push(sonObj);
