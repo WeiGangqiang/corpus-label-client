@@ -14,7 +14,6 @@ ul,li{
 .effect .navbar-content,
 .effect #navbar,
 .effect #content-container,
-.effect #mainnav-container,
 .effect #aside-container,
 .effect .navbar-brand,
 .effect .navbar-content,
@@ -28,48 +27,14 @@ ul,li{
   transition-duration: 0.35s;
 }
 
-
-#navbar { position: absolute; width: 100%; height: @g-header-height; z-index: 10; background-color: #e7ebee; left: 0; top: 0;}
-#navbar-container { box-shadow: 0 2px 0px -1px rgba(0, 0, 0, 0.05);background-color: #373D41;}
-.navbar-header { float: left; left: 0; position: relative; z-index: 100;}
-.navbar-content { position: relative; left: 0; background-color: #373D41; padding: 0 8px;}
-.navbar-brand { background-color: transparent; color: #fff; padding: 0; height: @g-header-height; position: relative; z-index: 2; overflow: hidden; width: 320px; display: block;}
-.navbar-brand:hover,
-.navbar-brand:focus {color: #fff;}
-.brand-title{ display: block; line-height: @g-header-height;}
-.brand-text { display: block; font-size: 20px; font-weight: 600; letter-spacing: 5px; text-align: left;  padding-left: 15px;}
-.navbar-top-links .dropdown-menu-md{ display: none; }
-.navbar-top-links > .login-info{ display: block; }
-.navbar-top-links > li { float: left; }
-.navbar-top-links > li > a { display: table-cell; padding: 0 12px; vertical-align: middle; height: @g-header-height; color: #ddd; -webkit-transition: all 0.4s; transition: all 0.4s;}
-.navbar-top-links > li > a:focus { background-color: transparent;}
-.navbar-top-links > li > a:hover { background-color: #f2f2f2; color: #2b2b2b; -webkit-transition: all 0.4s; transition: all 0.4s;}
-.navbar-top-links > .open > a,
-.navbar-top-links > .open > a:focus { background-color: #f2f2f2; color: #515151;}
-.navbar-top-links{ float: right;margin-bottom: 0px;}
-
 #container { height: auto; position: relative; min-width: 290px; overflow: hidden; -webkit-transition: opacity 0.5s linear 1.5s; transition: opacity 0.5s linear 1.5s;}
 #container.boxed-layout { background-color: #cfd3d6;}
-#content-container { position: relative; /*padding-top: @g-header-height; padding-left: @g-left-width-base;*/  background-color: #e7ebee; }
+#content-container { position: relative; background-color: #e7ebee; }
 .page-header { border: 0 none; color: #7c7c7c; font-size: 2.2em; font-weight: 100; margin: 0; padding: 10px 0;}
 .page-header .label { margin-right: 0.5em;}
 #page-content { padding:0;display: flex; flex-direction: column;
   .ant-spin-nested-loading{ height:100%;.ant-spin-container{
     height: 100%;} }
-}
-
-#mainnav-container { position: absolute; width: @g-left-width-base; left: 0; margin-top: @g-header-height; top: 0; bottom: 0; z-index: 4; min-height: 100%; background-color: #42485B ; 
-  .ant-menu .ant-menu-submenu-title { background-color: #42485B; height: 36px; line-height: 36px; padding:0; margin:0; color: #fff;
-    &:after{ display: none;}
-    .anticon{ font-size: 10px; width: 10px; height: 10px; margin:-4px 16px 0 0; transition: transform .3s ease;}
-  }
-  .ant-menu-submenu-arrow{ right: 6px; display: none;}
-  .ant-menu-sub{ 
-    .anticon{ font-size: @font-size-lg; margin:0 @space-big 0 0; color: #fff;}
-  }
-  .ant-menu-submenu-open.ant-menu-submenu-inline .ant-menu-submenu-title .anticon{ transform: rotate(180deg) scale(1); }
-  .ant-menu-inline.ant-menu-sub { background-color: #333745; }
-  .ant-menu-submenu .ant-menu-sub .ant-menu-item{margin:0px; height: 36px; height: 36px; padding-left: 12px!important;}
 }
 .nav-dropmenu{ border: 1px solid #ccc;
   .ant-dropdown-menu-item{ width: 280px;
@@ -83,19 +48,6 @@ ul,li{
 .LeftNav-control{ background-color: #4A5064; text-align: center; height: 30px; line-height: 30px; cursor: pointer;
   .qqbicon{ margin: 0;}
   &:hover{ background-color: #4c577b;}
-}
-
-.boxed-mini{
-  #content-container{padding-left: @g-left-width-mini;}
-  .main{
-    .left-contant{left: @g-left-width-mini;}
-  }
-}
-.LeftNavMini #mainnav-container{ width: @g-left-width-mini;
-  .ant-menu-dark.ant-menu-inline{ width: @g-left-width-mini;}
-  .ant-menu-submenu-title{padding: 0 12px !important}
-  .ant-menu-inline-collapsed{width: @g-left-width-mini;}
-  .menu-name{ display: none;}
 }
 
 
@@ -169,18 +121,6 @@ ul,li{
   top: 10px;
 }
 
-.bread-cruft{
-  height: 40px;
-  line-height: 40px;
-  padding-left: 20px;
-  font-size: 14px;
-  width: 100%;
-  display: block;
-  margin-top: -55px;
-  float: left;
-  background: #283535;
-  color: #fff;
-}
 .intentSlide{
   width: @g-slide-width;
   margin-left: -@g-slide-margin;
@@ -216,24 +156,30 @@ ul,li{
   font-size: 16px!important;
 }
 .container-of-index{
-  padding-left: @g-slide-margin;
   height: 100%;
 }
-.slideBar-of-index{
+
+.slider-padding{
+  padding-left: @g-sliderBar-margin-big;
+}
+
+.slideBar-of-index,.sliderBar-container{
   float: left;
-  width: @g-slide-width;
-  margin-left: -@g-slide-margin;
+  width: @g-sliderBar-width-big;
+  margin-left: -@g-sliderBar-margin-big;
   background: #fbfbfb;
   height: 100%;
   border-radius: 15px;
 }
-.slideBar-of-index>li, .slideBar-of-index>div{
+.slideBar-of-index>li, .slideBar-of-index>div,.sliderBar-container>div,.sliderBar-container>.sliderItem{
   line-height: 40px;
   height: 40px;
   cursor: pointer;
   padding-left: 20px;
+  display: block;
+  color: #515151;
 }
-.slideBar-of-index>li:hover{
+.slideBar-of-index>li:hover,.sliderBar-container>.sliderItem:hover{
   background: #188ae2;
   color: #fff;
 }
@@ -243,3 +189,42 @@ ul,li{
 .modalFormItem{
   padding: 0 24px!important;
 }
+
+.header-padding{
+  padding-top: @g-navBar-margin;
+}
+.header-container{
+  margin-top: -@g-navBar-margin;
+  margin-left: -@g-sliderBar-margin-big;
+  height: @g-navBar-height;
+  line-height: @g-navBar-height;
+  padding-left: 20px;
+  font-size: 14px;
+  width: 100vw;
+  display: block;
+  float: left;
+  background: #283535;
+  color: #fff;
+}
+
+.bread-cruft{
+  height: @g-navBar-height;
+  line-height: @g-navBar-height;
+  padding-left: 20px;
+  font-size: 14px;
+  width: 100%;
+  display: block;
+  margin-top: -@g-navBar-margin;
+  float: left;
+  background: #283535;
+  color:#fff
+}
+.hoverLi:hover{
+  background: #188ae2;
+  color: #fff
+}
+
+
+
+
+

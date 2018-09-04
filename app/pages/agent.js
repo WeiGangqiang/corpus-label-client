@@ -161,10 +161,11 @@ export default class Agent extends Component {
 
             container: {
                 background: '#fff',
-                width: '740px',
+                width: '80%',
                 padding: '0 20px',
                 height: '100%',
-                paddingTop: '40px'
+                paddingTop: '40px',
+                background: '#fbfbfb'
             },
             flexBox: {
                 display: 'flex',
@@ -211,15 +212,15 @@ export default class Agent extends Component {
             }
         }
         return (
-            <div style={{marginTop:'55px',height: '100%'}}>
-                <div className='bread-cruft' ><img style={{height: '100%'}} src="images/logo.png" alt=""/></div>
+            <div style={{height: '100%'}}>
+                {/*<div className='header-container' ><img style={{height: '100%'}} src="images/logo.png" alt=""/></div>*/}
                 <div className="container-of-index">
-                    <ul className="slideBar-of-index">
-                        <div>操作</div>
-                        <li>我的应用</li>
-                        <li>公共应用</li>
-                        <li>帮助文档</li>
-                    </ul>
+                    {/*<ul className="slideBar-of-index">*/}
+                        {/*<div>操作</div>*/}
+                        {/*<li>我的应用</li>*/}
+                        {/*<li>公共应用</li>*/}
+                        {/*<li>帮助文档</li>*/}
+                    {/*</ul>*/}
                     <Spin spinning={agentResult.loading} className="content-of-index">
                         {!agentResult.loading ? <div style={style.container} className="container">
                             <div style={style.agentHead}>

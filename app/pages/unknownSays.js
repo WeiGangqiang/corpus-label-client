@@ -185,7 +185,7 @@ export default class unknownSays extends Component {
             innerContainer: {
                 width: '100%',
                 height: '100%',
-                paddingTop: '55px',
+                paddingTop: '50px',
             },
             innerBox: {
                 height: '100%'
@@ -200,7 +200,7 @@ export default class unknownSays extends Component {
         return (
             <Spin spinning={intentResult.loading}>
                 <div style={style.innerContainer}>
-                    <Link className='bread-cruft' style={style.headerStyle} to={'/selectService'}><Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择</Link>
+                    <Link className='bread-cruft' to={'/selectService'}><Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择</Link>
                     <div style={style.innerBox} className='intentContainer'>
                         <IntentList originEntity={[intentResult.data]} intentId={this.state.intentId}
                                     getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity}/>
@@ -215,7 +215,6 @@ export default class unknownSays extends Component {
                         </div>
                     </div>
                 </div>
-
             </Spin>
 
         )
