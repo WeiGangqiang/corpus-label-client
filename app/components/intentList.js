@@ -94,12 +94,6 @@ export class IntentList extends Component {
         this.setState({
             addIntentVisible: false
         })
-    }
-
-    onChange = (e) => {
-        this.setState({
-            intentName: e.target.value
-        })
     };
 
     intentInput = (e) => {
@@ -194,7 +188,8 @@ export class IntentList extends Component {
                 width: '100px',
                 height: '80px',
                 boxShadow: '0px 0px 13px 3px #ccc',
-                borderRadius: '5px'
+                borderRadius: '5px',
+                overflow: 'hidden'
             },
             positionLi:{
                 display: 'block',
@@ -294,6 +289,7 @@ export class IntentList extends Component {
                             })(<Input
                                 placeholder="请输入modelPath"
                                 type="text"
+                                disabled
                             />)}
                         </FormItem>
                         <FormItem>
@@ -318,6 +314,7 @@ export class IntentList extends Component {
                 >
                     删除此意图，他的子意图也会被删掉，确定删除吗？
                 </Modal>
+
             </div>
         )
     }

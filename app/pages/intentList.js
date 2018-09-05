@@ -7,6 +7,7 @@ import {
     fetchintent,
     postIntent,
     deleteIntent,
+    putIntent,
     fetchEntity,
     postPattern,
     postCorpus,
@@ -97,6 +98,7 @@ export default class intentList extends Component {
     }
 
     initData = (obj) => {
+        console.log(obj)
         this.setState({
             name: obj.name,
             zhName: obj.zhName,
@@ -291,7 +293,25 @@ export default class intentList extends Component {
         }, error => {
             console.log(error)
         }))
-    }
+    };
+
+    editIntent = (obj) => {
+        this.props.dispatch(putIntent({
+            agent: agentName,
+            ...obj
+        }, data => {
+            this.props.dispatch(fetchintent('?agent=' + agentName, data => {
+                if (data.length) {
+                    this.setState({
+                        originEfetchEntityListntity: [...data]
+                    })
+                    this.initData(this.props.intentResult.data.children[0])
+                }
+            }, error => {
+                console.log(error)
+            }))
+        }))
+    };
 
     render() {
 
@@ -333,13 +353,12 @@ export default class intentList extends Component {
                 <div style={style.innerBox} className='intentContainer'>
                     <IntentList originEntity={[intentResult.data]} intentId={this.state.intentId}
                                 getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity} addintent={this.addintent} deleteIntent={this.deleteIntent}/>
-
                     {
                         this.state.intentOrEntity == 'intent' ? 
                         <div style={{height: '100%', overflow: 'auto'}}>
                             {!intentResult.loading ? <div className="container" style={style.body}>
                                 <IntentDesc name={this.state.name} zhName={this.state.zhName}
-                                            modelPath={this.state.modelPath} mode={this.state.intentMode}/>
+                                            modelPath={this.state.modelPath} mode={this.state.intentMode} intentId={this.state.intentId} entityParam={this.state.entityParam} entityList={[entitySlideResult]} editIntent={this.editIntent}/>
                                 <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues}
                                                   showMoreValues={this.showMoreValues}/>
                                 <PatternList key={this.state.pattenListKey} agentName={agentName} intent={this.state.name} intentId={this.state.intentId}
@@ -351,10 +370,10 @@ export default class intentList extends Component {
                                 <ActionsList agentName={agentName} intentId={this.state.intentId} intentMode={this.state.intentMode}/>
                             </div> : ''}
                         </div> : 
-                        <div>
-                            <div>
+                        <div style={{width: '80%'}}>
+                            <div style={{height: '40px', lineHeight: '40px'}}>
                                 <span>实体</span>
-                                <span onClick={this.showAddEntity}>新增</span>
+                                <span className='add-new-button' onClick={this.showAddEntity}>新增</span>
                             </div>
                             <EntityTable data={this.state.certainEntity} addItem={this.updateEntity} deleteEntity={this.deleteEntity} delItem={this.updateEntity}/>
                             <Modal

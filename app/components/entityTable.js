@@ -88,7 +88,7 @@ export class EntityTable extends Component {
     render() {
         const style = {
             entityContainer:{
-                width: '80%',
+                width: '100%',
                 position: 'relative',
                 padding: '40px 0 80px 0',
                 borderLeft: '1px solid #dadada',

@@ -9,6 +9,7 @@ import {EntityTable} from "./entityTable";
 import {UnknownPatternLine} from "./unknowPatternLine";
 import {UnknownPatternList} from "./unknownPatternList";
 import {ActionsList} from "./actionsList";
+import {IntentEdit} from "./intentEdit";
 
 export {
     PatternLine,
@@ -21,5 +22,6 @@ export {
     EntityTable,
     UnknownPatternList,
     UnknownPatternLine,
-    ActionsList
+    ActionsList,
+    IntentEdit
 }

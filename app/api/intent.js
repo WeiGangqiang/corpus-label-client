@@ -5,7 +5,9 @@ export const intentList = ajax.fetchJSONByPost('/intent/all', mockUrl, 'getJson'
 
 export const postIntent = ajax.fetchJSONByPost('/intent', mockUrl, 'postJson');
 
-export const deleteIntent = ajax.fetchJSONByPost('/intent', mockUrl, 'deleteForm')
+export const deleteIntent = ajax.fetchJSONByPost('/intent', mockUrl, 'deleteForm');
+
+export const putIntent = ajax.fetchJSONByPost('/intent', mockUrl, 'putJson');
 
 export const entityList = ajax.fetchJSONByPost('/parameters', mockUrl, 'getJson');
 
