@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 
 import { Tree, Modal, message, Radio, Form, Input, Button } from 'antd';
 
+import {EditEntity} from 'components/index'
+
 const RadioGroup = Radio.Group;
 const FormItem = Form.Item;
 const TreeNode = Tree.TreeNode;
@@ -20,8 +22,10 @@ export class IntentList extends Component {
             top: 0,
             left: 0,
             showUl: 'none',
+            showEntityUl: 'none',
             addIntentVisible: false,
             delIntentVisible: false,
+            entityAddVisible: false,
             intentId: '',
             intentName: '',
             modelPath: '',
@@ -52,9 +56,18 @@ export class IntentList extends Component {
         })
     };
 
+    rightClickEntity = ({event, node}) => {
+        this.setState({
+            showEntityUl: 'block',
+            top: event.pageY + 14,
+            left: event.pageX
+        })
+    };
+
     hideUl = () => {
         this.setState({
-            showUl: 'none'
+            showUl: 'none',
+            showEntityUl: 'none'
         })
     };
 
@@ -139,6 +152,22 @@ export class IntentList extends Component {
         this.hideDelIntent()
     };
 
+    showAddEntity = () => {
+        this.setState({
+            entityAddVisible: true
+        })
+    };
+
+    hideAddEntity = () => {
+        this.setState({
+            entityAddVisible: false
+        })
+    };
+
+    handleEntitySubmit = (obj) => {
+        this.props.handleEntitySubmit(obj)
+    };
+
     render() {
 
         const {getFieldDecorator} = this.props.form;
@@ -218,7 +247,6 @@ export class IntentList extends Component {
                     <Tree
                         autoExpandParent={true}
                         onSelect={this.selectNode}
-                        onClick={this.clickNode}
                         onRightClick={this.rightClickNode}
                         // expandedKeys={this.state.expandedKeys}
                     >
@@ -227,14 +255,18 @@ export class IntentList extends Component {
                     <Tree
                         autoExpandParent={true}
                         onSelect={this.selectNodeEntity}
+                        onRightClick={this.rightClickEntity}
                     >
                         {this.renderTreeNodes(this.props.entityList)}
                     </Tree>
                 </div>
-                <div onClick={this.hideUl} style={{...style.positionDiv, display: this.state.showUl}}>
-                    <ul style={{...style.positionUl, top:this.state.top, left: this.state.left}}>
-                        <li onClick={this.showAddIntent} className="hoverLi" style={style.positionLi}>增加子意图</li>
+                <div onClick={this.hideUl} style={{...style.positionDiv, display: this.state.showUl=='block'|| this.state.showEntityUl=='block'? 'block': 'none'}}>
+                    <ul style={{...style.positionUl, top:this.state.top, left: this.state.left,display: this.state.showUl}}>
+                        <li onClick={this.showAddIntent} className="hoverLi" style={style.positionLi}>新增子意图</li>
                         <li onClick={this.showDelIntent} className="hoverLi" style={style.positionLi}>删除此意图</li>
+                    </ul>
+                    <ul style={{...style.positionUl, top:this.state.top, left: this.state.left,display: this.state.showEntityUl, height: '40px'}}>
+                        <li onClick={this.showAddEntity} className="hoverLi" style={style.positionLi}>新增实体</li>
                     </ul>
                 </div>
                 <Modal
@@ -315,6 +347,7 @@ export class IntentList extends Component {
                     删除此意图，他的子意图也会被删掉，确定删除吗？
                 </Modal>
 
+                <EditEntity entityAddVisible={this.state.entityAddVisible} hideAddEntity={this.hideAddEntity} handleEntitySubmit={this.handleEntitySubmit}/>
             </div>
         )
     }
