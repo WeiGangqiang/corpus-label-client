@@ -1,43 +1,34 @@
 import React, {Component} from 'react'
+import {Link} from 'react-router'
+import {Icon} from 'antd'
 
 export default class Header extends Component {
     // 初始化页面常量 绑定事件方法
     constructor(props, context) {
         super(props)
+        this.state = {
+            menuShow: false
+        }
     }
 
-    componentWillMount () {
-        //console.log(this.props)     //可监测到刷新，但是值为空
-    }
-
-    componentDidMount () {
-        //console.log(this.props)         //可监测到刷新，但是值为空
-    }
-
-    componentWillReceiveProps (prop) {
-        //console.log(prop)               //监测不到f5刷新
-    }
-
-    shouldComponentUpdate (prop) {
-        // console.log(prop);
-        return true
-    }
-
-    componentWillUpdate (prop) {
-        // console.log(prop)
-    }
-
-    componentDidUpdate (prop) {
-        //console.log(prop)   //可以监测到变化，f5刷新监测不到
-    }
-
-    componentWillUnmount () {
-        // console.log(this.props)
-    }
+    showMenu = () => {
+        this.setState({
+            menuShow: !this.state.menuShow
+        })
+    };
 
     render() {
         return (
-           <div className='header-container' ><img style={{height: '100%'}} src="images/logo.png" alt=""/></div>
+           <div className='header-container' >
+               <img style={{height: '100%'}} src="images/logo.png" alt=""/>
+               <Icon onClick={this.showMenu} className="menu-fold" type="menu-fold" />
+               <div className={`sliderBar-container sliderBar-top-container ${this.state.menuShow? 'heightAuto': ''}`}>
+                   <div>操作</div>
+                   <Link className='sliderItem' activeStyle={{background: '#188ae2', color: '#fff'}} to='/selectService'>我的应用</Link>
+                   <Link className='sliderItem'>公共应用</Link>
+                   <Link className='sliderItem'>帮助文档</Link>
+               </div>
+           </div>
         )
     }
 }

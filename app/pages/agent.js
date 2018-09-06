@@ -160,7 +160,6 @@ export default class Agent extends Component {
         const style = {
 
             container: {
-                background: '#fff',
                 width: '80%',
                 padding: '0 20px',
                 height: '100%',
@@ -170,8 +169,8 @@ export default class Agent extends Component {
             flexBox: {
                 display: 'flex',
                 flexWrap: 'wrap',
-                justifyContent: 'space-start',
-                marginBottom: '60px'
+                marginBottom: '60px',
+                justifyContent: 'center'
             },
             serveLi: {
                 border: '1px solid #dadada',
@@ -213,14 +212,7 @@ export default class Agent extends Component {
         }
         return (
             <div style={{height: '100%'}}>
-                {/*<div className='header-container' ><img style={{height: '100%'}} src="images/logo.png" alt=""/></div>*/}
                 <div className="container-of-index">
-                    {/*<ul className="slideBar-of-index">*/}
-                        {/*<div>操作</div>*/}
-                        {/*<li>我的应用</li>*/}
-                        {/*<li>公共应用</li>*/}
-                        {/*<li>帮助文档</li>*/}
-                    {/*</ul>*/}
                     <Spin spinning={agentResult.loading} className="content-of-index">
                         {!agentResult.loading ? <div style={style.container} className="container">
                             <div style={style.agentHead}>
@@ -293,7 +285,7 @@ export default class Agent extends Component {
                                 <Row>
                                     {
                                         agentResult.data.map(item => {
-                                            return item.name == this.state.newAgent ? '' : <Col key={item.agentId} span={8}><Checkbox value={item.name}>{item.name}</Checkbox></Col>
+                                            return item.name == this.state.newAgent ? '' : <Col key={item.agentId} xs={12} sm={12} md={12} lg={12} xl={8}><Checkbox value={item.name}>{item.name}</Checkbox></Col>
                                         })
                                     }
                                 </Row>

@@ -58,7 +58,8 @@ export default class intentList extends Component {
             intentOrEntity: 'intent',
             certainEntity: {},
             entityAddVisible: false,
-            intentMode: "local"
+            intentMode: "local",
+            showMenu: false,
         }
     }
 
@@ -98,7 +99,6 @@ export default class intentList extends Component {
     }
 
     initData = (obj) => {
-        console.log(obj)
         this.setState({
             name: obj.name,
             zhName: obj.zhName,
@@ -116,9 +116,26 @@ export default class intentList extends Component {
                 }
                 data[i].valuesShow = [...data[i].valuesF.slice(0, 10)]
             }
-            this.setState({
-                entityParam: [...data]
-            })
+            if(obj.intentId && obj.mode!='local'){
+                this.setState({
+                    entityParam: [...data,{
+                        name:'',
+                        label:'',
+                        entity:'',
+                        isList:false,
+                        values:[],
+                        subEntities:[],
+                        kind:'',
+                        valuesShow: [],
+                        valuesF: [],
+                        color: ''
+                    }]
+                })
+            }else{
+                this.setState({
+                    entityParam: [...data]
+                })
+            }
         }, error => {
             console.log(error)
         }))
@@ -234,33 +251,7 @@ export default class intentList extends Component {
         this.setState({
             entityAddVisible: false
         })
-    }
-
-    // handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     this.props.form.validateFields((err, values) => {
-    //         if (!err) {
-    //             this.props.dispatch(addEntity(
-    //                 {
-    //                     agent: agentName,
-    //                     entity: {
-    //                         name: values.entityName,
-    //                         items: [values.entityItems.replace(/，/g, ',')]
-    //                     }
-    //                 }, data => {
-    //                     this.hideAddModal()
-    //                     this.props.dispatch(fetchEntityList('?agent=' + agentName, data => {
-    //                         // console.log(data)
-    //                     }, error => {
-    //                         console.log(error)
-    //                     }))
-    //                 }, error => {
-    //                     console.log(error)
-    //                 }
-    //             ))
-    //         }
-    //     });
-    // };
+    };
 
     addintent = (obj) => {
         this.props.dispatch(postIntent({agent: agentName,...obj},data => {
@@ -297,8 +288,8 @@ export default class intentList extends Component {
 
     editIntent = (obj) => {
         this.props.dispatch(putIntent({
-            agent: agentName,
-            ...obj
+            ...obj,
+            agent: agentName
         }, data => {
             this.props.dispatch(fetchintent('?agent=' + agentName, data => {
                 if (data.length) {
@@ -330,6 +321,14 @@ export default class intentList extends Component {
         ))
     };
 
+    showMenu = (e) => {
+        e.stopPropagation()
+        e.preventDefault()
+        this.setState({
+            showMenu: !this.state.showMenu
+        })
+    }
+
     render() {
 
         const {getFieldDecorator} = this.props.form
@@ -338,11 +337,6 @@ export default class intentList extends Component {
         const {intentResult, entitySlideResult} = this.props;
 
         const style = {
-            innerContainer: {
-                width: '100%',
-                height: '100%',
-                paddingTop: '50px',
-            },
             innerBox: {
                 height: '100%'
             },
@@ -365,19 +359,20 @@ export default class intentList extends Component {
         };
 
         return <Spin spinning={intentResult.loading}>
-            <div style={style.innerContainer}>
-                <Link className='bread-cruft' to={'/selectService'}><Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择</Link>
+            <div className='intent-inner-container'>
+                <Link className='bread-cruft' to={'/selectService'}>
+                    <Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择
+                    <Icon onClick={this.showMenu} className="menu-fold" type="menu-fold" />
+                </Link>
                 <div style={style.innerBox} className='intentContainer'>
-                    <IntentList originEntity={[intentResult.data]} intentId={this.state.intentId}
-                                getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity} addintent={this.addintent} deleteIntent={this.deleteIntent} handleEntitySubmit={this.handleEntitySubmit}/>
+                    <IntentList originEntity={[intentResult.data]} intentId={this.state.intentId} getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity} addintent={this.addintent} deleteIntent={this.deleteIntent} handleEntitySubmit={this.handleEntitySubmit} showMenu={this.state.showMenu}/>
                     {
                         this.state.intentOrEntity == 'intent' ? 
                         <div style={{height: '100%', overflow: 'auto'}}>
                             {!intentResult.loading ? <div className="container" style={style.body}>
                                 <IntentDesc name={this.state.name} zhName={this.state.zhName}
                                             modelPath={this.state.modelPath} mode={this.state.intentMode} intentId={this.state.intentId} entityParam={this.state.entityParam} entityList={[entitySlideResult]} editIntent={this.editIntent}/>
-                                <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues}
-                                                  showMoreValues={this.showMoreValues}/>
+                                <EntityParameters entityList={entitySlideResult.children} entityParam={this.state.entityParam} agent={agentName} intentId={this.state.intentId} name={this.state.name} zhName={this.state.zhName} modelPath={this.state.modelPath} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues} editIntent={this.editIntent}/>
                                 <PatternList key={this.state.pattenListKey} agentName={agentName} intent={this.state.name} intentId={this.state.intentId}
                                              corpusType={this.state.type} updatePhrase={this.getPhrase} phraseArray={this.state.phraseArray} entityParam={this.state.entityParam} positivePatterns={this.state.positivePatterns} negativePatterns={this.state.negativePatterns} getPatternList={this.getPatternList}/>
 
@@ -393,53 +388,6 @@ export default class intentList extends Component {
                                 <span className='add-new-button' onClick={this.showAddEntity}>新增</span>
                             </div>
                             <EntityTable data={this.state.certainEntity} addItem={this.updateEntity} deleteEntity={this.deleteEntity} delItem={this.updateEntity}/>
-                            {/*<Modal*/}
-                                {/*title="新增"*/}
-                                {/*visible={this.state.entityAddVisible}*/}
-                                {/*centered*/}
-                                {/*destroyOnClose="true"*/}
-                                {/*footer={null}*/}
-                                {/*onCancel={this.hideAddModal}*/}
-                                {/*bodyStyle={{padding:0}}*/}
-                            {/*>*/}
-                                {/*<Form onSubmit={this.handleSubmit}>*/}
-                                    {/*<FormItem className="modalFormItem">*/}
-                                        {/*{getFieldDecorator('entityName', {*/}
-                                            {/*rules: [*/}
-                                                {/*{required: true, message: '请输入实体名字'},*/}
-                                                {/*{*/}
-                                                    {/*pattern: /^[0-9a-zA-Z-\u4E00-\u9FFF]+$/,*/}
-                                                    {/*message: '不能有非法字符串'*/}
-                                                {/*}*/}
-                                            {/*]*/}
-                                        {/*})(<Input*/}
-                                            {/*placeholder="请输入实体名字"*/}
-                                            {/*type="text"*/}
-                                        {/*/>)}*/}
-                                    {/*</FormItem>*/}
-                                    {/*<FormItem className="modalFormItem">*/}
-                                        {/*{getFieldDecorator('entityItems', {*/}
-                                            {/*rules: [*/}
-                                                {/*{*/}
-                                                    {/*pattern: /^[0-9a-zA-Z-\u4E00-\u9FFF,]+$/,*/}
-                                                    {/*message: '不能有非法字符串'*/}
-                                                {/*}*/}
-                                            {/*]*/}
-                                        {/*})(<Input*/}
-                                            {/*placeholder="请输入实体的值"*/}
-                                            {/*type="text"*/}
-                                        {/*/>)}*/}
-                                    {/*</FormItem>*/}
-                                    {/*<FormItem>*/}
-                                        {/*<div style={style.modalFoot}>*/}
-                                            {/*<Button onClick={this.hideAddModal}>Cancel</Button>*/}
-                                            {/*<Button style={style.modalFootBtn} type="primary" htmlType="submit">*/}
-                                                {/*OK*/}
-                                            {/*</Button>*/}
-                                        {/*</div>*/}
-                                    {/*</FormItem>*/}
-                                {/*</Form>*/}
-                            {/*</Modal>*/}
                             <EditEntity entityAddVisible={this.state.entityAddVisible} hideAddEntity={this.hideAddModal} handleEntitySubmit={this.handleEntitySubmit}/>
                         </div>
                     }

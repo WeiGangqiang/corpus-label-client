@@ -9,7 +9,7 @@ export default class SliderBar extends Component {
         return (
             <div className='sliderBar-container'>
                 <div>操作</div>
-                <Link className='sliderItem' to='/selectService'>我的应用</Link>
+                <Link className='sliderItem' activeStyle={{background: '#188ae2', color: '#fff'}} to='/selectService'>我的应用</Link>
                 <Link className='sliderItem'>公共应用</Link>
                 <Link className='sliderItem'>帮助文档</Link>
             </div>

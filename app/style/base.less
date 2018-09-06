@@ -124,6 +124,8 @@ ul,li{
 .intentSlide{
   width: @g-slide-width;
   margin-left: -@g-slide-margin;
+  height: 100%;
+  float:left;
 }
 .intentContainer{
   padding-left: @g-slide-margin;
@@ -236,7 +238,99 @@ ul,li{
   margin-top: 4px;
   cursor: pointer;
 }
+.hover-li:hover{
+  //box-shadow: 0px 0px 6px 0px #ddd;
+}
+.menu-fold{
+  display: none!important;
+  float: right;
+  font-size: 20px;
+  margin: 10px;
+}
+.sliderBar-top-container{
+  display: none;
+}
+.heightAuto{
+  height: 161px!important;
+}
+.intent-inner-container{
+  width: 100%;
+  height: 100%;
+  padding-top: @g-navBar-margin;
+}
 
+@media (max-width: 575px) {
+  .header-padding{
+    padding-top: 40px;
+  }
+  .header-container{
+    margin-top: -40px;
+  }
+  .slider-padding{
+    padding-left: 0;
+  }
+  .header-container{
+    margin-left: 0;
+  }
+  .sliderBar-container{
+    margin-left: 0;
+    float: none;
+    width: 100%;
+    height: 0;
+    border-bottom: 1px solid #dadada;
+    overflow: hidden;
+    position: fixed;
+    top: 40px;
+    left: 0px;
+    z-index: 1;
+    transition:height .5s;
+    display: none;
+  }
+  .menu-fold{
+    display: block!important;
+  }
+  .sliderBar-top-container{
+    display: block;
+  }
+  .container{
+    width: 100%!important;
+  }
+  .bottom-line{
+    border-bottom: 1px solid #dadada;
+  }
+  .modalFormItem{
+    margin-bottom: 5px!important;
+  }
+  .intent-inner-container{
+    padding-top: 40px;
+  }
+  .bread-cruft{
+    margin-top: -40px;
+  }
+  .intentContainer{
+    padding-left: 0;
+  }
+  .intentSlide{
+    position: fixed;
+    top: 40px;
+    left: 0px;
+    margin-left: 0;
+    z-index: 2;
+    height: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow: auto;
+    border-bottom: 1px solid #dadada;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+    box-shadow: 0 0 5px 0 #ccc;
+    transition: height .5s;
+  }
+  .height-auto{
+    height: auto;
+    max-height: 200px;
+  }
+}
 
 
 

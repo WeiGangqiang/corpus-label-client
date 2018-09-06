@@ -98,7 +98,7 @@ export class IntentDesc extends Component {
     render() {
         const style = {
             baseInfo: {
-                height: '120px',
+                height: 'auto',
                 background: '#fbfbfb',
                 padding: '0 15px',
                 fontSize: '14px',
@@ -106,7 +106,13 @@ export class IntentDesc extends Component {
                 borderRadius: '15px'
             },
             col: {
-                lineHeight: '40px'
+                lineHeight: '40px',
+                paddingLeft: '70px'
+            },
+            span: {
+                float: 'left',
+                width: '70px',
+                marginLeft: '-70px'
             },
             modalFoot:{
                 height: '52px',
@@ -137,10 +143,22 @@ export class IntentDesc extends Component {
             <div>
                 <Row style={style.baseInfo}>
                     {this.getTitle()}
-                    <Col style={style.col} span={10}>意图名字 ： {this.props.name}</Col>
-                    <Col style={style.col} span={10}>中文名字 ： {this.props.zhName}</Col>
-                    <Col style={style.col} span={4}>类型 ： {this.props.mode}</Col>
-                    <Col style={style.col} span={24}>模型路径 ： {this.props.modelPath}</Col>
+                    <Col style={style.col} span={10} xs={24} sm={12} xl={10}>
+                        <span style={style.span} xs={6}>意图名字:</span>
+                        <div xs={18}>{this.props.name}</div>
+                    </Col>
+                    <Col style={style.col} span={10} xs={24} sm={12} xl={10}>
+                        <span style={style.span} xs={6}>中文名字:</span>
+                        <div xs={18}>{this.props.zhName}</div>
+                    </Col>
+                    <Col style={style.col} span={4} xs={24} sm={12} xl={4}>
+                        <span style={style.span} xs={6}>类型:</span>
+                        <div xs={18}>{this.props.mode}</div>
+                    </Col>
+                    <Col style={style.col} span={24} xs={24} sm={24}>
+                        <span style={style.span} xs={6}>模型路径:</span>
+                        <div xs={18}>{this.props.modelPath}</div>
+                    </Col>
                 </Row>
                 <Modal
                     title='编辑'

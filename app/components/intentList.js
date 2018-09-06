@@ -180,10 +180,6 @@ export class IntentList extends Component {
                 height: '100%',
                 borderRadius: '15px'
             },
-            intentBox: {
-                height: '100%',
-                float: 'left',
-            },
             headerTitle: {
                 lineHeight: '40px',
                 fontSize: '16px',
@@ -241,7 +237,7 @@ export class IntentList extends Component {
         }
 
         return (
-            <div className='intentSlide' style={style.intentBox}>
+            <div className={`intentSlide ${this.props.showMenu? 'height-auto': ''}`}>
                 <div style={style.corpusBox}>
                     <div style={style.headerTitle}>操作</div>
                     <Tree

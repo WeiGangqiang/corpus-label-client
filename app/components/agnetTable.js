@@ -42,9 +42,11 @@ export class AgentTable extends Component {
             li:{
                 borderLeft: '1px solid #dadada',
                 borderTop: '1px solid #dadada',
-                width: '100%',
+                width: '99%',
                 marginBottom: '30px',
-                position: 'relative'
+                position: 'relative',
+                marginTop: '5px',
+                boxShadow: '0 0 5px 0 #bbb'
             },
             row:{
                 borderBottom: '1px solid #dadada',
@@ -55,7 +57,7 @@ export class AgentTable extends Component {
             },
             label:{
                 display: 'inline-block',
-                width: '90px',
+                width: '100%',
                 textAlign: 'center',
                 verticalAlign: 'top'
             },
@@ -86,47 +88,92 @@ export class AgentTable extends Component {
         };
 
         return (
-            <li style={style.li}>
+            <li className="hover-li" style={style.li}>
                 <Row style={style.row}>
-                    <Col style={style.col} span={12}>
-                        <span style={style.label}>name</span><pre style={style.pre}>{this.props.agent.name}</pre>
+                    <Col className='bottom-line' style={style.col} xs={24} sm={24} md={24} lg={24} xl={12}>
+                        <Col xs={6} sm={8} md={6} lg={4} xl={4}>
+                            <span style={style.label}>name</span>
+                        </Col>
+                        <Col xs={18} sm={18} md={18} lg={20} xl={20}>
+                            <p style={style.pre}>{this.props.agent.name}</p>
+                        </Col>
                     </Col>
-                    <Col style={style.col} span={12}>
-                        <span style={style.label}>中文名字</span><pre style={style.pre}>{this.props.agent.zhName}</pre>
+                    <Col style={style.col} xs={24} sm={24} md={24} lg={24} xl={12}>
+                        <Col xs={6} sm={8} md={6} lg={4} xl={4}>
+                            <span style={style.label}>中文名字</span>
+                        </Col>
+                        <Col xs={18} sm={18} md={18} lg={20} xl={20}>
+                            <p style={style.pre}>{this.props.agent.zhName}</p>
+                        </Col>
                     </Col>
                 </Row>
                 <Row style={style.row}>
-                    <Col style={style.col} span={12}><span style={style.label}>ID</span><pre style={style.pre}>{this.props.agent.agentId}</pre></Col>
-                    <Col style={style.col} span={12}><span style={style.label}>网关</span><pre style={style.pre}>{this.props.agent.gateWay}</pre></Col>
+                    <Col className='bottom-line' style={style.col} xs={24} sm={24} md={24} lg={24} xl={12}>
+                        <Col xs={6} sm={8} md={6} lg={4} xl={4}>
+                            <span style={style.label}>ID</span>
+                        </Col>
+                        <Col xs={18} sm={18} md={18} lg={20} xl={20}>
+                            <p style={style.pre}>{this.props.agent.agentId}</p>
+                        </Col>
+                    </Col>
+                    <Col style={style.col} xs={24} sm={24} md={24} lg={24} xl={12}>
+                        <Col xs={6} sm={8} md={6} lg={4} xl={4}>
+                            <span style={style.label}>网关</span>
+                        </Col>
+                        <Col xs={18} sm={18} md={18} lg={20} xl={20}>
+                            <p style={style.pre}>{this.props.agent.gateWay}</p>
+                        </Col>
+                    </Col>
                 </Row>
                 <Row style={style.row}>
-                    <Col style={style.col} span={24}><span style={style.label}>介绍语</span><pre style={style.pre}>{this.props.agent.introduced}</pre></Col>
+                    <Col style={style.col}>
+                        <Col xs={6} sm={8} md={6} lg={4} xl={4}>
+                            <span style={style.label}>介绍语</span>
+                        </Col>
+                        <Col xs={18} sm={18} md={18} lg={20} xl={20}>
+                            <p style={style.pre}>{this.props.agent.introduced}</p>
+                        </Col>
+                    </Col>
                 </Row>
                 <Row style={style.row}>
-                    <Col style={style.col} span={24}><span style={style.label}>依赖</span><pre style={style.pre}>{this.props.agent.shareAgents.join(',')}</pre></Col>
+                    <Col style={style.col}>
+                        <Col xs={6} sm={8} md={6} lg={4} xl={4}>
+                            <span style={style.label}>依赖</span>
+                        </Col>
+                        <Col xs={18} sm={18} md={18} lg={20} xl={20}>
+                            <p style={style.pre}>{this.props.agent.shareAgents.join(',')}</p>
+                        </Col>
+                    </Col>
                 </Row>
                 <Row style={style.row}>
-                    <Col style={style.col} span={24}><span style={style.label}>未识别回复</span><pre style={style.pre}>{this.props.agent.unknownReplies.join('\n')}</pre></Col>
+                    <Col style={style.col}>
+                        <Col xs={6} sm={8} md={6} lg={4} xl={4}>
+                            <span style={style.label}>未识别回复</span>
+                        </Col>
+                        <Col xs={18} sm={18} md={18} lg={20} xl={20}>
+                            <p style={style.pre}>{this.props.agent.unknownReplies.join(';')}</p>
+                        </Col>
+                    </Col>
                 </Row>
                 <Row style={style.row}>
-                    <Col style={style.col} span={6}>
+                    <Col className='bottom-line' style={style.col} xs={12} sm={12} md={12} lg={12} xl={6}>
                         <Link style={style.link} to={{
                             pathname: '/intentList',
                             search: '?agent=' + this.props.agent.name,
                         }}>配置语料</Link>
                     </Col>
-                    <Col style={style.col} span={6}>
+                    <Col className='bottom-line' style={style.col} xs={12} sm={12} md={12} lg={12} xl={6}>
                         <Link style={style.link} to={{
                             pathname: '/unknown',
                             search: '?agent=' + this.props.agent.name
                         }}>未识别语料</Link>
                     </Col>
-                    <Col style={style.col} span={6}>
+                    <Col style={style.col} xs={12} sm={12} md={12} lg={12} xl={6}>
                         <Link onClick={this.editAgent} style={style.link}>
                             编辑应用
                         </Link>
                     </Col>
-                    <Col style={style.col} span={6}>
+                    <Col style={style.col} xs={12} sm={12} md={12} lg={12} xl={6}>
                         <Link style={style.link}>发布</Link>
                     </Col>
                 </Row>
