@@ -371,7 +371,7 @@ export default class intentList extends Component {
                         <div style={{height: '100%', overflow: 'auto'}}>
                             {!intentResult.loading ? <div className="container" style={style.body}>
                                 <IntentDesc name={this.state.name} zhName={this.state.zhName}
-                                            modelPath={this.state.modelPath} mode={this.state.intentMode} intentId={this.state.intentId} entityParam={this.state.entityParam} entityList={[entitySlideResult]} editIntent={this.editIntent}/>
+                                            modelPath={this.state.modelPath} mode={this.state.intentMode} intentId={this.state.intentId} entityParam={this.state.entityParam} editIntent={this.editIntent}/>
                                 <EntityParameters entityList={entitySlideResult.children} entityParam={this.state.entityParam} agent={agentName} intentId={this.state.intentId} name={this.state.name} zhName={this.state.zhName} modelPath={this.state.modelPath} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues} editIntent={this.editIntent}/>
                                 <PatternList key={this.state.pattenListKey} agentName={agentName} intent={this.state.name} intentId={this.state.intentId}
                                              corpusType={this.state.type} updatePhrase={this.getPhrase} phraseArray={this.state.phraseArray} entityParam={this.state.entityParam} positivePatterns={this.state.positivePatterns} negativePatterns={this.state.negativePatterns} getPatternList={this.getPatternList}/>

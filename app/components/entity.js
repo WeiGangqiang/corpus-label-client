@@ -60,6 +60,7 @@ export class EntityParameters extends Component {
             entity: this.state.entity,
             isList: false
         })
+        parameters = parameters.filter(({ entity }) => entity != '')
         if(flag){
             this.props.editIntent({
                 "agent": this.props.agent,
@@ -73,6 +74,32 @@ export class EntityParameters extends Component {
             })
         }else{
             message.info('变量名重复请重新填写')
+        }
+    };
+
+    deleteItems = (item) => {
+        if (this.props.intentId && this.state.mode != 'local'){
+            let parameters = [];
+            this.props.entityParam.map(item => {
+                let {name, label, entity, isList} = item;
+                parameters.push({
+                    name, label, entity, isList
+                })
+            });
+            parameters = parameters.filter(({ entity }) => entity != '').filter(({entity}) => entity != item);
+
+            this.props.editIntent({
+                "agent": this.props.agent,
+                "intent" :{
+                    "intentId": this.props.intentId,
+                    "name": this.props.name,
+                    "zhName": this.props.zhName,
+                    "modelPath": this.props.modelPath,
+                    "parameters": parameters
+                }
+            })
+        }else{
+            message.info('不允许删除该变量')
         }
     }
 
@@ -133,11 +160,11 @@ export class EntityParameters extends Component {
                 render(text, record, index) {
                     if(record.entity){
                         if(record.values.length < 10){
-                            return (<span> </span>)
+                            return (<div><Icon onClick={that.deleteItems.bind(that,record.entity)} type="delete"/></div>)
                         } else if(record.valuesShow.length <= 10){
-                            return ( <span style={{paddingLeft: '10px', color:'#0099CC'}} onClick={that.showMoreValues.bind(that, index)}>详情 <Icon type='caret-down'/></span>)
+                            return ( <div><span style={{paddingLeft: '10px', color:'#0099CC'}} onClick={that.showMoreValues.bind(that, index)}>详情 <Icon type='caret-down'/></span><Icon onClick={that.deleteItems.bind(that,record.entity)} type="delete"/></div>)
                         } else {
-                            return (<span style={{paddingLeft: '10px', color:'#0099CC'}}  onClick={that.showLessValues.bind(that, index)}>简要 <Icon type='caret-up'/></span>)
+                            return (<div><span style={{paddingLeft: '10px', color:'#0099CC'}}  onClick={that.showLessValues.bind(that, index)}>简要 <Icon type='caret-up'/></span><Icon onClick={that.deleteItems.bind(that,record.entity)} type="delete"/></div>)
                         }
                     }else{
                         return <Button onClick={that.addItems} disabled={that.state.entity=='' || that.state.name==''}>增加</Button>

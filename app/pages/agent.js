@@ -92,10 +92,6 @@ export default class Agent extends Component {
         })
     }
 
-    addAgent = () => {
-
-    }
-
     onChange = (value) => {
         this.setState({
             shareAgents: value
@@ -163,7 +159,7 @@ export default class Agent extends Component {
                 width: '80%',
                 padding: '0 20px',
                 height: '100%',
-                paddingTop: '40px',
+                paddingTop: '55px',
                 background: '#fbfbfb'
             },
             flexBox: {
@@ -182,10 +178,10 @@ export default class Agent extends Component {
                 cursor: 'pointer',
             },
             agentHead: {
-                lineHeight: '40px',
-                marginTop: '-40px',
+                lineHeight: '50px',
+                marginTop: '-55px',
                 borderBottom: '1px solid #dadada',
-                marginBottom: '10px'
+                marginBottom: '20px'
             },
             addApp:{
                 float:'right',
@@ -196,7 +192,7 @@ export default class Agent extends Component {
                 height: '32px',
                 lineHeight: '32px',
                 textAlign: 'center',
-                marginTop: '4px',
+                marginTop: '11px',
                 cursor: 'pointer'
             },
             modalFoot:{
@@ -209,14 +205,14 @@ export default class Agent extends Component {
             modalFootBtn:{
                 marginLeft: '8px'
             }
-        }
+        };
         return (
             <div style={{height: '100%'}}>
                 <div className="container-of-index">
                     <Spin spinning={agentResult.loading} className="content-of-index">
                         {!agentResult.loading ? <div style={style.container} className="container">
                             <div style={style.agentHead}>
-                                <span>我的应用</span>
+                                <span style={{fontSize: '20px'}}>我的应用</span>
                                 <span onClick={this.showAddAgent} style={style.addApp}><Icon type="plus"></Icon>添加应用</span>
                             </div>
                             <div style={{height: '100%', overflow: 'auto'}}>

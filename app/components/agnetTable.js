@@ -1,6 +1,12 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux'
 import {Link} from 'react-router'
-import {Row, Col, Icon, Modal} from 'antd'
+import {Row, Col, Icon, Modal, Button} from 'antd'
+import {packageAgent} from 'actions/serve'
+
+@connect((state, props) => ({
+    config: state.config
+}))
 
 export class AgentTable extends Component {
     constructor(props) {
@@ -8,7 +14,8 @@ export class AgentTable extends Component {
         this.state = {
             deleteVisible: false,
             agentName: '',
-            agentId: ''
+            agentId: '',
+            packageVisible: false
         }
     }
 
@@ -26,7 +33,13 @@ export class AgentTable extends Component {
             agentName: '',
             agentId: ''
         })
-    }
+    };
+
+    hideAddModal = () => {
+        this.setState({
+            packageVisible: false
+        })
+    };
 
     delete = () => {
         this.props.deleteAgent(this.state.agentId)
@@ -34,7 +47,17 @@ export class AgentTable extends Component {
 
     editAgent = () => {
         this.props.showEditModal(this.props.agent)
-    }
+    };
+
+    package = () => {
+        this.props.dispatch(packageAgent('?agent=' + this.props.agent.name + '&agentId=' + this.props.agent.agentId, data => {
+            this.setState({
+                packageVisible: true
+            })
+        }, error => {
+            console.log(error)
+        }))
+    };
 
     render() {
 
@@ -79,11 +102,25 @@ export class AgentTable extends Component {
                 position: 'absolute',
                 right: '0',
                 top: '0',
-                width: '20px',
-                height: '20px',
-                lineHeight: '20px',
+                width: '24px',
+                height: '24px',
+                lineHeight: '24px',
                 background: '#ddd',
                 cursor: 'pointer'
+            },
+            modalFoot:{
+                height: '52px',
+                lineHeight: '32px',
+                textAlign: 'right',
+                padding: '10px 16px',
+                borderTop: '1px solid #e8e8e8'
+            },
+            modalFootBtn:{
+                marginLeft: '8px'
+            },
+            downloadTip:{
+                lineHeight: '40px',
+                paddingLeft: '40px'
             }
         };
 
@@ -173,7 +210,7 @@ export class AgentTable extends Component {
                             编辑应用
                         </Link>
                     </Col>
-                    <Col style={style.col} xs={12} sm={12} md={12} lg={12} xl={6}>
+                    <Col onClick={this.package} style={style.col} xs={12} sm={12} md={12} lg={12} xl={6}>
                         <Link style={style.link}>发布</Link>
                     </Col>
                 </Row>
@@ -186,6 +223,29 @@ export class AgentTable extends Component {
                     onCancel={this.hideDeleteModal}
                 >
                     确定删除{this.state.agentName}应用？
+                </Modal>
+                <Modal
+                    title="打包提示"
+                    visible={this.state.packageVisible}
+                    centered
+                    onCancel={this.hideDeleteModal}
+                    destroyOnClose="true"
+                    footer={null}
+                    bodyStyle={{padding:0}}
+                >
+                    {
+                        this.state.packageVisible ? <span style={style.downloadTip}>打包完成，现在需要下载？</span> : <span style={style.downloadTip}>打包中...</span>
+                    }
+                    <div style={style.modalFoot}>
+                        <Button onClick={this.hideAddModal}>Cancel</Button>
+                        {
+                            this.state.packageVisible ? <Button style={style.modalFootBtn} type="primary" onClick={this.hideAddModal}>
+                                <a href={this.props.config.linkUrl + '/package/' + this.props.agent.name + '.zip'}>下载</a>
+                            </Button> : <Button style={style.modalFootBtn}>
+                                <a href="javascript:void(0)">下载</a>
+                            </Button>
+                        }
+                    </div>
                 </Modal>
             </li>
         )

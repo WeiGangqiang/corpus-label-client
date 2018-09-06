@@ -69,7 +69,7 @@ export class PatternLine extends Component {
                 label: label
             })
         }
-    }
+    };
 
     getSpans = () => {
         let sentence = this.props.pattern.sentence

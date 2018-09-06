@@ -200,7 +200,10 @@ export default class unknownSays extends Component {
         return (
             <Spin spinning={intentResult.loading}>
                 <div style={style.innerContainer}>
-                    <Link className='bread-cruft' to={'/selectService'}><Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择</Link>
+                    <Link className='bread-cruft' to={'/selectService'}>
+                        <Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择
+
+                    </Link>
                     <div style={style.innerBox} className='intentContainer'>
                         <IntentList originEntity={[intentResult.data]} intentId={this.state.intentId}
                                     getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity}/>
@@ -210,7 +213,6 @@ export default class unknownSays extends Component {
                                 <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues}/>
 
                                 <UnknownPatternList agentName={this.state.agent} intent={this.state.intent} intentId={this.state.intentId} phraseArray={this.state.phraseArray} entityParam={this.state.entityParam} patterns={unknownResult.data} updatePhrase={this.getPhrase} getPatternList={this.getPatternList} saveCorpus={this.saveCorpus}/>
-
                             </div>
                         </div>
                     </div>

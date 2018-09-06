@@ -99,8 +99,7 @@ const ajaxHttp = {
     postForm: function (url, data) {
         return axios({
             method: 'post',
-            url,
-            data,
+            url:url + data,
             timeout: 10000,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
