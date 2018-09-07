@@ -157,17 +157,13 @@ export default class unknownSays extends Component {
     };
 
     getPatternList = (prop, type) => {
-        this.props.dispatch(getPattern('?agent=' + prop.agentName + '&intentId=' + prop.intentId + '&type=' + type,
-            data => {
-                if(type == "positive"){
-                    this.setState({positivePatterns: data})
-                }
-                else{
-                    this.setState({negativePatterns: data})
-                }
-            },error => {
-                console.log(error)
-            }))
+          this.props.dispatch(unknownList('?agent=' + agent, data => {
+            this.setState({
+              unknownResult: [...data]
+            })
+          }, error => {
+            console.log(error)
+          }));
     }
 
     saveCorpus = (obj) => {
