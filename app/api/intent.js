@@ -9,6 +9,12 @@ export const deleteIntent = ajax.fetchJSONByPost('/intent', mockUrl, 'deleteForm
 
 export const putIntent = ajax.fetchJSONByPost('/intent', mockUrl, 'putJson');
 
+export const putIntentParameter = ajax.fetchJSONByPost('/intent/parameter', mockUrl, 'putJson');
+
+export const addIntentParameter = ajax.fetchJSONByPost('/intent/parameter', mockUrl, 'postJson');
+
+export const deleteIntentParameter = ajax.fetchJSONByPost('/intent/parameter', mockUrl, 'deleteJson');
+
 export const entityList = ajax.fetchJSONByPost('/parameters', mockUrl, 'getJson');
 
 export const corpus = ajax.fetchJSONByPost('/unknown-says', mockUrl, 'getJson');

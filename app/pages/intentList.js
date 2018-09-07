@@ -1,23 +1,9 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
-import {Spin, Icon, Form, Row, Col, Modal, Input, Button} from 'antd'
+import {Spin, Icon, Form} from 'antd'
 import {isArrayDomain} from 'utils/util'
-import {
-    fetchintent,
-    postIntent,
-    deleteIntent,
-    putIntent,
-    fetchEntity,
-    postPattern,
-    postCorpus,
-    predict,
-    getPhrase,
-    putPhrase,
-    deletePhrase,
-    postPhrase,
-    getPattern
-} from 'actions/intent'
+import {fetchintent, postIntent, deleteIntent, putIntent, putIntentParameter, addIntentParameter, deleteIntentParameter, fetchEntity, postPattern, postCorpus, predict, getPhrase, putPhrase, deletePhrase, postPhrase, getPattern} from 'actions/intent'
 
 import {fetchEntityList, certainEntity, updateEntity, deleteEntity, addEntity} from 'actions/entity'
 
@@ -25,7 +11,6 @@ import {PatternList, PhraseList, EntityParameters, IntentList, IntentDesc, Entit
 
 let agentName = '';
 
-const FormItem = Form.Item
 
 @connect((state, dispatch) => ({
     config: state.config,
@@ -34,10 +19,6 @@ const FormItem = Form.Item
     entitySlideResult: state.entitySlideResult
 }))
 
-@Form.create({
-    onFieldsChange(props, items) {
-    },
-})
 export default class intentList extends Component {
     constructor(props) {
         super(props)
@@ -58,7 +39,7 @@ export default class intentList extends Component {
             intentOrEntity: 'intent',
             certainEntity: {},
             entityAddVisible: false,
-            intentMode: "local",
+            intentMode: '',
             showMenu: false,
         }
     }
@@ -67,15 +48,11 @@ export default class intentList extends Component {
         agentName = this.props.location.query.agent;
         this.props.dispatch(fetchintent('?agent=' + agentName, data => {
             if (data.length) {
-                this.setState({
-                    originEfetchEntityListntity: [...data]
-                })
-                // console.log(this.props.intentResult.data.children[0])
                 this.initData(this.props.intentResult.data.children[0])
             }
         }, error => {
             console.log(error)
-        }))
+        }));
 
         this.props.dispatch(fetchEntityList('?agent=' + agentName, data => {
             // console.log(data)
@@ -106,7 +83,16 @@ export default class intentList extends Component {
             intentId: obj.intentId,
             intentMode: obj.mode
         });
-        this.props.dispatch(fetchEntity('?agent=' + agentName + '&intentId=' + obj.intentId, data => {
+
+        this.initEntityParam(obj.intentId, obj.mode);
+
+        this.initPhrase(obj.intentId);
+
+        this.initPattern(obj.intentId);
+    };
+
+    initEntityParam = (intentId, mode) => {
+        this.props.dispatch(fetchEntity('?agent=' + agentName + '&intentId=' + intentId, data => {
             for (let i = 0; i < data.length; i++) {
                 data[i].valuesF = [...data[i].values]
                 for (let j = 0; j < data[i].valuesF.length; j++) {
@@ -116,7 +102,7 @@ export default class intentList extends Component {
                 }
                 data[i].valuesShow = [...data[i].valuesF.slice(0, 10)]
             }
-            if(obj.intentId && obj.mode!='local'){
+            if(intentId && mode!='local'){
                 this.setState({
                     entityParam: [...data,{
                         name:'',
@@ -139,7 +125,10 @@ export default class intentList extends Component {
         }, error => {
             console.log(error)
         }))
-        this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + obj.intentId
+    };
+
+    initPhrase = (intentId) => {
+        this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + intentId
             , data => {
                 this.setState({
                     phraseArray: [...data]
@@ -147,15 +136,18 @@ export default class intentList extends Component {
             }, error => {
                 console.log(error)
             }))
-        this.props.dispatch(getPattern('?agent=' + agentName + '&intentId=' + obj.intentId + '&type=positive',
-                data => {
-                    this.setState({
-                        positivePatterns: data
-                    })
-        },error => {
-            console.log(error)
-        }))
-        this.props.dispatch(getPattern('?agent=' + agentName + '&intentId=' + obj.intentId + '&type=negative',
+    };
+
+    initPattern = (intentId) => {
+        this.props.dispatch(getPattern('?agent=' + agentName + '&intentId=' + intentId + '&type=positive',
+            data => {
+                this.setState({
+                    positivePatterns: data
+                })
+            },error => {
+                console.log(error)
+            }));
+        this.props.dispatch(getPattern('?agent=' + agentName + '&intentId=' + intentId + '&type=negative',
             data => {
                 this.setState({
                     negativePatterns: data
@@ -163,7 +155,7 @@ export default class intentList extends Component {
             },error => {
                 console.log(error)
             }))
-    }
+    };
 
     initEntity = (obj) => {
         this.props.dispatch(certainEntity('?agent=' + agentName + '&entityName=' + obj.key, data => {
@@ -173,7 +165,7 @@ export default class intentList extends Component {
         }, error => {
             console.log(error)
         }))
-    }
+    };
 
     getPhrase = () => {
         this.props.dispatch(getPhrase('?agent=' + agentName + '&intentId=' + this.state.intentId
@@ -203,7 +195,6 @@ export default class intentList extends Component {
     reloadPatterns = () => {
         this.getPatternList({agentName: agentName, intentId: this.state.intentId}, 'positive')
         this.getPatternList({agentName: agentName, intentId: this.state.intentId}, 'negative')
-        // this.setState({pattenListKey: this.state.pattenListKey + 1})
     }
 
     showMoreValues = (i) => {
@@ -257,9 +248,6 @@ export default class intentList extends Component {
         this.props.dispatch(postIntent({agent: agentName,...obj},data => {
             this.props.dispatch(fetchintent('?agent=' + agentName, data => {
                 if (data.length) {
-                    this.setState({
-                        originEfetchEntityListntity: [...data]
-                    })
                 }
             }, error => {
                 console.log(error)
@@ -273,9 +261,6 @@ export default class intentList extends Component {
         this.props.dispatch(deleteIntent('?agent=' + agentName + '&intentId=' + intentId,data => {
             this.props.dispatch(fetchintent('?agent=' + agentName, data => {
                 if (data.length) {
-                    this.setState({
-                        originEfetchEntityListntity: [...data]
-                    })
                     this.initData(this.props.intentResult.data.children[0])
                 }
             }, error => {
@@ -293,15 +278,59 @@ export default class intentList extends Component {
         }, data => {
             this.props.dispatch(fetchintent('?agent=' + agentName, data => {
                 if (data.length) {
-                    this.setState({
-                        originEfetchEntityListntity: [...data]
-                    })
                     this.initData(this.props.intentResult.data.children[0])
                 }
             }, error => {
                 console.log(error)
             }))
         }))
+    };
+
+    editIntentParameter = (param,obj) => {
+        this.props.dispatch(putIntentParameter({
+            ...param,
+            agent: agentName
+        }, data => {
+            this.initEntityParam(obj.intentId,obj.mode)
+            // this.props.dispatch(fetchintent('?agent=' + agentName, data => {
+            //     if (data.length) {
+            //         this.initData(this.props.intentResult.data.children[0])
+            //     }
+            // }, error => {
+            //     console.log(error)
+            // }))
+        }, error => {}))
+    };
+
+    addIntentParameter = (param,obj) => {
+        this.props.dispatch(addIntentParameter({
+            ...param,
+            agent: agentName
+        }, data => {
+            this.initEntityParam(obj.intentId, obj.mode)
+            // this.props.dispatch(fetchintent('?agent=' + agentName, data => {
+            //     if (data.length) {
+            //         this.initData(this.props.intentResult.data.children[0])
+            //     }
+            // }, error => {
+            //     console.log(error)
+            // }))
+        }, error => {}))
+    };
+
+    deleteIntentParameter = (obj) => {
+        this.props.dispatch(deleteIntentParameter({
+            ...obj,
+            agent: agentName
+        }, data => {
+            this.props.dispatch(fetchintent('?agent=' + agentName, data => {
+                if (data.length) {
+                    this.initData(this.props.intentResult.data.children[0])
+                }
+            }, error => {
+                console.log(error)
+            }))
+        }, error => {}))
     };
 
     handleEntitySubmit = (obj) => {
@@ -330,8 +359,6 @@ export default class intentList extends Component {
     }
 
     render() {
-
-        const {getFieldDecorator} = this.props.form
 
         const agentName = this.props.location.query.agent;
         const {intentResult, entitySlideResult} = this.props;
@@ -365,14 +392,14 @@ export default class intentList extends Component {
                     <Icon onClick={this.showMenu} className="menu-fold" type="menu-fold" />
                 </Link>
                 <div style={style.innerBox} className='intentContainer'>
-                    <IntentList originEntity={[intentResult.data]} intentId={this.state.intentId} getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity} addintent={this.addintent} deleteIntent={this.deleteIntent} handleEntitySubmit={this.handleEntitySubmit} showMenu={this.state.showMenu}/>
+                    <IntentList originEntity={[intentResult.data]} intentId={this.state.intentId} agent={agentName} getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity} addintent={this.addintent} deleteIntent={this.deleteIntent} handleEntitySubmit={this.handleEntitySubmit} showMenu={this.state.showMenu}/>
                     {
                         this.state.intentOrEntity == 'intent' ? 
                         <div style={{height: '100%', overflow: 'auto'}}>
                             {!intentResult.loading ? <div className="container" style={style.body}>
                                 <IntentDesc name={this.state.name} zhName={this.state.zhName}
-                                            modelPath={this.state.modelPath} mode={this.state.intentMode} intentId={this.state.intentId} entityParam={this.state.entityParam} editIntent={this.editIntent}/>
-                                <EntityParameters entityList={entitySlideResult.children} entityParam={this.state.entityParam} agent={agentName} intentId={this.state.intentId} name={this.state.name} zhName={this.state.zhName} modelPath={this.state.modelPath} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues} editIntent={this.editIntent}/>
+                                            modelPath={this.state.modelPath} mode={this.state.intentMode} intentId={this.state.intentId} editIntent={this.editIntent}/>
+                                <EntityParameters entityList={entitySlideResult.children} entityParam={this.state.entityParam} agent={agentName} intentId={this.state.intentId} name={this.state.name} zhName={this.state.zhName} modelPath={this.state.modelPath} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues} addIntentParameter={this.addIntentParameter} deleteIntentParameter={this.deleteIntentParameter} putIntentParameter={this.editIntentParameter}/>
                                 <PatternList key={this.state.pattenListKey} agentName={agentName} intent={this.state.name} intentId={this.state.intentId}
                                              corpusType={this.state.type} updatePhrase={this.getPhrase} phraseArray={this.state.phraseArray} entityParam={this.state.entityParam} positivePatterns={this.state.positivePatterns} negativePatterns={this.state.negativePatterns} getPatternList={this.getPatternList}/>
 

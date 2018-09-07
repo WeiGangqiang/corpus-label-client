@@ -13,11 +13,11 @@ export const intentResult = handleActions({
     'receive intent list'(state, action) {
         let {req, res} = action.payload;
         if (res.length) {
-            let modelPath = res[0].modelPath.split('/')[0]
+            // let modelPath = res[0].modelPath.split('/')[0]
             res = getDisc(res).children[0].children[0]
-            res.key = modelPath;
+            // res.key = modelPath;
             res.title = '意图';
-            res.modelPath = modelPath;
+            res.modelPath = res.key;
             return {data: {...res}, loading: false}
         } else {
             return {data:

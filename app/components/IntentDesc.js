@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import {Modal, Form, Input, Button, Checkbox, Col, Row, message, Icon} from 'antd'
+import { Form, Input, Col, Row, message, Icon} from 'antd'
 
-const FormItem = Form.Item;
 
 @Form.create({
     onFieldsChange(props, items) {
@@ -37,18 +36,12 @@ export class IntentDesc extends Component {
 
     editBaseMsg = () => {
         if(this.state.editState){
-            let parameters = [];
-            this.props.entityParam.map(item => {
-                let {name, label, entity, isList} = item;
-                parameters.push({name, label, entity, isList})
-            });
             let param = {
                 "intent": {
                     "intentId": this.props.intentId,
                     "name": this.state.name,
                     "zhName": this.state.zhName,
-                    "modelPath": this.props.modelPath,
-                    "parameters": parameters
+                    "modelPath": this.props.modelPath
                 }
             };
             this.props.editIntent(param);
@@ -58,7 +51,9 @@ export class IntentDesc extends Component {
         }else{
             if(this.props.intentId && this.props.mode != 'local'){
                 this.setState({
-                    editState: !this.state.editState
+                    editState: !this.state.editState,
+                    name: this.props.name,
+                    zhName: this.props.zhName
                 })
             }else{
                 message.info('此意图不可编辑')

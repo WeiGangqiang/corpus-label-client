@@ -15,7 +15,13 @@ export const postIntent = createAjaxAction(intent.postIntent);
 
 export const deleteIntent = createAjaxAction(intent.deleteIntent);
 
-export const putIntent = createAjaxAction(intent.putIntent)
+export const putIntent = createAjaxAction(intent.putIntent);
+
+export const putIntentParameter = createAjaxAction(intent.putIntentParameter);
+
+export const addIntentParameter = createAjaxAction(intent.addIntentParameter);
+
+export const deleteIntentParameter = createAjaxAction(intent.deleteIntentParameter);
 
 export const requestEntityList = createAction('request entity list');
 export const receiveEntityList = createAction('receive entity list');

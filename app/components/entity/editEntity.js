@@ -79,7 +79,7 @@ export class EditEntity extends Component{
                         {getFieldDecorator('items', {
                             rules: [
                                 {
-                                    pattern: /^[0-9a-zA-Z-\u4E00-\u9FFF,]+$/,
+                                    pattern: /^[0-9a-zA-Z-\u4E00-\u9FFF,，]+$/,
                                     message: '不能有非法字符串'
                                 }
                             ]

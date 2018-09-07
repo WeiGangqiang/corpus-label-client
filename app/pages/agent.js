@@ -110,7 +110,7 @@ export default class Agent extends Component {
                         gateWay: values.gateWay,
                         introduced: values.introduce,
                         shareAgents: this.state.shareAgents,
-                        unknownReplies: values.unknown.replace(/；/g,";").split(';')
+                        unknownReplies: values.unknown?values.unknown.replace(/；/g,";").split(';'): []
                     }, data => {
                         console.log(data)
                         this.hideAddModal()

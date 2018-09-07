@@ -43,35 +43,21 @@ export class EntityParameters extends Component {
     };
 
     addItems = () => {
-        let flag = true, parameters = [];
+        let flag = true;
 
         this.props.entityParam.map(item => {
             if(item.name == this.state.name){
                 flag = false
             }
-            let {name, label, entity, isList} = item;
-            parameters.push({
-                name, label, entity, isList
-            })
         });
-        parameters.push({
-            name: this.state.name,
-            label: 'L' + parameters.length,
-            entity: this.state.entity,
-            isList: false
-        })
-        parameters = parameters.filter(({ entity }) => entity != '')
         if(flag){
-            this.props.editIntent({
-                "agent": this.props.agent,
-                "intent" :{
-                    "intentId": this.props.intentId,
-                    "name": this.props.name,
-                    "zhName": this.props.zhName,
-                    "modelPath": this.props.modelPath,
-                    "parameters": parameters
+            this.props.addIntentParameter({
+                "intentId": this.props.intentId,
+                "parameter": {
+                    name: this.state.name,
+                    entity: this.state.entity
                 }
-            })
+            }, {intentId:this.props.intentId,mode: this.props.mode})
         }else{
             message.info('变量名重复请重新填写')
         }
@@ -79,29 +65,24 @@ export class EntityParameters extends Component {
 
     deleteItems = (item) => {
         if (this.props.intentId && this.state.mode != 'local'){
-            let parameters = [];
-            this.props.entityParam.map(item => {
-                let {name, label, entity, isList} = item;
-                parameters.push({
-                    name, label, entity, isList
-                })
-            });
-            parameters = parameters.filter(({ entity }) => entity != '').filter(({entity}) => entity != item);
-
-            this.props.editIntent({
-                "agent": this.props.agent,
-                "intent" :{
+            const {name, label, entity} = item;
+            this.props.deleteIntentParameter({
                     "intentId": this.props.intentId,
-                    "name": this.props.name,
-                    "zhName": this.props.zhName,
-                    "modelPath": this.props.modelPath,
-                    "parameters": parameters
-                }
+                    "parameter": {name,label,entity}
             })
         }else{
             message.info('不允许删除该变量')
         }
-    }
+    };
+
+    updateName = (item, e) => {
+        let {name, label, entity} = item;
+        name = e.target.value;
+        this.props.putIntentParameter({
+            "intentId": this.props.intentId,
+            "parameter": {name,label,entity}
+        },{intentId: this.props.intentId, mode: this.props.mode})
+    };
 
     getEntity = () => {
 
@@ -117,10 +98,10 @@ export class EntityParameters extends Component {
                 key: 'name',
                 width: '15%',
                 render(text, record, index) {
-                    if(text){
-                        return <span>{text}</span>
-                    }else{
-                        return <Input onInput={that.inputName}/>
+                    if(record.entity){
+                        return <input className='inputOrigin' placeholder={text} defaultValue={record.name} onBlur={that.updateName.bind(that, record)}/>}
+                    else{
+                        return <Input className='bb' defaultValue='' onInput={that.inputName}/>
                     }
                 }
             },
@@ -160,7 +141,7 @@ export class EntityParameters extends Component {
                 render(text, record, index) {
                     if(record.entity){
                         if(record.values.length < 10){
-                            return (<div><Icon onClick={that.deleteItems.bind(that,record.entity)} type="delete"/></div>)
+                            return (<div><Icon onClick={that.deleteItems.bind(that,record)} type="delete"/></div>)
                         } else if(record.valuesShow.length <= 10){
                             return ( <div><span style={{paddingLeft: '10px', color:'#0099CC'}} onClick={that.showMoreValues.bind(that, index)}>详情 <Icon type='caret-down'/></span><Icon onClick={that.deleteItems.bind(that,record.entity)} type="delete"/></div>)
                         } else {

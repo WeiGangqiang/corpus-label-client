@@ -45,6 +45,7 @@ export class IntentList extends Component {
     };
 
     rightClickNode =({event, node}) => {
+        console.log(node.props.dataRef)
         this.setState({
             showUl: 'block',
             top: event.pageY + 14,
@@ -94,7 +95,7 @@ export class IntentList extends Component {
 
     showAddIntent = (e) => {
         // e.stopPropagation();
-        if(this.state.intentId.length && this.state.mode != 'local'){
+        if(this.state.mode != 'local'){
             this.setState({
                 addIntentVisible: true
             })
@@ -111,7 +112,7 @@ export class IntentList extends Component {
 
     intentInput = (e) => {
         this.setState({
-            modelPath: this.state.defaultModelPath + '/' + e.target.value
+            modelPath: this.state.defaultModelPath ? this.state.defaultModelPath + '/' + e.target.value : 'users/' + this.props.agent + '/' + e.target.value
         })
     }
 
