@@ -157,20 +157,17 @@ export default class unknownSays extends Component {
     };
 
     getPatternList = (prop, type) => {
-        this.props.dispatch(getPattern('?agent=' + prop.agentName + '&intentId=' + prop.intentId + '&type=' + type,
-            data => {
-                if(type == "positive"){
-                    this.setState({positivePatterns: data})
-                }
-                else{
-                    this.setState({negativePatterns: data})
-                }
-            },error => {
-                console.log(error)
-            }))
+          this.props.dispatch(unknownList('?agent=' + agent, data => {
+            this.setState({
+              unknownResult: [...data]
+            })
+          }, error => {
+            console.log(error)
+          }));
     }
 
     saveCorpus = (obj) => {
+        console.log('enter saveCorpus')
         this.props.dispatch(postCorpus(obj, data => {
             // this.props.dispatch(unknownList('?agent=' + agent, data => {
             // }, error => {
@@ -196,7 +193,7 @@ export default class unknownSays extends Component {
             body: {
                 width: '80%'
             }
-        };
+        }                                                                                                                                                                  ;
         return (
             <Spin spinning={intentResult.loading}>
                 <div style={style.innerContainer}>
@@ -205,14 +202,32 @@ export default class unknownSays extends Component {
 
                     </Link>
                     <div style={style.innerBox} className='intentContainer'>
-                        <IntentList originEntity={[intentResult.data]} intentId={this.state.intentId}
-                                    getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity}/>
+                        <IntentList
+                            originEntity={[intentResult.data]}
+                            intentId={this.state.intentId}
+                            getIntent={this.getIntent}
+                            entityList={[entitySlideResult]}
+                            getEntity={this.getEntity}
+                        />
 
                         <div style={{height: '100%', overflow: 'auto'}}>
                             <div className="container" style={style.body}>
-                                <EntityParameters entityParam={this.state.entityParam} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues}/>
-
-                                <UnknownPatternList agentName={this.state.agent} intent={this.state.intent} intentId={this.state.intentId} phraseArray={this.state.phraseArray} entityParam={this.state.entityParam} patterns={unknownResult.data} updatePhrase={this.getPhrase} getPatternList={this.getPatternList} saveCorpus={this.saveCorpus}/>
+                                <EntityParameters
+                                    entityParam={this.state.entityParam}
+                                    showLessValues={this.showLessValues}
+                                    showMoreValues={this.showMoreValues}
+                                />
+                                <UnknownPatternList
+                                    agentName={this.state.agent}
+                                    intent={this.state.intent}
+                                    intentId={this.state.intentId}
+                                    phraseArray={this.state.phraseArray}
+                                    entityParam={this.state.entityParam}
+                                    patterns={unknownResult.data}
+                                    updatePhrase={this.getPhrase}
+                                    getPatternList={this.getPatternList}
+                                    saveCorpus={this.saveCorpus}
+                                />
                             </div>
                         </div>
                     </div>

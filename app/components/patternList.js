@@ -184,6 +184,9 @@ export class PatternList extends Component {
             })
         }
         let patternList = this.getPatternListBy(corpusType)
+        if (patternList === "") {
+            return ""
+        }
         return patternList.map((pattern, patternId) => {
             return (<PatternLine key={patternId} patternId={patternId} pattern={pattern}
                                  removePatternBy={this.removePatternBy} updateSelectLabel={this.updateSelectLabel}
