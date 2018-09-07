@@ -167,6 +167,7 @@ export default class unknownSays extends Component {
     }
 
     saveCorpus = (obj) => {
+        console.log('enter saveCorpus')
         this.props.dispatch(postCorpus(obj, data => {
             // this.props.dispatch(unknownList('?agent=' + agent, data => {
             // }, error => {
@@ -192,7 +193,7 @@ export default class unknownSays extends Component {
             body: {
                 width: '80%'
             }
-        };
+        }                                                                                                                                                                  ;
         return (
             <Spin spinning={intentResult.loading}>
                 <div style={style.innerContainer}>
@@ -222,8 +223,10 @@ export default class unknownSays extends Component {
                                     intentId={this.state.intentId}
                                     phraseArray={this.state.phraseArray}
                                     entityParam={this.state.entityParam}
-                                    patterns={unknownResult.data} updatePhrase={this.getPhrase}
-                                    getPatternList={this.getPatternList} saveCorpus={this.saveCorpus}
+                                    patterns={unknownResult.data}
+                                    updatePhrase={this.getPhrase}
+                                    getPatternList={this.getPatternList}
+                                    saveCorpus={this.saveCorpus}
                                 />
                             </div>
                         </div>
