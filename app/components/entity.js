@@ -9,6 +9,7 @@ export class EntityParameters extends Component {
         this.state={
             entity: '',
             name: '',
+            nameEditArray: [],
             entityEditArray: []
         }
     }
@@ -35,6 +36,19 @@ export class EntityParameters extends Component {
         this.setState({
             entity: value
         })
+    };
+
+    handleEntityChange = (item,value) => {
+        this.setState({
+            entityEditArray: []
+        });
+        let {name, label, entity} = item;
+        entity = value;
+
+        this.props.putIntentParameterEntity({
+            "intentId": this.props.intentId,
+            "parameter": {name,label,entity}
+        },{intentId: this.props.intentId, mode: this.props.mode})
     };
 
     inputName = (e) => {
@@ -84,7 +98,7 @@ export class EntityParameters extends Component {
 
     updateName = (item, index, e) => {
         this.setState({
-            entityEditArray: []
+            nameEditArray: []
         });
         let {name, label, entity} = item;
         name = e.target.value;
@@ -99,6 +113,17 @@ export class EntityParameters extends Component {
     };
 
     changeInput = (index) => {
+        let arr = [];
+        this.props.entityParam.map(item => {
+            arr.push(false);
+        });
+        arr.splice(index,1,true);
+        this.setState({
+            nameEditArray: arr
+        })
+    };
+
+    changeSelected = (index) => {
         let arr = [];
         this.props.entityParam.map(item => {
             arr.push(false);
@@ -120,7 +145,7 @@ export class EntityParameters extends Component {
                 width: '15%',
                 render(text, record, index) {
                     if(record.entity){
-                        return that.state.entityEditArray[index] ? <input className='inputOrigin' placeholder={text} defaultValue={record.name} onBlur={that.updateName.bind(that, record,index)}/> : <span style={{display: 'block'}} onClick={that.changeInput.bind(that,index)}>{record.name}</span>}
+                        return that.state.nameEditArray[index] ? <input className='inputOrigin' placeholder={text} defaultValue={record.name} onBlur={that.updateName.bind(that, record,index)}/> : <span style={{display: 'block'}} onClick={that.changeInput.bind(that,index)}>{record.name}</span>}
                     else{
                         return <Input className='bb' defaultValue='' onInput={that.inputName}/>
                     }
@@ -133,9 +158,15 @@ export class EntityParameters extends Component {
                 width: '15%',
                 render(text, record, index) {
                     if(text){
-                        return <span className='corpusSpan' style={{background: record.color}}>{text}</span>
+                        return that.state.entityEditArray[index] ? <Select className='testAA' defaultValue={text} firstActiveValue={text} style={{ width: 120 }} onChange={that.handleEntityChange.bind(that,record)} open={true}>
+                            {
+                                that.props.entityList.map(item => {
+                                    return <Option key={item.entityId} value={item.key}>{item.key}</Option>
+                                })
+                            }
+                        </Select> : <span onClick={that.changeSelected.bind(that,index)} className='corpusSpan' style={{background: record.color}}>{text}</span>
                     }else{
-                        return <Select defaultValue="" style={{ width: 120 }} onChange={that.handleChange}>
+                        return <Select className='testAA' defaultValue="" style={{ width: 120 }} onChange={that.handleChange}>
                             {
                                 that.props.entityList.map(item => {
                                     return <Option key={item.entityId} value={item.key}>{item.key}</Option>
@@ -162,11 +193,11 @@ export class EntityParameters extends Component {
                 render(text, record, index) {
                     if(record.entity){
                         if(record.values.length < 10){
-                            return (<div><Icon onClick={that.deleteItems.bind(that,record)} type="delete"/></div>)
+                            return (<div><Icon style={{float: 'right'}} onClick={that.deleteItems.bind(that,record)} type="delete"/></div>)
                         } else if(record.valuesShow.length <= 10){
-                            return ( <div><span style={{paddingLeft: '10px', color:'#0099CC'}} onClick={that.showMoreValues.bind(that, index)}>详情 <Icon type='caret-down'/></span><Icon onClick={that.deleteItems.bind(that,record.entity)} type="delete"/></div>)
+                            return ( <div><span style={{paddingLeft: '10px', color:'#0099CC'}} onClick={that.showMoreValues.bind(that, index)}>详情 <Icon type='caret-down'/></span><Icon  style={{float: 'right'}} onClick={that.deleteItems.bind(that,record.entity)} type="delete"/></div>)
                         } else {
-                            return (<div><span style={{paddingLeft: '10px', color:'#0099CC'}}  onClick={that.showLessValues.bind(that, index)}>简要 <Icon type='caret-up'/></span><Icon onClick={that.deleteItems.bind(that,record.entity)} type="delete"/></div>)
+                            return (<div><span style={{paddingLeft: '10px', color:'#0099CC'}}  onClick={that.showLessValues.bind(that, index)}>简要 <Icon type='caret-up'/></span><Icon  style={{float: 'right'}} onClick={that.deleteItems.bind(that,record.entity)} type="delete"/></div>)
                         }
                     }else{
                         return <Button onClick={that.addItems} disabled={that.state.entity=='' || that.state.name==''}>增加</Button>

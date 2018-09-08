@@ -296,13 +296,16 @@ export default class intentList extends Component {
             agent: agentName
         }, data => {
             this.initEntityParam(obj.intentId,obj.mode)
-            // this.props.dispatch(fetchintent('?agent=' + agentName, data => {
-            //     if (data.length) {
-            //         this.initData(this.props.intentResult.data.children[0])
-            //     }
-            // }, error => {
-            //     console.log(error)
-            // }))
+        }, error => {}))
+    };
+
+    putIntentParameterEntity = (param, obj) => {
+        this.props.dispatch(putIntentParameter({
+            ...param,
+            agent: agentName
+        }, data => {
+            this.initEntityParam(obj.intentId,obj.mode);
+            this.initPattern(obj.intentId);
         }, error => {}))
     };
 
@@ -398,7 +401,7 @@ export default class intentList extends Component {
                             {!intentResult.loading ? <div className="container" style={style.body}>
                                 <IntentDesc name={this.state.name} zhName={this.state.zhName}
                                             modelPath={this.state.modelPath} mode={this.state.intentMode} intentId={this.state.intentId} editIntent={this.editIntent}/>
-                                <EntityParameters entityList={entitySlideResult.children} entityParam={this.state.entityParam} agent={agentName} intentId={this.state.intentId} name={this.state.name} zhName={this.state.zhName} modelPath={this.state.modelPath} mode={this.props.mode} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues} addIntentParameter={this.addIntentParameter} deleteIntentParameter={this.deleteIntentParameter} putIntentParameter={this.editIntentParameter}/>
+                                <EntityParameters entityList={entitySlideResult.children} entityParam={this.state.entityParam} agent={agentName} intentId={this.state.intentId} name={this.state.name} zhName={this.state.zhName} modelPath={this.state.modelPath} mode={this.props.mode} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues} addIntentParameter={this.addIntentParameter} deleteIntentParameter={this.deleteIntentParameter} putIntentParameter={this.editIntentParameter} putIntentParameterEntity={this.putIntentParameterEntity}/>
                                 <PatternList key={this.state.pattenListKey} agentName={agentName} intent={this.state.name} intentId={this.state.intentId}
                                              corpusType={this.state.type} updatePhrase={this.getPhrase} phraseArray={this.state.phraseArray} entityParam={this.state.entityParam} positivePatterns={this.state.positivePatterns} negativePatterns={this.state.negativePatterns} getPatternList={this.getPatternList}/>
 
