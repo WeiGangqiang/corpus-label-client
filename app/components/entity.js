@@ -8,7 +8,8 @@ export class EntityParameters extends Component {
         super(props)
         this.state={
             entity: '',
-            name: ''
+            name: '',
+            entityEditArray: []
         }
     }
 
@@ -81,7 +82,10 @@ export class EntityParameters extends Component {
         }
     };
 
-    updateName = (item, e) => {
+    updateName = (item, index, e) => {
+        this.setState({
+            entityEditArray: []
+        });
         let {name, label, entity} = item;
         name = e.target.value;
         this.props.putIntentParameter({
@@ -92,6 +96,17 @@ export class EntityParameters extends Component {
 
     getEntity = () => {
 
+    };
+
+    changeInput = (index) => {
+        let arr = [];
+        this.props.entityParam.map(item => {
+            arr.push(false);
+        });
+        arr.splice(index,1,true);
+        this.setState({
+            entityEditArray: arr
+        })
     };
 
     columns = () => {
@@ -105,7 +120,7 @@ export class EntityParameters extends Component {
                 width: '15%',
                 render(text, record, index) {
                     if(record.entity){
-                        return <input className='inputOrigin' placeholder={text} defaultValue={record.name} onBlur={that.updateName.bind(that, record)}/>}
+                        return that.state.entityEditArray[index] ? <input className='inputOrigin' placeholder={text} defaultValue={record.name} onBlur={that.updateName.bind(that, record,index)}/> : <span style={{display: 'block'}} onClick={that.changeInput.bind(that,index)}>{record.name}</span>}
                     else{
                         return <Input className='bb' defaultValue='' onInput={that.inputName}/>
                     }

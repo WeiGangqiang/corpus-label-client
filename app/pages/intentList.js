@@ -322,18 +322,13 @@ export default class intentList extends Component {
         }, error => {}))
     };
 
-    deleteIntentParameter = (obj) => {
+    deleteIntentParameter = (param, obj) => {
         this.props.dispatch(deleteIntentParameter({
-            ...obj,
+            ...param,
             agent: agentName
         }, data => {
-            this.props.dispatch(fetchintent('?agent=' + agentName, data => {
-                if (data.length) {
-                    this.initData(this.props.intentResult.data.children[0])
-                }
-            }, error => {
-                console.log(error)
-            }))
+            this.initEntityParam(obj.intentId, obj.mode);
+            this.initPattern(obj.intentId);
         }, error => {}))
     };
 
