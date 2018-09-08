@@ -76,6 +76,16 @@ export default class intentList extends Component {
     }
 
     initData = (obj) => {
+        this.initState(obj);
+
+        this.initEntityParam(obj.intentId, obj.mode);
+
+        this.initPhrase(obj.intentId);
+
+        this.initPattern(obj.intentId);
+    };
+
+    initState = (obj) => {
         this.setState({
             name: obj.name,
             zhName: obj.zhName,
@@ -83,12 +93,6 @@ export default class intentList extends Component {
             intentId: obj.intentId,
             intentMode: obj.mode
         });
-
-        this.initEntityParam(obj.intentId, obj.mode);
-
-        this.initPhrase(obj.intentId);
-
-        this.initPattern(obj.intentId);
     };
 
     initEntityParam = (intentId, mode) => {
@@ -271,18 +275,18 @@ export default class intentList extends Component {
         }))
     };
 
-    editIntent = (obj) => {
+    editIntent = (param, obj) => {
         this.props.dispatch(putIntent({
-            ...obj,
+            ...param,
             agent: agentName
         }, data => {
             this.props.dispatch(fetchintent('?agent=' + agentName, data => {
-                if (data.length) {
-                    this.initData(this.props.intentResult.data.children[0])
-                }
+                this.initState(obj)
             }, error => {
                 console.log(error)
-            }))
+            }));
+
+
         }))
     };
 
@@ -356,7 +360,7 @@ export default class intentList extends Component {
         this.setState({
             showMenu: !this.state.showMenu
         })
-    }
+    };
 
     render() {
 

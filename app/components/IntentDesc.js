@@ -44,7 +44,12 @@ export class IntentDesc extends Component {
                     "modelPath": this.props.modelPath
                 }
             };
-            this.props.editIntent(param);
+            this.props.editIntent(param, {
+                name: this.state.name,
+                zhName: this.state.zhName,
+                intentId: this.props.intentId,
+                modelPath: this.props.modelPath
+            });
             this.setState({
                 editState: !this.state.editState
             })
