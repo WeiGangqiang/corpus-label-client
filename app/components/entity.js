@@ -69,6 +69,12 @@ export class EntityParameters extends Component {
             this.props.deleteIntentParameter({
                     "intentId": this.props.intentId,
                     "parameter": {name,label,entity}
+            },{
+                name: this.props.name,
+                zhName: this.props.zhName,
+                modelPath: this.props.modelPath,
+                intentId: this.props.intentId,
+                mode: this.props.mode
             })
         }else{
             message.info('不允许删除该变量')

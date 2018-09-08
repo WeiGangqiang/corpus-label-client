@@ -1,53 +1,10 @@
 import React, {Component} from 'react';
-import {Icon, Row, Col, Input} from 'antd'
+import {Icon, Row, Col, Input, Table} from 'antd'
+import {IntentDesc} from 'components/index'
 
 export class EntityTable extends Component {
     constructor(props) {
         super(props)
-    }
-
-    getCol = (item, index) => {
-        const style = {
-            contentItem:{
-                borderBottom: '1px solid #dadada'
-            },
-            contentLabel:{
-                textAlign: 'center',
-                lineHeight: '40px'
-            },
-            contentInput:{
-                lineHeight: '40px',
-                padding: '0 10px',
-                borderLeft: '1px solid #dadada'
-            },
-            span:{
-                padding: '0px 5px',
-                background: '#ccc',
-                borderRadius: '2px',
-                marginLeft: '5px',
-                display: 'inline-block',
-                lineHeight: '32px'
-            },
-            input:{
-                width: '100px',
-                marginLeft: '5px'
-            }
-        }
-        let other = item.split(',');
-        let first = other[0];
-        other.shift();
-        let last = other.join();
-        return <Row key={item.name} style={style.contentItem}>
-            <Col style={style.contentLabel} span={6}>{first}</Col>
-            <Col style={style.contentInput} span={18}>
-                {
-                    other.map((item,i) => {
-                        return <span onClick={this.deleteItem.bind(this,index,i)} style={style.span}>{item} <Icon type="close" /></span>
-                    })
-                }
-                <Input style={style.input} onPressEnter={this.updateItem.bind(this,index)}/>
-            </Col>
-        </Row>
     }
 
     addItem = (e) => {
@@ -83,18 +40,76 @@ export class EntityTable extends Component {
             items: this.props.data.items
         })
 
+    };
+
+    columns = () => {
+        const style = {
+            contentItem:{
+                borderBottom: '1px solid #dadada'
+            },
+            contentLabel:{
+                textAlign: 'center',
+                lineHeight: '40px'
+            },
+            contentInput:{
+                lineHeight: '40px',
+                padding: '0 10px',
+                borderLeft: '1px solid #dadada'
+            },
+            close:{
+                cursor: 'pointer'
+            },
+            span:{
+                padding: '0px 5px',
+                background: '#bae7ff',
+                borderRadius: '2px',
+                marginLeft: '5px',
+                display: 'inline-block',
+                lineHeight: '32px',
+                marginTop: '5px',
+            },
+            input:{
+                width: '120px',
+                marginLeft: '5px',
+                marginTop: '5px',
+            }
+        }
+        const that = this
+        return [
+            {
+                title: '词条',
+                dataIndex: 'word',
+                key: 'word',
+                width: '20%',
+                className: 'tableIndex',
+                render(text, record, index) {
+                    return <span>{record.split(',')[0]}</span>
+                }
+            },
+            {
+                title: '近义词',
+                dataIndex: 'phrase',
+                key: 'phrase',
+                width: '80%',
+                className: 'tableIndex',
+                render(text, record, index) {
+                    let other = record.split(',');
+                    other.shift();
+                    return <block>
+                        {
+                            other.map((item,i) => {
+                                return <span onClick={that.deleteItem.bind(that,index,i)} style={style.span}>{item} <Icon type="close" style={style.close}/></span>
+                            })
+                        }
+                        <Input placeholder='请输入近义词' style={style.input} onPressEnter={that.updateItem.bind(that,index)}/>
+                    </block>
+                }
+            }
+        ]
     }
 
     render() {
         const style = {
-            entityContainer:{
-                width: '100%',
-                position: 'relative',
-                padding: '40px 0 80px 0',
-                borderLeft: '1px solid #dadada',
-                borderTop: '1px solid #dadada',
-                height: '80%'
-            },
             close:{
                 position: 'absolute',
                 right: '0',
@@ -106,34 +121,6 @@ export class EntityTable extends Component {
                 cursor: 'pointer',
                 zIndex: 1
             },
-            header:{
-                height: '40px',
-                lineHeight: '40px',
-                borderBottom: '1px solid #dadada',
-                marginTop: '-40px',
-            },
-            headerItem:{
-                borderRight: '1px solid #dadada',
-                textAlign: 'center'
-            },
-            content:{
-                height: '100%',
-                overflow: 'auto',
-                borderRight: '1px solid #dadada'
-            },
-            footer:{
-                position: 'absolute',
-                bottom: 0,
-                height: '80px',
-                width: '100%',
-                borderBottom: '1px solid #dadada',
-                borderTop: '1px solid #dadada',
-                borderRight: '1px solid #dadada'
-            },
-            footerFirst:{
-                paddingLeft: '90px',
-                padding: '4px 10px'
-            },
             footerFirstInput:{
                 // width: '80%',
             },
@@ -142,25 +129,53 @@ export class EntityTable extends Component {
                 lineHeight: '40px',
                 paddingLeft: '10px',
                 color: '#aaa'
-            }
+            },
+            baseInfo: {
+                height: 'auto',
+                background: '#fbfbfb',
+                padding: '0 15px',
+                fontSize: '14px',
+                marginBottom: '30px',
+                borderRadius: '15px'
+            },
+            col: {
+                lineHeight: '40px',
+                paddingLeft: '70px'
+            },
+            span: {
+                float: 'left',
+                width: '70px',
+                marginLeft: '-70px'
+            },
         }
 
         return (
-            <div style={style.entityContainer}>
+            <div className="entity-table-container">
                 <Icon onClick={this.deleteEntity} style={style.close} type="close"></Icon>
-                <Row style={style.header}>
-                    <Col style={style.headerItem} span={12}>名字: {this.props.data.name}</Col>
-                    <Col style={style.headerItem} span={12}>类型: 枚举</Col>
+
+                <Row style={style.baseInfo}>
+                    <Col style={style.col} span={10} xs={24} sm={12} xl={10}>
+                        <span style={style.span}>名字:</span>
+                        <div>{this.props.data.name}</div>
+                    </Col>
+                    <Col style={style.col} span={10} xs={24} sm={12} xl={10}>
+                        <span style={style.span}>中文名字:</span>
+                        <div>{this.props.data.zhName}</div>
+                    </Col>
+                    <Col style={style.col} span={4} xs={24} sm={12} xl={4}>
+                        <span style={style.span}>类型:</span>
+                        <div>枚举</div>
+                    </Col>
                 </Row>
-                <div style={style.content}>
-                    {
-                        this.props.data.items && this.props.data.items.map((item,index) => {
-                            return this.getCol(item, index)
-                        })
-                    }
-                </div>
-               <Row style={style.footer}>
-                   <Col style={style.footerFirst}>
+
+                <Table
+                    dataSource={this.props.data.items && this.props.data.items}
+                    columns={this.columns()}
+                    bordered
+                    pagination={false}
+                ></Table>
+               <Row style={{marginTop: '30px'}}>
+                   <Col>
                        <Input style={style.footerFirstInput} onPressEnter={this.addItem} addonBefore={<div>新增实体</div>}/>
                    </Col>
                    <Col style={style.footerLast}>
@@ -169,6 +184,5 @@ export class EntityTable extends Component {
                </Row>
             </div>
         )
-
     }
 }
