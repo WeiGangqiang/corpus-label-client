@@ -51,6 +51,12 @@ export class EntityParameters extends Component {
         },{intentId: this.props.intentId, mode: this.props.mode})
     };
 
+    blur = () => {
+        this.setState({
+            entityEditArray: []
+        });
+    };
+
     inputName = (e) => {
         this.setState({
             name: e.target.value
@@ -158,7 +164,7 @@ export class EntityParameters extends Component {
                 width: '15%',
                 render(text, record, index) {
                     if(text){
-                        return that.state.entityEditArray[index] ? <Select className='testAA' defaultValue={text} firstActiveValue={text} style={{ width: 120 }} onChange={that.handleEntityChange.bind(that,record)} open={true}>
+                        return that.state.entityEditArray[index] ? <Select className='testAA' defaultValue={text} firstActiveValue={text} style={{ width: 120 }} onChange={that.handleEntityChange.bind(that,record)} onBlur={that.blur} open={true} autoFocus={true}>
                             {
                                 that.props.entityList.map(item => {
                                     return <Option key={item.entityId} value={item.key}>{item.key}</Option>
