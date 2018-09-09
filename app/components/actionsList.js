@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
-import {Table, Button} from 'antd'
+import {Table, Button, Icon, Input, Select, message} from 'antd'
 
 import {getIntentActions, updateIntentActions} from 'actions/intent'
 
 import {connect} from 'react-redux'
+
+const Option = Select.Option;
 
 @connect((state, dispatch) => ({
 }))
@@ -15,7 +17,24 @@ export class ActionsList extends Component {
             actions: [
                 {type: "replies", values: ["你好", "不好"]},
                 {type: "replies", values: ["天天都喜欢你", "我真的很喜欢你"]}
-            ]
+            ],
+            typeArray: [
+                {
+                    name: 'replies',
+                    zhName: '文本回复'
+                },
+                {
+                    name: 'api',
+                    zhName: '函数调用'
+                },
+                {
+                    name: 'forward',
+                    zhName: '跳转'
+                }
+            ],
+            values: [],
+            type: '',
+            typeState: []
         }
     }
 
@@ -24,10 +43,12 @@ export class ActionsList extends Component {
     }
     
     retreiveActions = (props) => {
-        let entityUrl = '?agent=' + props.agentName + '&intentId=' + props.intentId
-        console.log('get actions for intent url', entityUrl, )
+        let entityUrl = '?agent=' + props.agentName + '&intentId=' + props.intentId;
         this.props.dispatch(getIntentActions(entityUrl, rsp => {
-            console.log('receive intent actions', rsp.data)
+            rsp.data.push({
+                type: '',
+                values: []
+                })
             this.setState({actions: rsp.data})
         }, err=> {
 
@@ -46,29 +67,118 @@ export class ActionsList extends Component {
 
     getActions = () => {
         return this.state.actions
-    }
+    };
 
-    deleteActionBy(index) {
-        console.log("delete action by index", index)
-    }
+    saveValues = (e) => {
+        this.setState({
+            values: [e.target.value]
+        })
+    };
 
-    getActionsType = (type) => {
-        const typeDesc = {
-            "replies" : "文本",
-            "api": "函数调用"
+    selectType = (value) => {
+        this.setState({
+            type: value
+        })
+    };
+
+    getZhName = (type) => {
+        let obj = this.state.typeArray.find(item => item.name == type)
+        return obj.zhName
+    };
+
+    typeBlur = () => {
+        this.setState({
+            typeState:[]
+        })
+    };
+
+    typeFocus = (index) => {
+        let arr=[];
+        this.state.actions.map(item => {
+            arr.push(false)
+        })
+        arr[index] = true;
+        this.setState({
+            typeState: arr
+        })
+    };
+
+    getActionsType = (type,index) => {
+        if(type){
+            let desc = this.getZhName(type);
+            return this.state.typeState[index]? <Select defaultValue={desc} firstActiveValue={type}	 style={{ width: 120 }} onChange={this.updateAction.bind(this,index,'typeChange')} autoFocus={true} open={true} onBlur={this.typeBlur}>
+                {
+                    this.state.typeArray.map((item,index) => {
+                        return <Option key={index} value={item.name}>{item.zhName}</Option>
+                    })
+                }
+            </Select> : <span onClick={this.typeFocus.bind(this,index)}> {desc} </span>
+        }else{
+            return <Select defaultValue="" style={{ width: 120 }} onChange={this.selectType}>
+                {
+                    this.state.typeArray.map((item,index) => {
+                        return <Option key={index} value={item.name}>{item.zhName}</Option>
+                    })
+                }
+            </Select>
         }
-        let desc = typeDesc[type]
-        return <span> {desc} </span>
-    }
+    };
 
-    getActionsContent = (values) => {
-        let content = values.join(",")
-        return <span>{content} </span>
-    }
+    getActionsContent = (values, index, record) => {
+        if(record.type){
+            return <div>
+                {
+                    values.map((item,i) => {
+                        return <span className='cell-span' key={i}>{item} <Icon onClick={this.updateAction.bind(this, index, i)} type='close'></Icon></span>
+                    })
+                }
+                <Input style={{width: '100px',verticalAlign: 'top'}} onPressEnter={this.updateAction.bind(this, index, 'add')}/>
+            </div>
+        }else{
+            return <Input style={{width: '100px',verticalAlign: 'top'}} onBlur={this.saveValues}/>
+        }
+    };
 
-    getOperators = (actionIndex) => {
-        return <Button onClick={this.deleteActionBy.bind(this, actionIndex)} icon="close">删除</Button>
-    }
+    getOperators = (record, index) => {
+        if(record.type){
+            return <Icon onClick={this.updateAction.bind(this, index, 'delete')} type="delete"></Icon>
+        }else{
+            return <Icon onClick={this.updateAction.bind(this,0,'new')} type="plus"></Icon>
+        }
+    };
+
+    updateAction = (index,i,e) => {
+        this.state.actions=this.state.actions.filter(item => item.type!='');
+        if (i == 'add'){
+            this.state.actions[index].values.push(e.target.value);
+        }else if(i=='new'){
+            if(this.state.type){
+                this.state.actions.push({
+                    type: this.state.type,
+                    values: this.state.values
+                });
+            }else{
+                message.info('请选择类型')
+            }
+        }else if(i=='delete'){
+            this.state.actions.splice(index,1)
+        }else if(i == 'typeChange'){
+            this.state.actions[index].type = e
+            this.typeBlur()
+        }else{
+            this.state.actions[index].values.splice(i,1)
+        }
+        if(e.target){
+            e.target.value = '';
+        }
+        this.props.dispatch(updateIntentActions({
+            agent: this.props.agentName,
+            intentId: this.props.intentId,
+            actions: this.state.actions
+        }, data => {
+            this.retreiveActions(this.props)
+            }))
+    };
 
     columns = () => {
         const that = this
@@ -77,9 +187,9 @@ export class ActionsList extends Component {
                 title: '类型',
                 dataIndex: 'type',
                 key: 'type',
-                width: '10%',
+                width: '15%',
                 render(text, record, index) {
-                    return that.getActionsType(text)
+                    return that.getActionsType(text, index)
                 }
             },
             {
@@ -87,7 +197,7 @@ export class ActionsList extends Component {
                 dataIndex: 'values',
                 key: 'values',
                 render(text, record, index) {
-                    return that.getActionsContent(text)
+                    return that.getActionsContent(text,index,record)
                 }
             },
             {
@@ -95,7 +205,7 @@ export class ActionsList extends Component {
                 dataIndex: 'delete',
                 key: 'delete',
                 render(text, record, index) {
-                    return that.getOperators(index)
+                    return that.getOperators(record, index)
                 }
             }
         ]

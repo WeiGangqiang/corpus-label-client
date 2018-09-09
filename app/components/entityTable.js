@@ -1,44 +1,105 @@
 import React, {Component} from 'react';
-import {Icon, Row, Col, Input, Table} from 'antd'
+import {Icon, Row, Col, Input, Table, message, Button} from 'antd'
 import {IntentDesc} from 'components/index'
 
 export class EntityTable extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            newWord: '',
+            newPhrase: ''
+        }
     }
 
+    newWord = (e) => {
+        this.setState({
+            newWord: e.target.value
+        });
+    };
+
+    newPhrase = (e) => {
+        this.setState({
+            newPhrase: e.target.value
+        });
+    };
+
     addItem = (e) => {
-        this.props.addItem({
-            name: this.props.data.name,
-            entityId: this.props.data.entityId,
-            items: this.props.data.items ? [...this.props.data.items, e.target.value.replace(/，/g,',')] : [e.target.value.replace(/，/g,',')]
-        })
-        e.target.value = ''
+        if(this.props.data.mode!='local'){
+            if(this.state.newWord){
+                let item = this.state.newPhrase ? this.state.newWord + ',' + this.state.newPhrase.replace(/，/g,',') : this.state.newWord;
+                this.props.data.items = this.props.data.items.filter(item => item!='');
+                this.props.updateEntity({
+                    name: this.props.data.name,
+                    entityId: this.props.data.entityId,
+                    items: [...this.props.data.items, item]
+                })
+            }else{
+                message.info('词条名不能为空')
+            }
+        }else {
+            message.info('该实体不允许更新')
+        }
+
+
     }
 
     updateItem = (index, e) => {
-        this.props.data.items[index] = this.props.data.items[index] + ',' + e.target.value.replace(/，/g, ',')
-        this.props.addItem({
-            name: this.props.data.name,
-            entityId: this.props.data.entityId,
-            items: this.props.data.items
-        })
-        e.target.value = ''
+        if(this.props.data.mode!='local'){
+            this.props.data.items = this.props.data.items.filter(item => item!='');
+            this.props.data.items[index] = this.props.data.items[index] + ',' + e.target.value.replace(/，/g, ',');
+            this.props.updateEntity({
+                name: this.props.data.name,
+                entityId: this.props.data.entityId,
+                items: this.props.data.items
+            })
+            e.target.value = ''
+        }else {
+            message.info('该实体不允许更新')
+        }
+
     }
 
     deleteEntity = () => {
-        this.props.deleteEntity(this.props.data)
+        if(this.props.data.mode!='local'){
+            if(this.props.entityRefrence.length){
+                message.info('该实体有多处引用，不允许删除')
+            }else{
+                this.props.deleteEntity(this.props.data)
+            }
+        }else{
+            message.info('该实体不允许删除')
+        }
     }
 
     deleteItem = (index,i) => {
-        var arr = this.props.data.items[index].split(',')
-        arr.splice(i+1,1)
-        this.props.data.items[index] = arr.join()
-        this.props.delItem({
-            name: this.props.data.name,
-            entityId: this.props.data.entityId,
-            items: this.props.data.items
-        })
+        if(this.props.data.mode!='local'){
+            this.props.data.items = this.props.data.items.filter(item => item!='');
+            var arr = this.props.data.items[index].split(',')
+            arr.splice(i+1,1)
+            this.props.data.items[index] = arr.join()
+            this.props.updateEntity({
+                name: this.props.data.name,
+                entityId: this.props.data.entityId,
+                items: this.props.data.items
+            })
+        }else {
+            message.info('该实体不允许更新')
+        }
+
+    };
+
+    deleteItems = (index) => {
+        if(this.props.data.mode!='local'){
+            this.props.data.items = this.props.data.items.filter(item => item!='');
+            this.props.data.items.splice(index,1);
+            this.props.updateEntity({
+                name: this.props.data.name,
+                entityId: this.props.data.entityId,
+                items: this.props.data.items
+            })
+        }else {
+            message.info('该实体不允许更新')
+        }
 
     };
 
@@ -83,30 +144,78 @@ export class EntityTable extends Component {
                 width: '20%',
                 className: 'tableIndex',
                 render(text, record, index) {
-                    return <span>{record.split(',')[0]}</span>
+                    if(record){
+                        return <span>{record.split(',')[0]}</span>
+                    }else{
+                        return <Input placeholder='词条名' onBlur={that.newWord}/>
+                    }
                 }
             },
             {
                 title: '近义词',
                 dataIndex: 'phrase',
                 key: 'phrase',
-                width: '80%',
+                width: '70%',
                 className: 'tableIndex',
                 render(text, record, index) {
-                    let other = record.split(',');
-                    other.shift();
-                    return <block>
-                        {
-                            other.map((item,i) => {
-                                return <span onClick={that.deleteItem.bind(that,index,i)} style={style.span}>{item} <Icon type="close" style={style.close}/></span>
-                            })
-                        }
-                        <Input placeholder='请输入近义词' style={style.input} onPressEnter={that.updateItem.bind(that,index)}/>
-                    </block>
+                    if(record){
+                        let other = record.split(',');
+                        other.shift();
+                        return <block>
+                            {
+                                other.map((item,i) => {
+                                    return <span onClick={that.deleteItem.bind(that,index,i)} style={style.span}>{item} <Icon type="close" style={style.close}/></span>
+                                })
+                            }
+                            <Input placeholder='请输入近义词' style={style.input} onPressEnter={that.updateItem.bind(that,index)}/>
+                        </block>
+                    }else{
+                        return <Input placeholder='输入近义词' onBlur={that.newPhrase}/>
+                    }
+                }
+            },
+            {
+                title: '操作',
+                dataIndex: 'todo',
+                key: 'todo',
+                width: '10%',
+                className: '',
+                render(text, record, index) {
+                    if(record){
+                        return <div><Icon onClick={that.deleteItems.bind(that,index)} type="delete"/></div>
+                    }else{
+                        return <div><Icon type="plus" onClick={that.addItem}/></div>
+                    }
                 }
             }
         ]
-    }
+    };
+    columnsRefrence = () => {
+        return [
+            {
+                title: '意图名',
+                dataIndex: 'intent',
+                key: 'intent',
+                width: '30%',
+                className: 'tableIndex',
+            },
+            {
+                title: '意图中文名',
+                dataIndex: 'zhName',
+                key: 'zhName',
+                width: '30%',
+                className: 'tableIndex'
+            },
+            {
+                title: '变量名',
+                dataIndex: 'para',
+                key: 'para',
+                width: '40%',
+                className: 'tableIndex'
+            }
+        ]
+
+    };
 
     render() {
         const style = {
@@ -147,7 +256,7 @@ export class EntityTable extends Component {
                 width: '70px',
                 marginLeft: '-70px'
             },
-        }
+        };
 
         return (
             <div className="entity-table-container">
@@ -173,15 +282,21 @@ export class EntityTable extends Component {
                     columns={this.columns()}
                     bordered
                     pagination={false}
+                    scroll={{x:600}}
                 ></Table>
-               <Row style={{marginTop: '30px'}}>
-                   <Col>
-                       <Input style={style.footerFirstInput} onPressEnter={this.addItem} addonBefore={<div>新增实体</div>}/>
-                   </Col>
-                   <Col style={style.footerLast}>
-                       填写多个词语的时候，中间用逗号隔开
-                   </Col>
-               </Row>
+
+               <div>
+                   <Button style={{display: 'block',width: '100%', margin: '10px 0'}} type="primary" onClick={this.deleteEntity}>删除实体</Button>
+                   <span>实体的引用</span>
+                   <Table
+                       dataSource={this.props.entityRefrence}
+                       columns={this.columnsRefrence()}
+                       bordered
+                       pagination={false}
+                       scroll={{x:600}}
+                   >
+                   </Table>
+               </div>
             </div>
         )
     }

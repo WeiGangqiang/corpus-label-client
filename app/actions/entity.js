@@ -11,10 +11,12 @@ export const fetchEntityList = createAjaxAction(
     receiveEntityList,
 );
 
-export const certainEntity = createAjaxAction(entity.Entity)
+export const certainEntity = createAjaxAction(entity.Entity);
 
-export const deleteEntity = createAjaxAction(entity.deleteEntity)
+export const deleteEntity = createAjaxAction(entity.deleteEntity);
 
-export const addEntity = createAjaxAction(entity.addEntity)
+export const addEntity = createAjaxAction(entity.addEntity);
 
-export const updateEntity = createAjaxAction(entity.updateEntity)
+export const updateEntity = createAjaxAction(entity.updateEntity);
+
+export const entityReference = createAjaxAction(entity.entityReference)

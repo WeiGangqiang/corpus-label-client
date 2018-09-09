@@ -6,3 +6,4 @@ export const Entity = ajax.fetchJSONByPost('/entity', mockUrl, 'getForm');
 export const addEntity = ajax.fetchJSONByPost('/entity', mockUrl, 'postJson');
 export const updateEntity = ajax.fetchJSONByPost('/entity', mockUrl, 'putJson');
 export const deleteEntity = ajax.fetchJSONByPost('/entity', mockUrl, 'deleteForm');
+export const entityReference = ajax.fetchJSONByPost('/entity/reference', mockUrl, 'getForm');

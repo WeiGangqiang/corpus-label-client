@@ -5,7 +5,7 @@ import {Spin, Icon, Form} from 'antd'
 import {isArrayDomain} from 'utils/util'
 import {fetchintent, postIntent, deleteIntent, putIntent, putIntentParameter, addIntentParameter, deleteIntentParameter, fetchEntity, postPattern, postCorpus, predict, getPhrase, putPhrase, deletePhrase, postPhrase, getPattern} from 'actions/intent'
 
-import {fetchEntityList, certainEntity, updateEntity, deleteEntity, addEntity} from 'actions/entity'
+import {fetchEntityList, certainEntity, updateEntity, deleteEntity, addEntity, entityReference} from 'actions/entity'
 
 import {PatternList, PhraseList, EntityParameters, IntentList, IntentDesc, EntityTable, ActionsList,EditEntity} from "components/index";
 
@@ -38,6 +38,7 @@ export default class intentList extends Component {
             negativePatterns:[],
             intentOrEntity: 'intent',
             certainEntity: {},
+            entityRefrence: [],
             entityAddVisible: false,
             intentMode: '',
             showMenu: false,
@@ -163,11 +164,18 @@ export default class intentList extends Component {
 
     initEntity = (obj) => {
         this.props.dispatch(certainEntity('?agent=' + agentName + '&entityName=' + obj.key, data => {
+            data.items.push('');
             this.setState({
                 certainEntity: {...data}
             })
         }, error => {
             console.log(error)
+        }))
+        this.props.dispatch(entityReference('?agent=' + agentName + '&entityName=' + obj.key, data => {
+            console.log(data.data);
+            this.setState({
+                entityRefrence: [...data.data]
+            })
         }))
     };
 
@@ -411,12 +419,12 @@ export default class intentList extends Component {
                                 <ActionsList agentName={agentName} intentId={this.state.intentId} intentMode={this.state.intentMode}/>
                             </div> : ''}
                         </div> : 
-                        <div style={{width: '80%'}}>
-                            <div style={{height: '55px', lineHeight: '50px'}}>
+                        <div className='entity-container'>
+                            <div className='entity-container-head'>
                                 <span style={{fontSize: '20px'}}>实体</span>
                                 <span className='add-new-button' onClick={this.showAddEntity}>新增</span>
                             </div>
-                            <EntityTable data={this.state.certainEntity} addItem={this.updateEntity} deleteEntity={this.deleteEntity} delItem={this.updateEntity}/>
+                            <EntityTable data={this.state.certainEntity} entityRefrence={this.state.entityRefrence} updateEntity={this.updateEntity} deleteEntity={this.deleteEntity} updateEntity={this.updateEntity}/>
                             <EditEntity entityAddVisible={this.state.entityAddVisible} hideAddEntity={this.hideAddModal} handleEntitySubmit={this.handleEntitySubmit}/>
                         </div>
                     }
