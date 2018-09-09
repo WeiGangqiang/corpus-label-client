@@ -3,7 +3,6 @@ import axios from 'axios'
 import {prefix, suffix, timeout, useMock} from '../config'
 
 axios.interceptors.request.use(function (config) {
-    console.log(config,config.data,config.headers['Content-Type'])
     if(config.method=='get'){
         if(config.url.indexOf('?')>=0){
             config.url += '&user=darwin'
@@ -25,7 +24,6 @@ axios.interceptors.request.use(function (config) {
             }
         }
     }
-    // config.data = {...config.data, user: 'darwin'}
     return config;
 }, function (error) {
     // 对请求错误做些什么
@@ -141,6 +139,5 @@ function axiosPost(url, reqData, target, sign, handleCancel) {
 const fetchJSONByPost = (url, target, sign) => (reqData, handleCancel) => axiosPost(url, reqData, target, sign, handleCancel)
 
 export {
-    fetchJSONByPost,
-    axiosBaseConfig,
+    fetchJSONByPost
 }
