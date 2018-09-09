@@ -24,14 +24,14 @@ export class EditEntity extends Component{
                 this.props.handleEntitySubmit({
                     entity: {
                         name: values.name,
-                        items: [values.items.replace(/，/g, ',')]
+                        zhName: values.zhName,
+                        items: []
                     }
-                })
+                });
                 this.hideAddModal()
             }
         });
     };
-
 
     render() {
         const {getFieldDecorator} = this.props.form;
@@ -76,15 +76,15 @@ export class EditEntity extends Component{
                         />)}
                     </FormItem>
                     <FormItem className="modalFormItem">
-                        {getFieldDecorator('items', {
+                        {getFieldDecorator('zhName', {
                             rules: [
                                 {
-                                    pattern: /^[0-9a-zA-Z-\u4E00-\u9FFF,，]+$/,
+                                    pattern: /^[0-9a-zA-Z-\u4E00-\u9FFF]+$/,
                                     message: '不能有非法字符串'
                                 }
                             ]
                         })(<Input
-                            placeholder="请输入实体的值"
+                            placeholder="请输入实体中文名的值"
                             type="text"
                         />)}
                     </FormItem>

@@ -15,8 +15,6 @@ export class ActionsList extends Component {
         super(props)
         this.state = {
             actions: [
-                {type: "replies", values: ["你好", "不好"]},
-                {type: "replies", values: ["天天都喜欢你", "我真的很喜欢你"]}
             ],
             typeArray: [
                 {

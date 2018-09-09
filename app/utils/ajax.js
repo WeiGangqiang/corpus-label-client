@@ -1,79 +1,36 @@
-import fetch from 'isomorphic-fetch'
+
 import axios from 'axios'
 import {prefix, suffix, timeout, useMock} from '../config'
 
-// axios配置
-const axiosBaseConfig = {
-    // baseURL: prefix,
-    timeout: timeout,
-    headers: {'Content-Type': 'text/plain'},
-    method: 'post',
-    // 跨域请求，是否带上认证信息
-    withCredentials: true, // default
-    // http返回的数据类型
-    // 默认是json，可选'arraybuffer', 'blob', 'document', 'json', 'text', 'stream'
-    responseType: 'json', // default
-    // http请求返回状态码检查
-    validateStatus: status =>
-        status >= 200 && status < 300, // default
-    // 请求数据预处理
-    transformRequest: [(data, headers) => {
-        // 加入token？
-        const token = sessionStorage.getItem('token')
-        if (token) {
-            data.token = token
+axios.interceptors.request.use(function (config) {
+    console.log(config,config.data,config.headers['Content-Type'])
+    if(config.method=='get'){
+        if(config.url.indexOf('?')>=0){
+            config.url += '&user=darwin'
+        }else{
+            config.url += '?user=darwin'
         }
-        // 请求对象转换成jon字符串
-        if (typeof data === 'object') {
-            return JSON.stringify(data)
+    }else if(config.method=='post' || config.method == 'put' || config.method == 'delete'){
+        if(config.headers['Content-Type'].indexOf('json')>0){
+            if(config.data){
+                config.data = {...config.data, user: 'darwin'}
+            }else{
+                config.data = {user: 'darwin'}
+            }
+        }else{
+            if(config.url.indexOf('?')>=0){
+                config.url += '&user=darwin'
+            }else{
+                config.url += '?user=darwin'
+            }
         }
-        return data
-    }],
-    // 返回数据预处理
-    transformResponse: [respData =>
-        // 检查返回status值
-        // if (typeof respData.status !== 'undefined') {
-        //   if (respData.status === 1) {
-        //     return respData
-        //   }
-        //   throw new Error(respData.errMsg || 'respData.status不为0')
-        // }
-        respData,
-    ],
-}
-
-// axios 实例
-const axiosInstance = axios.create(axiosBaseConfig)
-// 拦截器
-axiosInstance.interceptors.request.use(req => req, error =>
-    // 当请求错误时
-    Promise.reject(error))
-
-axiosInstance.interceptors.response.use(resp => resp, (error) => {
-    // 当返回错误时
-    if (axios.isCancel(error)) {
-        return Promise.reject(new Error('请求被取消'))
     }
-    if ('code' in error && error.code === 'ECONNABORTED') {
-        return Promise.reject(new Error('请求超时'))
-    }
-    return Promise.reject(error)
-})
-//
-// function axiosPost(url, reqData, target, sign, handleCancel) {
-//   let newUrl
-//   if (target) {
-//     newUrl = `${target}${url}${suffix}`
-//   } else {
-//     newUrl = `${prefix}${url}${suffix}`
-//   }
-//   // return axiosInstance.post(newUrl, reqData, {
-//   //   cancelToken: handleCancel ? handleCancel.token : undefined,
-//   // })
-//   return axiosInstance.get(newUrl, reqData, {
-//     cancelToken: handleCancel ? handleCancel.token : undefined,
-//   })
-// }
+    // config.data = {...config.data, user: 'darwin'}
+    return config;
+}, function (error) {
+    // 对请求错误做些什么
+    return Promise.reject(error);
+});
 
 const ajaxHttp = {
     getForm: function (url, data) {
