@@ -7,7 +7,8 @@ export class EntityTable extends Component {
         super(props)
         this.state = {
             newWord: '',
-            newPhrase: ''
+            newPhrase: '',
+            wordState: []
         }
     }
 
@@ -56,7 +57,6 @@ export class EntityTable extends Component {
         }else {
             message.info('该实体不允许更新')
         }
-
     }
 
     deleteEntity = () => {
@@ -69,12 +69,42 @@ export class EntityTable extends Component {
         }else{
             message.info('该实体不允许删除')
         }
-    }
+    };
+
+    showInput = (index) => {
+        let arr = [];
+        this.props.data.items && this.props.data.items.map(item => {
+            arr.push(false)
+        });
+        arr[index] = true;
+        this.setState({
+            wordState: arr
+        });
+    };
+
+    changeWord = (index,e) => {
+        this.setState({
+            wordState: []
+        });
+        if(this.props.data.mode!='local'){
+            this.props.data.items = this.props.data.items.filter(item => item!='');
+            var arr = this.props.data.items[index].split(',')
+            arr[0] = e.target.value;
+            this.props.data.items[index] = arr.join()
+            this.props.updateEntity({
+                name: this.props.data.name,
+                entityId: this.props.data.entityId,
+                items: this.props.data.items
+            })
+        }else {
+            message.info('该实体不允许更新')
+        }
+    };
 
     deleteItem = (index,i) => {
         if(this.props.data.mode!='local'){
             this.props.data.items = this.props.data.items.filter(item => item!='');
-            var arr = this.props.data.items[index].split(',')
+            var arr = this.props.data.items[index].split(',');
             arr.splice(i+1,1)
             this.props.data.items[index] = arr.join()
             this.props.updateEntity({
@@ -145,7 +175,7 @@ export class EntityTable extends Component {
                 className: 'tableIndex',
                 render(text, record, index) {
                     if(record){
-                        return <span>{record.split(',')[0]}</span>
+                        return that.state.wordState[index] ? <Input defaultValue={record.split(',')[0]} placeholder='词条名' autoFocus={true} onPressEnter={that.changeWord.bind(that,index)} onBlur={that.changeWord.bind(that,index)}/> : <span onClick={that.showInput.bind(that,index)}>{record.split(',')[0]}</span>
                     }else{
                         return <Input placeholder='词条名' onBlur={that.newWord}/>
                     }
@@ -260,8 +290,6 @@ export class EntityTable extends Component {
 
         return (
             <div className="entity-table-container">
-                <Icon onClick={this.deleteEntity} style={style.close} type="close"></Icon>
-
                 <Row style={style.baseInfo}>
                     <Col style={style.col} span={10} xs={24} sm={12} xl={10}>
                         <span style={style.span}>名字:</span>
