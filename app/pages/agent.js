@@ -228,6 +228,7 @@ export default class Agent extends Component {
                         </div> : <div>数据正在加载中，您可以先去嗑瓜子</div>}
                     </Spin>
                 </div>
+
                 <Modal
                     title={this.state.editOrAdd == 'add'? '新增' : '编辑'}
                     visible={this.state.addVisible}
