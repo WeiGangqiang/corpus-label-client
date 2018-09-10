@@ -112,7 +112,7 @@ export class IntentList extends Component {
 
     intentInput = (e) => {
         this.setState({
-            modelPath: this.state.defaultModelPath ? this.state.defaultModelPath + '/' + e.target.value : 'users/' + this.props.agent + '/' + e.target.value
+            modelPath: this.state.defaultModelPath ? this.state.defaultModelPath + '/' + e.target.value : 'users/'+ sessionStorage.getItem('user') + '/' + this.props.agent + '/' + e.target.value
         })
     }
 
