@@ -107,6 +107,7 @@ export default class Agent extends Component {
                 if (this.state.editOrAdd == 'add'){
                     this.props.dispatch(addAgent({
                         name: values.agentName,
+                        user: sessionStorage.getItem('user'),
                         gateWay: values.gateWay,
                         introduced: values.introduce,
                         shareAgents: this.state.shareAgents,
@@ -125,6 +126,7 @@ export default class Agent extends Component {
                 } else if (this.state.editOrAdd == 'edit') {
                     this.props.dispatch(updateAgent({
                         name: values.agentName,
+                        user: sessionStorage.getItem('user'),
                         gateWay: values.gateWay,
                         introduced: values.introduce,
                         shareAgents: this.state.shareAgents,

@@ -39,6 +39,7 @@ export default class Login extends Component {
                 Object.keys(values).map(key => values[key] = (values[key] && values[key].trim()))
                 this.props.dispatch(postLogin(values, (res) => {
                     message.success("登录成功")
+                    sessionStorage.setItem('user', values.name)
                     sessionStorage.setItem("isUserLogged", true)
                     hashHistory.push('/')
                 }, (res) => {
