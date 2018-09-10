@@ -84,7 +84,7 @@ export class IntentList extends Component {
         return data.map((item,index) => {
             if (item.children) {
                 return (
-                    <TreeNode disabled={item.entityId == ''||item.intentId== ''} key={index} title={item.title} key={item.key} dataRef={item}>
+                    <TreeNode key={index} title={item.title} key={item.key} dataRef={item}>
                         {this.renderTreeNodes(item.children)}
                     </TreeNode>
                 );
