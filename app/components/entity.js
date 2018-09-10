@@ -201,12 +201,23 @@ export class EntityParameters extends Component {
                         if(record.values.length < 10){
                             return (<div><Icon style={{float: 'right'}} onClick={that.deleteItems.bind(that,record)} type="delete"/></div>)
                         } else if(record.valuesShow.length <= 10){
-                            return ( <div><span style={{paddingLeft: '10px', color:'#0099CC'}} onClick={that.showMoreValues.bind(that, index)}>详情 <Icon type='caret-down'/></span><Icon  style={{float: 'right'}} onClick={that.deleteItems.bind(that,record.entity)} type="delete"/></div>)
+                            return ( <div>
+                                <Button className='button-icon' onClick={that.deleteItems.bind(that,record.entity)} icon='delete'></Button>
+                                {/*<Icon style={{float: 'right'}} onClick={that.deleteItems.bind(that,record.entity)} type="delete"/>*/}
+                                <Button className='button-icon' icon='down' onClick={that.showMoreValues.bind(that, index)}></Button>
+                                {/*<Icon style={{float: 'right'}} onClick={that.showMoreValues.bind(that, index)} type='down'/>*/}
+                            </div>)
                         } else {
-                            return (<div><span style={{paddingLeft: '10px', color:'#0099CC'}}  onClick={that.showLessValues.bind(that, index)}>简要 <Icon type='caret-up'/></span><Icon  style={{float: 'right'}} onClick={that.deleteItems.bind(that,record.entity)} type="delete"/></div>)
+                            return (<div>
+                                <Button className='button-icon' icon='delete' onClick={that.deleteItems.bind(that,record.entity)}></Button>
+                                {/*<Icon  style={{float: 'right'}} onClick={that.deleteItems.bind(that,record.entity)} type="delete"/>*/}
+                                <Button className='button-icon' icon='up' onClick={that.showLessValues.bind(that, index)}>
+                                    {/*<Icon style={{float: 'right'}} onClick={that.showLessValues.bind(that, index)} type='up'/>*/}
+                                </Button>
+                            </div>)
                         }
                     }else{
-                        return <Button onClick={that.addItems} disabled={that.state.entity=='' || that.state.name==''}>增加</Button>
+                        return <Button className='button-icon' icon='plus' onClick={that.addItems} disabled={that.state.entity=='' || that.state.name==''}></Button>
                         // return <Button disabled={true}>增加</Button>
                     }
                 }

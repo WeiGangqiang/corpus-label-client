@@ -139,9 +139,9 @@ export class ActionsList extends Component {
 
     getOperators = (record, index) => {
         if(record.type){
-            return <Icon onClick={this.updateAction.bind(this, index, 'delete')} type="delete"></Icon>
+            return <Button className='button-icon' icon='delete' onClick={this.updateAction.bind(this, index, 'delete')}></Button>
         }else{
-            return <Icon onClick={this.updateAction.bind(this,0,'new')} type="plus"></Icon>
+            return <Button className='button-icon' icon='plus' onClick={this.updateAction.bind(this,0,'new')} disabled={this.state.type == ''}></Button>
         }
     };
 
@@ -202,6 +202,7 @@ export class ActionsList extends Component {
                 title: '操作',
                 dataIndex: 'delete',
                 key: 'delete',
+                width: '10%',
                 render(text, record, index) {
                     return that.getOperators(record, index)
                 }

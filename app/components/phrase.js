@@ -197,8 +197,9 @@ export class PhraseList extends Component {
                 title: '操作',
                 dataIndex: 'delete',
                 key: 'delete',
+                width: '10%',
                 render(text, record, index) {
-                    return record.intentId?<Button onClick={that.delPhraseItem.bind(that, record)}>删除</Button>:<Button disabled>删除</Button>
+                    return record.intentId?<Button className='button-icon' icon='delete' onClick={that.delPhraseItem.bind(that, record)}></Button>:<Button className='button-icon' icon='delete' disabled></Button>
                 }
             }
         ]

@@ -14,7 +14,7 @@ export const intentResult = handleActions({
         let {req, res} = action.payload;
         if (res.length) {
             // let modelPath = res[0].modelPath.split('/')[0]
-            res = getDisc(res).children[0].children[0]
+            res = getDisc(res).children[0].children[0].children[0];
             // res.key = modelPath;
             res.title = '意图';
             res.modelPath = res.key;

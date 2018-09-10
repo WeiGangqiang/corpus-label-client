@@ -212,9 +212,9 @@ export class EntityTable extends Component {
                 className: '',
                 render(text, record, index) {
                     if(record){
-                        return <div><Icon onClick={that.deleteItems.bind(that,index)} type="delete"/></div>
+                        return <div><Button className='button-icon' icon='delete' onClick={that.deleteItems.bind(that,index)}></Button></div>
                     }else{
-                        return <div><Icon type="plus" onClick={that.addItem}/></div>
+                        return <div><Button disabled={that.state.newWord == '' || that.state.newPhrase == ''} className='button-icon' icon='plus' onClick={that.addItem}></Button></div>
                     }
                 }
             }
@@ -290,20 +290,20 @@ export class EntityTable extends Component {
 
         return (
             <div className="entity-table-container">
-                <Row style={style.baseInfo}>
-                    <Col style={style.col} span={10} xs={24} sm={12} xl={10}>
-                        <span style={style.span}>名字:</span>
-                        <div>{this.props.data.name}</div>
-                    </Col>
-                    <Col style={style.col} span={10} xs={24} sm={12} xl={10}>
-                        <span style={style.span}>中文名字:</span>
-                        <div>{this.props.data.zhName}</div>
-                    </Col>
-                    <Col style={style.col} span={4} xs={24} sm={12} xl={4}>
-                        <span style={style.span}>类型:</span>
-                        <div>枚举</div>
-                    </Col>
-                </Row>
+                {/*<Row style={style.baseInfo}>*/}
+                    {/*<Col style={style.col} span={10} xs={24} sm={12} xl={10}>*/}
+                        {/*<span style={style.span}>名字:</span>*/}
+                        {/*<div>{this.props.data.name}</div>*/}
+                    {/*</Col>*/}
+                    {/*<Col style={style.col} span={10} xs={24} sm={12} xl={10}>*/}
+                        {/*<span style={style.span}>中文名字:</span>*/}
+                        {/*<div>{this.props.data.zhName}</div>*/}
+                    {/*</Col>*/}
+                    {/*<Col style={style.col} span={4} xs={24} sm={12} xl={4}>*/}
+                        {/*<span style={style.span}>类型:</span>*/}
+                        {/*<div>枚举</div>*/}
+                    {/*</Col>*/}
+                {/*</Row>*/}
 
                 <Table
                     dataSource={this.props.data.items && this.props.data.items}

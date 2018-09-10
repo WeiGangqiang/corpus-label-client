@@ -19,17 +19,24 @@ export class IntentDesc extends Component {
 
 
     getTitle = () => {
-        const subtitleCss = {
-            fontSize: '20px',
-            fontWeight: 'bold',
-            marginBottom: '0px',
-            lineHeight: '40px'
+        const style = {
+            subtitleCss: {
+                fontSize: '20px',
+                fontWeight: 'bold',
+                marginBottom: '0px',
+                lineHeight: '55px'
+            },
+            box:{
+                padding: '0 15px',
+                borderBottom: '1px solid #dadada',
+                marginBottom: '10px'
+            }
         };
-        return <div>
+        return <div style={style.box}>
             {
                 this.state.editState ? <Icon type="save" onClick={this.editBaseMsg}  className='edit-icon'/> :  <Icon onClick={this.editBaseMsg} className='edit-icon' type="edit"/>
             }
-            <p style={subtitleCss}> 基本信息 </p>
+            <p style={style.subtitleCss}> 基本信息 </p>
         </div>
     };
 
@@ -81,10 +88,12 @@ export class IntentDesc extends Component {
             baseInfo: {
                 height: 'auto',
                 background: '#fbfbfb',
-                padding: '0 15px',
                 fontSize: '14px',
                 marginBottom: '15px',
                 borderRadius: '15px'
+            },
+            baseInfoInner:{
+                padding: '0 15px',
             },
             col: {
                 lineHeight: '40px',
@@ -111,29 +120,31 @@ export class IntentDesc extends Component {
             <div>
                 <Row style={style.baseInfo}>
                     {this.getTitle()}
-                    <Col style={style.col} span={10} xs={24} sm={12} xl={10}>
-                        <span style={style.span}>意图名字:</span>
-                        <div>
-                            {
-                                this.state.editState? <Input defaultValue={this.props.name} onBlur={this.nameBlur}/> : this.props.name
-                            }</div>
-                    </Col>
-                    <Col style={style.col} span={10} xs={24} sm={12} xl={10}>
-                        <span style={style.span}>中文名字:</span>
-                        <div>
-                            {
-                                this.state.editState? <Input defaultValue={this.props.zhName} onBlur={this.zhNameBlur}/> : this.props.zhName
-                            }
+                    <div style={style.baseInfoInner}>
+                        <Col style={style.col} span={10} xs={24} sm={12} xl={10}>
+                            <span style={style.span}>意图名字:</span>
+                            <div>
+                                {
+                                    this.state.editState? <Input defaultValue={this.props.name} onBlur={this.nameBlur}/> : this.props.name
+                                }</div>
+                        </Col>
+                        <Col style={style.col} span={10} xs={24} sm={12} xl={10}>
+                            <span style={style.span}>中文名字:</span>
+                            <div>
+                                {
+                                    this.state.editState? <Input defaultValue={this.props.zhName} onBlur={this.zhNameBlur}/> : this.props.zhName
+                                }
                             </div>
-                    </Col>
-                    <Col style={style.col} span={4} xs={24} sm={12} xl={4}>
-                        <span style={style.span}>类型:</span>
-                        <div>{this.props.mode}</div>
-                    </Col>
-                    <Col style={style.col} span={24} xs={24} sm={24}>
-                        <span style={style.span}>模型路径:</span>
-                        <div>{this.props.modelPath}</div>
-                    </Col>
+                        </Col>
+                        <Col style={style.col} span={4} xs={24} sm={12} xl={4}>
+                            <span style={style.span}>类型:</span>
+                            <div>{this.props.mode}</div>
+                        </Col>
+                        <Col style={style.col} span={24} xs={24} sm={24}>
+                            <span style={style.span}>模型路径:</span>
+                            <div>{this.props.modelPath}</div>
+                        </Col>
+                    </div>
                 </Row>
             </div>
         )

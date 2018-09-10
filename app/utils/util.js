@@ -67,6 +67,5 @@ export const getDisc = (intent) => {
         children:[]
     }
     arrayToDisc(intent,discArr);
-    console.log(discArr)
     return discArr
 }

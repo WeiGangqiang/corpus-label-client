@@ -84,7 +84,7 @@ export class IntentList extends Component {
         return data.map((item,index) => {
             if (item.children) {
                 return (
-                    <TreeNode key={index} title={item.title} key={item.key} dataRef={item}>
+                    <TreeNode disabled={item.entityId == ''||item.intentId== ''} key={index} title={item.title} key={item.key} dataRef={item}>
                         {this.renderTreeNodes(item.children)}
                     </TreeNode>
                 );
@@ -243,6 +243,8 @@ export class IntentList extends Component {
                     <div style={style.headerTitle}>操作</div>
                     <Tree
                         autoExpandParent={true}
+                        defaultExpandAll={true}
+                        defaultExpandParent={true}
                         onSelect={this.selectNode}
                         onRightClick={this.rightClickNode}
                         // expandedKeys={this.state.expandedKeys}
