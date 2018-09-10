@@ -71,7 +71,6 @@ function isLogin(nextState, replaceState) {
 }
 
 function requireAuth(nextState, replaceState) {
-    console.log(sessionStorage.getItem('isUserLogged'))
     if( !sessionStorage.getItem('isUserLogged')) {
         replaceState({
         pathname: '/login',
@@ -82,11 +81,11 @@ function requireAuth(nextState, replaceState) {
 
 export default () => (
     <Router history={hashHistory}>
-        <Route path="/" component={App}>
+        <Route path="/" component={App}  onEnter={requireAuth}>
             <IndexRoute getComponent={selectService}/>
-            <Route path="/selectService" getComponent={selectService} onEnter={requireAuth}/>
-            <Route path="/intentList" query='agent' getComponent={intentList} onEnter={requireAuth}></Route>
-            <Route path="/unknown"  query='agent' getComponent={unknownSays} onEnter={requireAuth}></Route>
+            <Route path="/selectService" getComponent={selectService}/>
+            <Route path="/intentList" query='agent' getComponent={intentList}></Route>
+            <Route path="/unknown"  query='agent' getComponent={unknownSays}></Route>
         </Route>
         <Route path="/login" getComponent={Login} />
         <Route path="/register" getComponent={Register} />

@@ -20,6 +20,7 @@ export default class App extends Component {
 
     componentWillMount () {
         this.props.router.listen(route => {
+            console.log(this)
             this.setState({
                 pathname: route.pathname
             })

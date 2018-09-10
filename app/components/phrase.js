@@ -55,21 +55,6 @@ export class PhraseList extends Component {
         }
     }
 
-    showAddPhrase(phrase) {
-        this.setState({
-            showModalFlag: true,
-            phrase: {...phrase}
-        })
-    }
-
-    hideAddPhrase() {
-        this.setState({
-            showModalFlag: false,
-            phraseText: '',
-            phrase: {}
-        })
-    }
-
     delPhraseItem(phrase) {
         this.props.dispatch(deletePhrase({
             phraseId: phrase.phraseId,
@@ -129,21 +114,7 @@ export class PhraseList extends Component {
             lineHeight: '40px'
         }
         return <p style={subtitleCss}> 近义词列表 </p>
-    }
-
-    addNewPhrase = (e) => {
-        this.props.dispatch(postPhrase({
-            similars: e.target.value.replace('，',',').split(','),
-            intentId: this.props.intentId,
-            intent: this.props.intent,
-            agent: this.props.agent
-        }, data => {
-            this.props.updatePhraseArray()
-        },error => {
-            console.log(error)
-        }))
-        e.target.value = ''
-    }
+    };
 
     columns = () => {
         const style = {
@@ -253,15 +224,6 @@ export class PhraseList extends Component {
                     bordered
                     pagination={false}
                 />
-                {/*<div style={style.plus}>*/}
-                    {/*<div style={style.plusDiv}>*/}
-                        {/*<span style={style.plusDivSpan}>{this.props.phraseArray.length + 1}</span>*/}
-                    {/*</div>*/}
-                    {/*<div style={style.plusInputDiv}>*/}
-                        {/*<Input type="text" onPressEnter={this.addNewPhrase}/>*/}
-                    {/*</div>*/}
-
-                {/*</div>*/}
                 <div style = {{height: '10px'}}> </div>
             </div>)
 

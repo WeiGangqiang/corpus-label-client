@@ -66,7 +66,7 @@ const ajaxHttp = {
             method: 'post',
             url,
             data,
-            timeout: 10000,
+            timeout: 600000,
             headers: {
                 'Content-Type': 'application/json',
             },

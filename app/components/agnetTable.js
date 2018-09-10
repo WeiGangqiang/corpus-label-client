@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
-import {Row, Col, Icon, Modal, Button} from 'antd'
+import {Row, Col, Icon, Modal, Button, message} from 'antd'
 import {packageAgent} from 'actions/serve'
 
 @connect((state, props) => ({
@@ -50,11 +50,14 @@ export class AgentTable extends Component {
     };
 
     package = () => {
+        message.info('开始部署，可能需要几分钟，请等待');
         this.props.dispatch(packageAgent('?agent=' + this.props.agent.name + '&agentId=' + this.props.agent.agentId, data => {
-            this.setState({
-                packageVisible: true
-            })
+            // this.setState({
+            //     packageVisible: true
+            // })
+            message.info('部署完成')
         }, error => {
+            message.error('部署失败');
             console.log(error)
         }))
     };

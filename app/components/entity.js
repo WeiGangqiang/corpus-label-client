@@ -194,7 +194,7 @@ export class EntityParameters extends Component {
             {
                 title: '操作',
                 dataIndex: 'operate',
-                key: 'oparete',
+                key: 'operate',
                 width: '10%',
                 render(text, record, index) {
                     if(record.entity){

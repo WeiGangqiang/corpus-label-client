@@ -176,17 +176,19 @@ export class IntentList extends Component {
         const style = {
             corpusBox: {
                 background: '#fbfbfb',
-                padding: '40px 15px 15px',
+                padding: '55px 15px 15px',
                 width: '100%',
                 height: '100%',
                 borderRadius: '15px'
             },
             headerTitle: {
-                lineHeight: '40px',
-                fontSize: '16px',
+                lineHeight: '55px',
                 float: 'left',
-                marginTop: '-40px',
-
+                marginTop: '-55px',
+                fontSize: '20px',
+                fontWeight: 'bold',
+                borderBottom: '1px solid #dadada',
+                width: '100%'
             },
             flexBox: {
                 display: 'flex',

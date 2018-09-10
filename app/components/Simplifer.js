@@ -105,7 +105,7 @@ export class Simplifier extends Component {
     }
 
     render(){
-        const {getFieldDecorator} = this.props.form
+        const {getFieldDecorator} = this.props.form;
         const style = {
             simplifyBox: {
                 width: '100%',
@@ -126,14 +126,14 @@ export class Simplifier extends Component {
                 xs: { span: 24, offset: 0 },
                 sm: { span: 24, offset: 0 },
             }
-        }
+        };
         return (
             <Row style={style.simplifyBox}>
                 <Col span={24}>
                     <Form style={{ width: '100%' }} layout="inline">
                         <FormItem style={{width: '100%'}} wrapperCol={style.wrapperCol}>
                             {getFieldDecorator('newCorpus', {})(
-                                <Input style={{ width: '100%' }} placeholder="请输入新的语料" onPressEnter={this.onInputEnter}
+                                <Input autocomplete={false} style={{ width: '100%' }} placeholder="请输入新的语料" onPressEnter={this.onInputEnter}
                                     onBlur={this.corpusBlur} addonAfter={<Icon onClick={this.addCorpusToIntent} type="plus" />} />
                              )}
                         </FormItem>

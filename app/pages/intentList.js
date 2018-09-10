@@ -173,7 +173,6 @@ export default class intentList extends Component {
             console.log(error)
         }))
         this.props.dispatch(entityReference('?agent=' + agentName + '&entityName=' + obj.key, data => {
-            console.log(data.data);
             this.setState({
                 entityRefrence: [...data.data]
             })
@@ -432,8 +431,7 @@ export default class intentList extends Component {
                                 <PatternList key={this.state.pattenListKey} agentName={agentName} intent={this.state.name} intentId={this.state.intentId}
                                              corpusType={this.state.type} updatePhrase={this.getPhrase} phraseArray={this.state.phraseArray} entityParam={this.state.entityParam} positivePatterns={this.state.positivePatterns} negativePatterns={this.state.negativePatterns} getPatternList={this.getPatternList}/>
 
-                                <PhraseList intent={this.state.name} agent={agentName} intentId={this.state.intentId} phraseArray={this.state.phraseArray}
-                                            updatePhraseArray={this.getPhrase}  reloadPatterns={this.reloadPatterns}/>
+                                <PhraseList intent={this.state.name} agent={agentName} intentId={this.state.intentId} phraseArray={this.state.phraseArray} updatePhraseArray={this.getPhrase}  reloadPatterns={this.reloadPatterns}/>
                                 <div style={{position: 'fixed', top: '80px', right: '60px'}}>
                                     <ChatPage/>
                                 </div>
