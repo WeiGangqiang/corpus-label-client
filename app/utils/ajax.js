@@ -2,33 +2,33 @@
 import axios from 'axios'
 import {prefix, suffix, timeout, useMock} from '../config'
 
-axios.interceptors.request.use(function (config) {
-    if(config.method=='get'){
-        if(config.url.indexOf('?')>=0){
-            config.url += '&user=darwin'
-        }else{
-            config.url += '?user=darwin'
-        }
-    }else if(config.method=='post' || config.method == 'put' || config.method == 'delete'){
-        if(config.headers['Content-Type'].indexOf('json')>0){
-            if(config.data){
-                config.data = {...config.data, user: 'darwin'}
-            }else{
-                config.data = {user: 'darwin'}
-            }
-        }else{
-            if(config.url.indexOf('?')>=0){
-                config.url += '&user=darwin'
-            }else{
-                config.url += '?user=darwin'
-            }
-        }
-    }
-    return config;
-}, function (error) {
-    // 对请求错误做些什么
-    return Promise.reject(error);
-});
+// axios.interceptors.request.use(function (config) {
+//     if(config.method=='get'){
+//         if(config.url.indexOf('?')>=0){
+//             config.url += '&user=darwin'
+//         }else{
+//             config.url += '?user=darwin'
+//         }
+//     }else if(config.method=='post' || config.method == 'put' || config.method == 'delete'){
+//         if(config.headers['Content-Type'].indexOf('json')>0){
+//             if(config.data){
+//                 config.data = {...config.data, user: 'darwin'}
+//             }else{
+//                 config.data = {user: 'darwin'}
+//             }
+//         }else{
+//             if(config.url.indexOf('?')>=0){
+//                 config.url += '&user=darwin'
+//             }else{
+//                 config.url += '?user=darwin'
+//             }
+//         }
+//     }
+//     return config;
+// }, function (error) {
+//     // 对请求错误做些什么
+//     return Promise.reject(error);
+// });
 
 const ajaxHttp = {
     getForm: function (url, data) {

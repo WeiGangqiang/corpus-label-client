@@ -8,6 +8,7 @@ import {fetchintent, postIntent, deleteIntent, putIntent, putIntentParameter, ad
 import {fetchEntityList, certainEntity, updateEntity, deleteEntity, addEntity, entityReference} from 'actions/entity'
 
 import {PatternList, PhraseList, EntityParameters, IntentList, IntentDesc, EntityTable, ActionsList,EditEntity} from "components/index";
+import {ChatPage} from 'components/chatpage/chatpage'
 
 let agentName = '';
 
@@ -433,7 +434,9 @@ export default class intentList extends Component {
 
                                 <PhraseList intent={this.state.name} agent={agentName} intentId={this.state.intentId} phraseArray={this.state.phraseArray}
                                             updatePhraseArray={this.getPhrase}  reloadPatterns={this.reloadPatterns}/>
-
+                                <div style={{position: 'fixed', top: '80px', right: '60px'}}>
+                                    <ChatPage/>
+                                </div>
                                 <ActionsList agentName={agentName} intentId={this.state.intentId} intentMode={this.state.intentMode}/>
                             </div> : ''}
                         </div> : 

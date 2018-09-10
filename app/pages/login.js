@@ -3,7 +3,7 @@ import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import {hashHistory, Link} from 'react-router'
 import {Spin, message, Form, Icon, Input, Button, Row, Col} from 'antd'
-import {fetchLogin, userInfo} from 'actions/common'
+import {postLogin, userInfo} from 'actions/common'
 
 const FormItem = Form.Item
 
@@ -37,23 +37,16 @@ export default class Login extends Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 Object.keys(values).map(key => values[key] = (values[key] && values[key].trim()))
-                this.props.dispatch(fetchLogin(values, (res) => {
-                    message.success(res.msg)
-                    sessionStorage.setItem('username', values.username)
-                    this.props.dispatch(userInfo(values, (response) => {
-                        sessionStorage.setItem('token', response.data.token)
-                        hashHistory.push('/selectService')
-                    }, (response) => {
-                        message.warning(response)
-                    }))
+                this.props.dispatch(postLogin(values, (res) => {
+                    message.success("登录成功")
+                    sessionStorage.setItem("isUserLogged", true)
+                    hashHistory.push('/')
                 }, (res) => {
                     message.warning(res.msg)
                     this.setState({
                         loading: false,
                     })
                 }))
-                sessionStorage.setItem('token', 'dupi')
-                hashHistory.push('/')
             }
         })
     }
@@ -92,7 +85,7 @@ export default class Login extends Component {
                                 <Spin spinning={this.state.loading}>
                                     <Form onSubmit={this.handleSubmit}>
                                         <FormItem hasFeedback>
-                                            {getFieldDecorator('username', {
+                                            {getFieldDecorator('name', {
                                                 rules: [
                                                     {required: true, message: '请输入用户名'},
                                                     {validator: this.checkName},
@@ -117,7 +110,7 @@ export default class Login extends Component {
                                         </FormItem>
                                         <FormItem>
                                             <Button type="primary" htmlType="submit">登录</Button>
-                                            <Link to="/register">注册</Link>
+                                            {/* <Link to="/register">注册</Link> */}
                                         </FormItem>
                                     </Form>
                                 </Spin>
