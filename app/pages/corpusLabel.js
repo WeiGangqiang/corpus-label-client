@@ -284,14 +284,6 @@ export default class CorpusLabel extends Component {
         }))
     };
 
-    hasFollowUpIntent = (modelPath) => {
-        console.log('check follow up intent for', modelPath)
-        let followUpIntents = this.props.intentResult.find( (intent) => {
-            return intent.modelPath.includes(modelPath)
-        })
-        return followUpIntents.length > 1
-    }
-
     editIntent = (param, obj) => {
         this.props.dispatch(putIntent({
             ...param,
@@ -433,7 +425,7 @@ export default class CorpusLabel extends Component {
                 </div>
              
                 <div style={style.innerBox} className='intentContainer'>
-                    <IntentList originEntity={[intentResult.data]} intentId={this.state.intentId} agent={agentName} getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity} addintent={this.addintent} deleteIntent={this.deleteIntent} handleEntitySubmit={this.handleEntitySubmit} showMenu={this.state.showMenu} hasFollowUpIntent={this.hasFollowUpIntent}/>
+                    <IntentList originEntity={[intentResult.data]} intentId={this.state.intentId} agent={agentName} getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity} addintent={this.addintent} deleteIntent={this.deleteIntent} handleEntitySubmit={this.handleEntitySubmit} showMenu={this.state.showMenu}/>
                     {
                         this.state.intentOrEntity == 'intent' ? 
                         <div style={{height: '100%', overflow: 'auto'}}>

@@ -30,7 +30,8 @@ export class IntentList extends Component {
             intentName: '',
             modelPath: '',
             defaultModelPath: '',
-            mode: ''
+            mode: '',
+            children: []
         }
     }
 
@@ -53,7 +54,8 @@ export class IntentList extends Component {
             intentId: node.props.dataRef && node.props.dataRef.intentId,
             modelPath: node.props.dataRef && node.props.dataRef.modelPath,
             defaultModelPath:  node.props.dataRef && node.props.dataRef.modelPath,
-            mode: node.props.dataRef && node.props.dataRef.mode
+            mode: node.props.dataRef && node.props.dataRef.mode,
+            children: node.props.dataRef && node.props.dataRef.children
         })
     };
 
@@ -133,7 +135,10 @@ export class IntentList extends Component {
 
     showDelIntent = (e) => {        
         if (this.state.intentId.length && this.state.mode != 'local') {
-            console.log('has follow up', this.props.hasFollowUpIntent(this.state.modelPath))
+            if(this.state.children.length > 0){
+                message.info('需要首先删除子意图，才能删除当前意图') 
+                return    
+            }
             this.setState({
                 delIntentVisible: true
             })
