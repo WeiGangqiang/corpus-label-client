@@ -8,6 +8,7 @@ import {fetchintent, postIntent, deleteIntent, putIntent, putIntentParameter, ad
 import {fetchEntityList, certainEntity, updateEntity, deleteEntity, addEntity, entityReference} from 'actions/entity'
 
 import {PatternList, PhraseList, EntityParameters, IntentList, IntentDesc, EntityTable, ActionsList,EditEntity} from "components/index";
+import {EntityDesc} from 'components/entityDesc'
 import {Logout} from 'components/logout'
 import {ChatPage} from 'components/chatpage/chatpage'
 
@@ -236,6 +237,10 @@ export default class intentList extends Component {
     };
 
     deleteEntity = (obj) => {
+        if(this.state.entityRefrence.length){
+            message.info('该实体有多处引用，不允许删除')
+            return
+        }
         this.props.dispatch(deleteEntity('?agent=' + agentName + '&entityId=' + obj.entityId, data => {
             this.props.dispatch(fetchEntityList('?agent=' + agentName, data => {
                 this.initEntity({key:data[0]})
@@ -394,24 +399,7 @@ export default class intentList extends Component {
             modalFootBtn:{
                 marginLeft: '8px'
             },
-            baseInfo: {
-                height: 'auto',
-                background: '#fbfbfb',
-                padding: '0 15px',
-                fontSize: '14px',
-                marginBottom: '30px',
-                borderBottomLeftRadius: '15px',
-                borderBottomRightRadius: '15px'
-            },
-            col: {
-                lineHeight: '40px',
-                paddingLeft: '70px'
-            },
-            span: {
-                float: 'left',
-                width: '70px',
-                marginLeft: '-70px'
-            },
+
         };
 
         return <Spin spinning={intentResult.loading}>
@@ -448,24 +436,8 @@ export default class intentList extends Component {
                                 <span style={{fontSize: '20px',fontWeight: 'bold'}}>实体</span>
                                 <span className='add-new-button' onClick={this.showAddEntity}>新增</span>
                             </div>
-                            <div style={{overflow: 'auto'}}>
-                                <Row style={style.baseInfo}>
-                                    <Col style={style.col} span={10} xs={24} sm={12} xl={10}>
-                                        <span style={style.span}>名字:</span>
-                                        <div>{this.state.certainEntity&&this.state.certainEntity.name}</div>
-                                    </Col>
-                                    <Col style={style.col} span={10} xs={24} sm={12} xl={10}>
-                                        <span style={style.span}>中文名字:</span>
-                                        <div>{this.state.certainEntity&&this.state.certainEntity.zhName}</div>
-                                    </Col>
-                                    <Col style={style.col} span={4} xs={24} sm={12} xl={4}>
-                                        <span style={style.span}>类型:</span>
-                                        <div>枚举</div>
-                                    </Col>
-                                </Row>
-                            </div>
-
-                            <EntityTable data={this.state.certainEntity} entityRefrence={this.state.entityRefrence} updateEntity={this.updateEntity} deleteEntity={this.deleteEntity} updateEntity={this.updateEntity}/>
+                            <EntityDesc entity={this.state.certainEntity} deleteEntity={this.deleteEntity}  />
+                            <EntityTable data={this.state.certainEntity} entityRefrence={this.state.entityRefrence} updateEntity={this.updateEntity} updateEntity={this.updateEntity}/>
                             <EditEntity entityAddVisible={this.state.entityAddVisible} hideAddEntity={this.hideAddModal} handleEntitySubmit={this.handleEntitySubmit}/>
                         </div>
                     }

@@ -214,17 +214,12 @@ export class EntityParameters extends Component {
                             console.log(record);
                             return ( <div>
                                 {that._renderDeleteButton(record)}
-                                {/*<Icon style={{float: 'right'}} onClick={that.deleteItems.bind(that,record.entity)} type="delete"/>*/}
-                                <Button className='button-icon' icon='down' onClick={that.showMoreValues.bind(that, index)}></Button>
-                                {/*<Icon style={{float: 'right'}} onClick={that.showMoreValues.bind(that, index)} type='down'/>*/}
+                                <Button className='button-icon' icon='down' onClick={that.showMoreValues.bind(that, index)}/>
                             </div>)
                         } else {
                             return (<div>
                                 {that._renderDeleteButton(record)}
-                                {/*<Icon  style={{float: 'right'}} onClick={that.deleteItems.bind(that,record.entity)} type="delete"/>*/}
-                                <Button className='button-icon' icon='up' onClick={that.showLessValues.bind(that, index)}>
-                                    {/*<Icon style={{float: 'right'}} onClick={that.showLessValues.bind(that, index)} type='up'/>*/}
-                                </Button>
+                                <Button className='button-icon' icon='up' onClick={that.showLessValues.bind(that, index)}/>
                             </div>)
                         }
                     }else{
