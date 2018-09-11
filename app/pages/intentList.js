@@ -8,6 +8,7 @@ import {fetchintent, postIntent, deleteIntent, putIntent, putIntentParameter, ad
 import {fetchEntityList, certainEntity, updateEntity, deleteEntity, addEntity, entityReference} from 'actions/entity'
 
 import {PatternList, PhraseList, EntityParameters, IntentList, IntentDesc, EntityTable, ActionsList,EditEntity} from "components/index";
+import {Logout} from 'components/logout'
 import {ChatPage} from 'components/chatpage/chatpage'
 
 let agentName = '';
@@ -415,10 +416,14 @@ export default class intentList extends Component {
 
         return <Spin spinning={intentResult.loading}>
             <div className='intent-inner-container'>
-                <Link className='bread-cruft' to={'/selectService'}>
-                    <Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择
+                <div className='bread-cruft'>
+                    <Link to={'/selectService'}>
+                        <Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择
+                    </Link>
                     <Icon onClick={this.showMenu} className="menu-fold" type="menu-fold" />
-                </Link>
+                    <Logout/>
+                </div>
+             
                 <div style={style.innerBox} className='intentContainer'>
                     <IntentList originEntity={[intentResult.data]} intentId={this.state.intentId} agent={agentName} getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity} addintent={this.addintent} deleteIntent={this.deleteIntent} handleEntitySubmit={this.handleEntitySubmit} showMenu={this.state.showMenu}/>
                     {
@@ -432,8 +437,8 @@ export default class intentList extends Component {
                                              corpusType={this.state.type} updatePhrase={this.getPhrase} phraseArray={this.state.phraseArray} entityParam={this.state.entityParam} positivePatterns={this.state.positivePatterns} negativePatterns={this.state.negativePatterns} getPatternList={this.getPatternList}/>
 
                                 <PhraseList intent={this.state.name} agent={agentName} intentId={this.state.intentId} phraseArray={this.state.phraseArray} updatePhraseArray={this.getPhrase}  reloadPatterns={this.reloadPatterns}/>
-                                <div style={{position: 'fixed', top: '80px', right: '60px'}}>
-                                    <ChatPage/>
+                                <div style={{position:'fixed', zIndex: 500}}>
+                                    <ChatPage agentName={agentName}/>
                                 </div>
                                 <ActionsList agentName={agentName} intentId={this.state.intentId} intentMode={this.state.intentMode}/>
                             </div> : ''}

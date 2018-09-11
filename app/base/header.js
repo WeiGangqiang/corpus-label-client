@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {Link} from 'react-router'
 import {Icon} from 'antd'
+import {Logout} from 'components/logout'
 
 export default class Header extends Component {
     // 初始化页面常量 绑定事件方法
@@ -28,6 +29,7 @@ export default class Header extends Component {
                    <Link className='sliderItem'>公共应用</Link>
                    <Link className='sliderItem'>帮助文档</Link>
                </div>
+               <Logout/>
            </div>
         )
     }

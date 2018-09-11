@@ -1,15 +1,25 @@
+.sc-launcher-wrapper {
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  right: 25px;
+  bottom: 25px;
+}
+
 .sc-launcher {
+  display: none;
+}
+
+.sc-launcher.opened {
   width: 60px;
   height: 60px;
   background-color: #4e8cff;
   background-position: center;
   background-repeat: no-repeat;
-  position: fixed;
-  right: 25px;
-  bottom: 25px;
   border-radius: 50%;
   box-shadow: none;
   transition: box-shadow 0.2s ease-in-out;
+  display: block;
 }
 
 .sc-launcher:before {

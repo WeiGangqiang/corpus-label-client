@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import ChatWindow from './ChatWindow';
 import launcherIcon from './../assets/avatar1.png';
 import launcherIconActive from './../assets/close-icon.png';
+import {Button, Row, Col} from 'antd'
 
 class Launcher extends Component {
 
@@ -24,6 +25,17 @@ class Launcher extends Component {
     }
   }
 
+  _renderButton() {
+    return <Row>
+      <Col sm={24} xs={0}>
+        <Button type="primary" icon="message" ghost size="large" className={"sc-chat-desc"}>和小哒聊天</Button>
+      </Col>
+      <Col xs={24} sm={0}>
+      <Button type="primary" icon="message" shape="circle" size="large" className={"sc-chat-desc"}></Button>
+      </Col>
+    </Row>
+  }
+
   render() {
     const isOpen = this.props.hasOwnProperty('isOpen') ? this.props.isOpen : this.state.isOpen;
     const classList = [
@@ -34,11 +46,14 @@ class Launcher extends Component {
       <div>
         <div>
         </div>
-        <div className={classList.join(' ')} onClick={this.handleClick.bind(this)}>
-          <MessageCount count={this.props.newMessagesCount} isOpen={isOpen} />
-          <img className={"sc-open-icon"} src={launcherIconActive} />
-          <img className={"sc-closed-icon"} src={launcherIcon} />
+        <div className={"sc-launcher-wrapper"} onClick={this.handleClick.bind(this)}>
+          
+          {isOpen?'':this._renderButton()}
+          <div className={classList.join(' ')} >
+            <img className={"sc-open-icon"} src={launcherIconActive} />
+          </div>
         </div>
+
         <ChatWindow
           messageList={this.props.messageList}
           onUserInputSubmit={this.props.onMessageWasSent}
