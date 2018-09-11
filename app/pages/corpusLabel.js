@@ -7,7 +7,7 @@ import {fetchintent, postIntent, deleteIntent, putIntent, putIntentParameter, ad
 
 import {fetchEntityList, certainEntity, updateEntity, deleteEntity, addEntity, entityReference} from 'actions/entity'
 
-import {PatternList, PhraseList, EntityParameters, IntentList, IntentDesc, EntityTable, ActionsList,EditEntity} from "components/index";
+import {PatternList, PhraseList, EntityParameters, IntentList, IntentTitle, IntentDesc, EntityTable, ActionsList,EditEntity} from "components/index";
 import {EntityDesc} from 'components/entityDesc'
 import {Logout} from 'components/logout'
 import {ChatPage} from 'components/chatpage/chatpage'
@@ -420,8 +420,8 @@ export default class CorpusLabel extends Component {
                         this.state.intentOrEntity == 'intent' ? 
                         <div style={{height: '100%', overflow: 'auto'}}>
                             {!intentResult.loading ? <div className="container" style={style.body}>
-                                <IntentDesc name={this.state.name} zhName={this.state.zhName}
-                                            modelPath={this.state.modelPath} mode={this.state.intentMode} intentId={this.state.intentId} editIntent={this.editIntent}/>
+                                <IntentTitle modelPath={this.state.modelPath} agent={agentName} mode={this.state.intentMode} addintent={this.addintent}/>
+                                <IntentDesc name={this.state.name} zhName={this.state.zhName} modelPath={this.state.modelPath} mode={this.state.intentMode} intentId={this.state.intentId} editIntent={this.editIntent} deleteIntent={this.deleteIntent}/>
                                 <EntityParameters entityList={entitySlideResult.children} entityParam={this.state.entityParam} agent={agentName} intentId={this.state.intentId} name={this.state.name} zhName={this.state.zhName} modelPath={this.state.modelPath} mode={this.props.mode} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues} addIntentParameter={this.addIntentParameter} deleteIntentParameter={this.deleteIntentParameter} putIntentParameter={this.editIntentParameter} putIntentParameterEntity={this.putIntentParameterEntity}/>
                                 <PatternList key={this.state.pattenListKey} agentName={agentName} intent={this.state.name} intentId={this.state.intentId}
                                              corpusType={this.state.type} updatePhrase={this.getPhrase} phraseArray={this.state.phraseArray} entityParam={this.state.entityParam} positivePatterns={this.state.positivePatterns} negativePatterns={this.state.negativePatterns} getPatternList={this.getPatternList}/>

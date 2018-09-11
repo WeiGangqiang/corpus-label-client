@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Form, Input, Col, Row, message, Icon} from 'antd'
+import { Form, Input, Col, Row, message, Icon, Modal} from 'antd'
 
 
 @Form.create({
@@ -12,6 +12,7 @@ export class IntentDesc extends Component {
         super(props)
         this.state = {
             editState: false,
+            deleteVisible: false,
             name: '',
             zhName: ''
         }
@@ -27,20 +28,39 @@ export class IntentDesc extends Component {
                 lineHeight: '55px'
             },
             box:{
-                padding: '0 15px',
-                borderBottom: '1px solid #dadada',
-                marginBottom: '10px'
+                padding: '0 15px'
             }
         };
         return <div style={style.box}>
             {
                 this.state.editState ? <Icon type="save" onClick={this.editBaseMsg}  className='edit-icon'/> :  <Icon onClick={this.editBaseMsg} className='edit-icon' type="edit"/>
             }
+            <Icon type='delete' className='edit-icon' onClick={this.showDeleteModal}></Icon>
             <p style={style.subtitleCss}> 基本信息 </p>
         </div>
     };
 
+    showDeleteModal = () => {
+        if(this.props.mode != 'local'){
+            this.setState({
+                deleteVisible: true
+            })
+        }else{
+            message.info('由于该意图mode值为local，不允许删除')
+        }
 
+    };
+
+    hideDeleteModal = () => {
+        this.setState({
+            deleteVisible: false
+        })
+    };
+
+    delete = () => {
+        this.props.deleteIntent(this.props.intentId);
+        this.hideDeleteModal()
+    };
     editBaseMsg = () => {
         if(this.state.editState){
             let param = {
@@ -146,6 +166,15 @@ export class IntentDesc extends Component {
                         </Col>
                     </div>
                 </Row>
+                <Modal
+                    title="删除提示"
+                    visible={this.state.deleteVisible}
+                    centered
+                    onOk={this.delete}
+                    onCancel={this.hideDeleteModal}
+                >
+                    确定删除{this.props.name}意图,他的子意图也会被删掉，确定删除吗？
+                </Modal>
             </div>
         )
     }

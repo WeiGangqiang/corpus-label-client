@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import { Table , Icon, Input, Select, Button, message, Popconfirm} from 'antd'
 
+import {InputValidate} from 'components/index'
+
 const Option = Select.Option;
 
 export class EntityParameters extends Component {
@@ -47,9 +49,9 @@ export class EntityParameters extends Component {
         });
     };
 
-    inputName = (e) => {
+    inputName = (value) => {
         this.setState({
-            name: e.target.value
+            name: value
         })
     };
 
@@ -151,7 +153,8 @@ export class EntityParameters extends Component {
                     if(record.entity){
                         return that.state.nameEditArray[index] ? <input className='inputOrigin' placeholder={text} defaultValue={record.name} onBlur={that.updateName.bind(that, record,index)}/> : <span style={{display: 'block'}} onClick={that.changeInput.bind(that,index)}>{record.name}</span>}
                     else{
-                        return <Input className='bb' defaultValue='' onInput={that.inputName}/>
+                        // return <Input className='bb' defaultValue='' onInput={that.inputName}/>
+                        return <InputValidate setName={that.inputName}/>
                     }
                 }
             },
@@ -201,7 +204,6 @@ export class EntityParameters extends Component {
                                     {that._renderDeleteButton(record)}
                                 </div>)
                         } else if(record.valuesShow.length <= 10){
-                            console.log(record);
                             return ( <div>
                                 {that._renderDeleteButton(record)}
                                 <Button className='button-icon' icon='down' onClick={that.showMoreValues.bind(that, index)}/>
