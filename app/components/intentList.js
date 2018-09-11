@@ -131,9 +131,9 @@ export class IntentList extends Component {
         });
     };
 
-    showDelIntent = (e) => {
-        // e.stopPropagation()
+    showDelIntent = (e) => {        
         if (this.state.intentId.length && this.state.mode != 'local') {
+            console.log('has follow up', this.props.hasFollowUpIntent(this.state.modelPath))
             this.setState({
                 delIntentVisible: true
             })
@@ -345,7 +345,7 @@ export class IntentList extends Component {
                     onCancel={this.hideDelIntent}
                     onOk={this.delIntent}
                 >
-                    删除此意图，他的子意图也会被删掉，确定删除吗？
+                    你确定要删除当前意图吗？
                 </Modal>
 
                 <EditEntity entityAddVisible={this.state.entityAddVisible} hideAddEntity={this.hideAddEntity} handleEntitySubmit={this.handleEntitySubmit}/>

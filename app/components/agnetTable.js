@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {Row, Col, Icon, Modal, Button, message} from 'antd'
-import {packageAgent} from 'actions/serve'
+import {publishAgent} from 'actions/serve'
 
 @connect((state, props) => ({
     config: state.config
@@ -51,11 +51,8 @@ export class AgentTable extends Component {
 
     package = () => {
         message.info('开始部署，可能需要几分钟，请等待');
-        this.props.dispatch(packageAgent('?agent=' + this.props.agent.name + '&agentId=' + this.props.agent.agentId, data => {
-            // this.setState({
-            //     packageVisible: true
-            // })
-            message.info('部署完成')
+        this.props.dispatch(publishAgent({agent: this.props.agent.name, agentId: this.props.agent.agentId}, data => {
+            message.info(this.props.agent.name + '升级部署完成')
         }, error => {
             message.error('部署失败');
             console.log(error)
@@ -198,7 +195,7 @@ export class AgentTable extends Component {
                 <Row style={style.row}>
                     <Col className='bottom-line' style={style.col} xs={12} sm={12} md={12} lg={12} xl={6}>
                         <Link style={style.link} to={{
-                            pathname: '/intentList',
+                            pathname: '/corpusLabel',
                             search: '?agent=' + this.props.agent.name,
                         }}>配置语料</Link>
                     </Col>

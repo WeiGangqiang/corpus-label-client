@@ -48,10 +48,10 @@ const selectService = (location, cb) => {
     }, 'selectService')
 };
 
-const intentList = (location, cb) => {
+const corpusLabel = (location, cb) => {
     require.ensure([], (require) => {
-        cb(null, require('./pages/intentList').default)
-    }, 'intentList')
+        cb(null, require('./pages/corpusLabel').default)
+    }, 'corpusLabel')
 };
 
 const unknownSays = (location, cb) => {
@@ -84,7 +84,7 @@ export default () => (
         <Route path="/" component={App}  onEnter={requireAuth}>
             <IndexRoute getComponent={selectService}/>
             <Route path="/selectService" getComponent={selectService}/>
-            <Route path="/intentList" query='agent' getComponent={intentList}></Route>
+            <Route path="/corpusLabel" query='agent' getComponent={corpusLabel  }></Route>
             <Route path="/unknown"  query='agent' getComponent={unknownSays}></Route>
         </Route>
         <Route path="/login" getComponent={Login} />

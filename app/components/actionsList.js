@@ -22,7 +22,7 @@ export class ActionsList extends Component {
                     zhName: '文本回复'
                 },
                 {
-                    name: 'api',
+                    name: 'api-call',
                     zhName: '函数调用'
                 },
                 {
