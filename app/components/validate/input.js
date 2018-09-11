@@ -33,8 +33,8 @@ export class InputValidate extends Component{
                     rules: [
                         {required: true, message: '请输入变量名'},
                         {
-                            pattern: /^[0-9a-zA-Z-]+$/,
-                            message: '只允许数字字母-'
+                            pattern: /^[a-zA-Z][0-9a-zA-Z-]*$/,
+                            message: '字母开头，数字字母-'
                         }
                     ]
                 })(<Input

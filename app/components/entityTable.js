@@ -47,7 +47,24 @@ export class EntityTable extends Component {
         }
 
 
-    }
+    };
+
+    addWord = (e) => {
+        const name = e.target.value.replace(/\s/g, '');
+        if(this.props.data.mode != 'local'){
+            if(name){
+                let item = this.state.newPhrase ? name + ',' + this.state.newPhrase.replace(/，/g,',') : name;
+                this.props.data.items = this.props.data.items.filter(item => item!='');
+                this.props.updateEntity({
+                    name: this.props.data.name,
+                    entityId: this.props.data.entityId,
+                    items: [...this.props.data.items, item]
+                })
+            }
+        }else{
+            message.info('该实体mode值为local，不允许操作')
+        }
+    };
 
     updateItem = (index, e) => {
         if(this.props.data.mode!='local'){
@@ -170,7 +187,7 @@ export class EntityTable extends Component {
                     if(record){
                         return that.state.wordState[index] ? <Input defaultValue={record.split(',')[0]} placeholder='词条名' autoFocus={true} onPressEnter={that.changeWord.bind(that,index)} onBlur={that.changeWord.bind(that,index)}/> : <span onClick={that.showInput.bind(that,index)}>{record.split(',')[0]}</span>
                     }else{
-                        return <Input placeholder='词条名' onInput={that.newWord}/>
+                        return <Input placeholder='词条名' onInput={that.newWord} onPressEnter={that.addWord}/>
                     }
                 }
             },
