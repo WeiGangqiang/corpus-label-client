@@ -29,4 +29,4 @@ export const addAgent = createAjaxAction(serve.addAgent);
 
 export const updateAgent = createAjaxAction(serve.updateAgent);
 
-export const packageAgent = createAjaxAction(serve.packageAgent);
+export const publishAgent = createAjaxAction(serve.publishAgent);

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Table , Icon, Input, Select, Button, message} from 'antd'
+import { Table , Icon, Input, Select, Button, message, Popconfirm} from 'antd'
 
 import {InputValidate} from 'components/index'
 
@@ -23,16 +23,6 @@ export class EntityParameters extends Component {
     showLessValues(i) {
         this.props.showLessValues(i)
     }
-
-    getTitle = () => {
-        const subtitleCss = {
-            fontSize: '20px',
-            fontWeight: 'bold',
-            marginBottom: '0px',
-            lineHeight: '40px',
-        }
-        return <p style={subtitleCss}> 槽位信息 </p>
-    };
 
     handleChange = (value) => {
         this.setState({
@@ -142,6 +132,14 @@ export class EntityParameters extends Component {
         })
     };
 
+    _renderDeleteButton (record) {
+        return (
+            <Popconfirm placement="top" title="你确认要删除吗" onConfirm={this.deleteItems.bind(this,record)} okText="是" cancelText="否">
+                <Button className='button-icon' icon='delete'></Button>
+            </Popconfirm>
+        )
+    } 
+
     columns = () => {
         const that = this
 
@@ -202,21 +200,18 @@ export class EntityParameters extends Component {
                 render(text, record, index) {
                     if(record.entity){
                         if(record.values.length <= 10){
-                            return (<div><Button className='button-icon' onClick={that.deleteItems.bind(that,record)} icon={'delete'}></Button></div>)
+                            return (<div>
+                                    {that._renderDeleteButton(record)}
+                                </div>)
                         } else if(record.valuesShow.length <= 10){
                             return ( <div>
-                                <Button className='button-icon' onClick={that.deleteItems.bind(that,record)} icon='delete'></Button>
-                                {/*<Icon style={{float: 'right'}} onClick={that.deleteItems.bind(that,record.entity)} type="delete"/>*/}
-                                <Button className='button-icon' icon='down' onClick={that.showMoreValues.bind(that, index)}></Button>
-                                {/*<Icon style={{float: 'right'}} onClick={that.showMoreValues.bind(that, index)} type='down'/>*/}
+                                {that._renderDeleteButton(record)}
+                                <Button className='button-icon' icon='down' onClick={that.showMoreValues.bind(that, index)}/>
                             </div>)
                         } else {
                             return (<div>
-                                <Button className='button-icon' icon='delete' onClick={that.deleteItems.bind(that,record)}></Button>
-                                {/*<Icon  style={{float: 'right'}} onClick={that.deleteItems.bind(that,record.entity)} type="delete"/>*/}
-                                <Button className='button-icon' icon='up' onClick={that.showLessValues.bind(that, index)}>
-                                    {/*<Icon style={{float: 'right'}} onClick={that.showLessValues.bind(that, index)} type='up'/>*/}
-                                </Button>
+                                {that._renderDeleteButton(record)}
+                                <Button className='button-icon' icon='up' onClick={that.showLessValues.bind(that, index)}/>
                             </div>)
                         }
                     }else{
@@ -229,31 +224,16 @@ export class EntityParameters extends Component {
     }
 
     render() {
-        const style = {
-            entityContainer: {
-                marginTop: '15px',
-                background: '#fbfbfb',
-                borderRadius: '15px',
-                marginBottom: '15px',
-                padding: '0 15px',
-                paddingEnd: '10px'
-            }
-        };
         return (
-            <div style={style.entityContainer}>
-                {this.getTitle()}
+            <div className="table-container">
+                <p className='table-container-title'> 槽位信息 </p>
                 <Table
                     dataSource={this.props.entityParam}
                     columns={this.columns()}
                     bordered
                     pagination={false}
                 />
-                <div>
-
-                </div>
-                <div style={{ height: '10px' }}> </div>
             </div>
-
         )
     }
 }

@@ -30,7 +30,8 @@ export class IntentList extends Component {
             intentName: '',
             modelPath: '',
             defaultModelPath: '',
-            mode: ''
+            mode: '',
+            children: []
         }
     }
 
@@ -52,7 +53,8 @@ export class IntentList extends Component {
             intentId: node.props.dataRef && node.props.dataRef.intentId,
             modelPath: node.props.dataRef && node.props.dataRef.modelPath,
             defaultModelPath:  node.props.dataRef && node.props.dataRef.modelPath,
-            mode: node.props.dataRef && node.props.dataRef.mode
+            mode: node.props.dataRef && node.props.dataRef.mode,
+            children: node.props.dataRef && node.props.dataRef.children
         })
     };
 
@@ -130,9 +132,12 @@ export class IntentList extends Component {
         });
     };
 
-    showDelIntent = (e) => {
-        // e.stopPropagation()
+    showDelIntent = (e) => {        
         if (this.state.intentId.length && this.state.mode != 'local') {
+            if(this.state.children.length > 0){
+                message.info('需要首先删除子意图，才能删除当前意图') 
+                return    
+            }
             this.setState({
                 delIntentVisible: true
             })
@@ -265,9 +270,6 @@ export class IntentList extends Component {
                         <li onClick={this.showAddIntent} className="hoverLi" style={style.positionLi}>新增子意图</li>
                         <li onClick={this.showDelIntent} className="hoverLi" style={style.positionLi}>删除此意图</li>
                     </ul>
-                    <ul style={{...style.positionUl, top:this.state.top, left: this.state.left,display: this.state.showEntityUl, height: '40px'}}>
-                        <li onClick={this.showAddEntity} className="hoverLi" style={style.positionLi}>新增实体</li>
-                    </ul>
                 </div>
                 <Modal
                     title='新增'
@@ -344,7 +346,7 @@ export class IntentList extends Component {
                     onCancel={this.hideDelIntent}
                     onOk={this.delIntent}
                 >
-                    删除此意图，他的子意图也会被删掉，确定删除吗？
+                    你确定要删除当前意图吗？
                 </Modal>
 
                 <EditEntity entityAddVisible={this.state.entityAddVisible} hideAddEntity={this.hideAddEntity} handleEntitySubmit={this.handleEntitySubmit}/>

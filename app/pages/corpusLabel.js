@@ -8,6 +8,8 @@ import {fetchintent, postIntent, deleteIntent, putIntent, putIntentParameter, ad
 import {fetchEntityList, certainEntity, updateEntity, deleteEntity, addEntity, entityReference} from 'actions/entity'
 
 import {PatternList, PhraseList, EntityParameters, IntentList, IntentTitle, IntentDesc, EntityTable, ActionsList,EditEntity} from "components/index";
+import {EntityDesc} from 'components/entityDesc'
+import {Logout} from 'components/logout'
 import {ChatPage} from 'components/chatpage/chatpage'
 
 let agentName = '';
@@ -20,7 +22,7 @@ let agentName = '';
     entitySlideResult: state.entitySlideResult
 }))
 
-export default class intentList extends Component {
+export default class CorpusLabel extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -235,6 +237,10 @@ export default class intentList extends Component {
     };
 
     deleteEntity = (obj) => {
+        if(this.state.entityRefrence.length){
+            message.info('该实体有多处引用，不允许删除')
+            return
+        }
         this.props.dispatch(deleteEntity('?agent=' + agentName + '&entityId=' + obj.entityId, data => {
             this.props.dispatch(fetchEntityList('?agent=' + agentName, data => {
                 this.initEntity({key:data[0]})
@@ -393,32 +399,19 @@ export default class intentList extends Component {
             modalFootBtn:{
                 marginLeft: '8px'
             },
-            baseInfo: {
-                height: 'auto',
-                background: '#fbfbfb',
-                padding: '0 15px',
-                fontSize: '14px',
-                marginBottom: '30px',
-                borderBottomLeftRadius: '15px',
-                borderBottomRightRadius: '15px'
-            },
-            col: {
-                lineHeight: '40px',
-                paddingLeft: '70px'
-            },
-            span: {
-                float: 'left',
-                width: '70px',
-                marginLeft: '-70px'
-            },
+
         };
 
         return <Spin spinning={intentResult.loading}>
             <div className='intent-inner-container'>
-                <Link className='bread-cruft' to={'/selectService'}>
-                    <Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择
+                <div className='bread-cruft'>
+                    <Link to={'/selectService'}>
+                        <Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择
+                    </Link>
                     <Icon onClick={this.showMenu} className="menu-fold" type="menu-fold" />
-                </Link>
+                    <Logout/>
+                </div>
+             
                 <div style={style.innerBox} className='intentContainer'>
                     <IntentList originEntity={[intentResult.data]} intentId={this.state.intentId} agent={agentName} getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity} addintent={this.addintent} deleteIntent={this.deleteIntent} handleEntitySubmit={this.handleEntitySubmit} showMenu={this.state.showMenu}/>
                     {
@@ -432,10 +425,10 @@ export default class intentList extends Component {
                                              corpusType={this.state.type} updatePhrase={this.getPhrase} phraseArray={this.state.phraseArray} entityParam={this.state.entityParam} positivePatterns={this.state.positivePatterns} negativePatterns={this.state.negativePatterns} getPatternList={this.getPatternList}/>
 
                                 <PhraseList intent={this.state.name} agent={agentName} intentId={this.state.intentId} phraseArray={this.state.phraseArray} updatePhraseArray={this.getPhrase}  reloadPatterns={this.reloadPatterns}/>
-                                <div style={{position: 'fixed', top: '80px', right: '60px'}}>
-                                    <ChatPage/>
-                                </div>
                                 <ActionsList agentName={agentName} intentId={this.state.intentId} intentMode={this.state.intentMode}/>
+                                <div style={{position:'fixed', zIndex: 500}}>
+                                    <ChatPage agentName={agentName}/>
+                                </div>
                             </div> : ''}
                         </div> : 
                         <div className='entity-container'>
@@ -443,24 +436,8 @@ export default class intentList extends Component {
                                 <span style={{fontSize: '20px',fontWeight: 'bold'}}>实体</span>
                                 <span className='add-new-button' onClick={this.showAddEntity}>新增</span>
                             </div>
-                            <div style={{overflow: 'auto'}}>
-                                <Row style={style.baseInfo}>
-                                    <Col style={style.col} span={10} xs={24} sm={12} xl={10}>
-                                        <span style={style.span}>名字:</span>
-                                        <div>{this.state.certainEntity&&this.state.certainEntity.name}</div>
-                                    </Col>
-                                    <Col style={style.col} span={10} xs={24} sm={12} xl={10}>
-                                        <span style={style.span}>中文名字:</span>
-                                        <div>{this.state.certainEntity&&this.state.certainEntity.zhName}</div>
-                                    </Col>
-                                    <Col style={style.col} span={4} xs={24} sm={12} xl={4}>
-                                        <span style={style.span}>类型:</span>
-                                        <div>枚举</div>
-                                    </Col>
-                                </Row>
-                            </div>
-
-                            <EntityTable data={this.state.certainEntity} entityRefrence={this.state.entityRefrence} updateEntity={this.updateEntity} deleteEntity={this.deleteEntity} updateEntity={this.updateEntity}/>
+                            <EntityDesc entity={this.state.certainEntity} deleteEntity={this.deleteEntity}  />
+                            <EntityTable data={this.state.certainEntity} entityRefrence={this.state.entityRefrence} updateEntity={this.updateEntity} updateEntity={this.updateEntity}/>
                             <EditEntity entityAddVisible={this.state.entityAddVisible} hideAddEntity={this.hideAddModal} handleEntitySubmit={this.handleEntitySubmit}/>
                         </div>
                     }

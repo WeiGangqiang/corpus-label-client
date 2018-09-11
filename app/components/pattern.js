@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Button, Row, Col, Icon, Modal} from 'antd'
+import {Button, Row, Col, Icon, Modal, Popconfirm} from 'antd'
 import {ColorDownList} from "./colorDownList";
 import {generate} from 'actions/intent'
 
@@ -242,7 +242,9 @@ export class PatternLine extends Component {
         }
         return (<Row className="corpusItem" style={style.corpusBox}>
             <Col style={style.colRight}>
-                <span onClick={this.removePattern}> <Icon type="delete" style={style.delete} /></span>
+                <Popconfirm placement="top" title="你确认要删除吗" onConfirm={this.removePattern} okText="是" cancelText="否">
+                    <span> <Icon type="delete" style={style.delete} /></span>
+                </Popconfirm>
             </Col>
             <Col style={style.colRight}>
                 <span onClick={this.showPattern}> <Icon type="appstore-o" style={style.delete}/></span>

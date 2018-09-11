@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {Link} from 'react-router'
 import {Icon} from 'antd'
+import {Logout} from 'components/logout'
 
 export default class Header extends Component {
     // 初始化页面常量 绑定事件方法
@@ -20,7 +21,7 @@ export default class Header extends Component {
     render() {
         return (
            <div className='header-container' >
-               <img style={{height: '100%'}} src="images/logo.png" alt=""/>
+               <img style={{height: '100%'}} src="images/main-logo.svg" alt=""/>
                <Icon onClick={this.showMenu} className="menu-fold" type="menu-fold" />
                <div className={`sliderBar-container sliderBar-top-container ${this.state.menuShow? 'heightAuto': ''}`}>
                    <div>操作</div>
@@ -28,6 +29,7 @@ export default class Header extends Component {
                    <Link className='sliderItem'>公共应用</Link>
                    <Link className='sliderItem'>帮助文档</Link>
                </div>
+               <Logout/>
            </div>
         )
     }

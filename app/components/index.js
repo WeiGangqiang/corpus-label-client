@@ -4,7 +4,7 @@ import {EntityParameters} from "./entity";
 import {IntentList} from "./intentList";
 import {PatternList} from "./patternList";
 import {IntentDesc} from "./IntentDesc";
-import {AgentTable} from "./agnetTable";
+import {AgentTable} from "./agentTable";
 import {EntityTable} from "./entityTable";
 import {UnknownPatternLine} from "./unknowPatternLine";
 import {UnknownPatternList} from "./unknownPatternList";

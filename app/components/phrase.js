@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {putPhrase, deletePhrase, postPhrase, patternsSync} from 'actions/intent'
-import {Table,Form,Button,Input,Icon} from 'antd'
+import {Table,Form,Button,Input,Icon,Popconfirm} from 'antd'
 
 
 const FormItem = Form.Item
@@ -106,15 +106,14 @@ export class PhraseList extends Component {
         }
     }
 
-    getTitle = () => {
-        const subtitleCss = {
-            fontSize: '20px',
-            fontWeight: 'bold',
-            marginBottom: '0px',
-            lineHeight: '40px'
-        }
-        return <p style={subtitleCss}> 近义词列表 </p>
-    };
+    _renderDeleteButton (record) {
+        return (
+            <Popconfirm placement="top" title="你确认要删除吗" onConfirm={this.delPhraseItem.bind(this, record)}
+                okText="是" cancelText="否">
+                <Button className='button-icon' icon='delete'/>
+            </Popconfirm>
+        )
+    }
 
     columns = () => {
         const style = {
@@ -170,7 +169,11 @@ export class PhraseList extends Component {
                 key: 'delete',
                 width: '10%',
                 render(text, record, index) {
-                    return record.intentId?<Button className='button-icon' icon='delete' onClick={that.delPhraseItem.bind(that, record)}></Button>:<Button className='button-icon' icon='delete' disabled></Button>
+                    if (record.intentId) {
+                        return that._renderDeleteButton(record)
+                    } else {
+                        return <Button className='button-icon' icon='delete' disabled></Button>
+                    }
                 }
             }
         ]
@@ -178,13 +181,6 @@ export class PhraseList extends Component {
 
     render() {
         const style = {
-            phraseContainer: {
-                marginTop: '15px',
-                background: '#fbfbfb',
-                borderRadius: '15px',
-                padding: '10px 15px',
-                marginBottom: '50px',
-            },
 
             tableBox: {
                 marginBottom: '20px'
@@ -216,8 +212,8 @@ export class PhraseList extends Component {
             }
         }
         return (
-            <div style={style.phraseContainer}>
-                {this.getTitle()}
+            <div className="table-container">
+                <p className="table-container-title"> 近义词列表 </p>
                 <Table
                     dataSource={this.props.phraseArray}
                     columns={this.columns()}

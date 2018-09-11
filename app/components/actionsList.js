@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Table, Button, Icon, Input, Select, message} from 'antd'
+import {Table, Button, Icon, Input, Select, message, Popconfirm} from 'antd'
 
 import {getIntentActions, updateIntentActions} from 'actions/intent'
 
@@ -22,7 +22,7 @@ export class ActionsList extends Component {
                     zhName: '文本回复'
                 },
                 {
-                    name: 'api',
+                    name: 'api-call',
                     zhName: '函数调用'
                 },
                 {
@@ -51,16 +51,6 @@ export class ActionsList extends Component {
         }, err=> {
 
         }))
-    }
-
-    getTitle = () => {
-        const subtitleCss = {
-            fontSize: '20px',
-            fontWeight: 'bold',
-            marginBottom: '0px',
-            lineHeight: '40px'
-        }
-        return <p style={subtitleCss}> 动作 </p>
     }
 
     getActions = () => {
@@ -139,7 +129,11 @@ export class ActionsList extends Component {
 
     getOperators = (record, index) => {
         if(record.type){
-            return <Button className='button-icon' icon='delete' onClick={this.updateAction.bind(this, index, 'delete')}></Button>
+            return (
+                <Popconfirm placement="top" title="你确认要删除吗" onConfirm={this.updateAction.bind(this, index, 'delete')} okText="是" cancelText="否">
+                    <Button className='button-icon' icon='delete'></Button>
+                </Popconfirm>
+            )
         }else{
             return <Button className='button-icon' icon='plus' onClick={this.updateAction.bind(this,0,'new')} disabled={this.state.type == ''}></Button>
         }
@@ -211,28 +205,18 @@ export class ActionsList extends Component {
     }
 
     render(){
-        const style = {
-            actionsContainer: {
-                marginTop: '15px',
-                background: '#fbfbfb',
-                borderRadius: '15px',
-                padding: '10px 15px',
-                marginBottom: '50px',
-            }
-        }
         if(this.props.intentMode == "local"){
             return (<div/>)
         }
 
-        return (<div style={style.actionsContainer}>
-            {this.getTitle()}
+        return (<div className='table-container'>
+            <p className='table-container-title'> 动作 </p>
             <Table
                 dataSource={this.getActions()}
                 columns={this.columns()}
                 bordered
                 pagination={false}
             />
-            <div style={{ height: '10px' }}> </div>
         </div>)
     }
 }

@@ -18,7 +18,7 @@ export class ChatPage extends Component {
 
   _onMessageWasSent(message) {
     this._pushMessage(message)
-    axios.post('http://106.15.177.105/westore/chatbot', message)
+    axios.post(`http://xiaoda.ai/corpus-live-chat/chatbot/${sessionStorage.getItem('user')}/${this.props.agentName}`, message)
       .then((response) => {
         this._pushMessage(response.data)
       })
