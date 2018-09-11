@@ -59,18 +59,6 @@ export class EntityTable extends Component {
         }
     }
 
-    deleteEntity = () => {
-        if(this.props.data.mode!='local'){
-            if(this.props.entityRefrence.length){
-                message.info('该实体有多处引用，不允许删除')
-            }else{
-                this.props.deleteEntity(this.props.data)
-            }
-        }else{
-            message.info('该实体不允许删除')
-        }
-    };
-
     showInput = (index) => {
         let arr = [];
         this.props.data.items && this.props.data.items.map(item => {
@@ -321,7 +309,6 @@ export class EntityTable extends Component {
                 ></Table>
 
                <div>
-                   <Button style={{display: 'block',width: '100%', margin: '10px 0'}} type="primary" onClick={this.deleteEntity}>删除实体</Button>
                    <span>实体的引用</span>
                    <Table
                        dataSource={this.props.entityRefrence}

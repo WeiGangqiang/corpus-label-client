@@ -21,7 +21,7 @@ export default class Header extends Component {
     render() {
         return (
            <div className='header-container' >
-               <img style={{height: '100%'}} src="images/logo.png" alt=""/>
+               <img style={{height: '100%'}} src="images/main-logo.svg" alt=""/>
                <Icon onClick={this.showMenu} className="menu-fold" type="menu-fold" />
                <div className={`sliderBar-container sliderBar-top-container ${this.state.menuShow? 'heightAuto': ''}`}>
                    <div>操作</div>
