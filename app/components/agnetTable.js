@@ -195,7 +195,7 @@ export class AgentTable extends Component {
                 <Row style={style.row}>
                     <Col className='bottom-line' style={style.col} xs={12} sm={12} md={12} lg={12} xl={6}>
                         <Link style={style.link} to={{
-                            pathname: '/intentList',
+                            pathname: '/corpusLabel',
                             search: '?agent=' + this.props.agent.name,
                         }}>配置语料</Link>
                     </Col>
