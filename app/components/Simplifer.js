@@ -99,8 +99,8 @@ export class Simplifier extends Component {
         }
 
         return <Row>
-                <Col span ={12}><Button type="primary" style={styleButten} onClick = {this.addSimpliferSentence} icon ="check">接受</Button> </Col>
-                <Col span ={12}><Button type="danger" style={styleButten} onClick = {this.addOrignalSentence} icon ="close">拒绝</Button> </Col>
+                <Col span ={12}><Button className='simpliferBtn' type="primary" style={styleButten} onClick = {this.addSimpliferSentence} icon ="check">接受</Button> </Col>
+                <Col span ={12}><Button className='simpliferBtn' type="danger" style={styleButten} onClick = {this.addOrignalSentence} icon ="close">拒绝</Button> </Col>
                 </Row>
     }
 
@@ -133,7 +133,7 @@ export class Simplifier extends Component {
                     <Form style={{ width: '100%' }} layout="inline">
                         <FormItem style={{width: '100%'}} wrapperCol={style.wrapperCol}>
                             {getFieldDecorator('newCorpus', {})(
-                                <Input autocomplete={false} style={{ width: '100%' }} placeholder="请输入新的语料" onPressEnter={this.onInputEnter}
+                                <Input autoComplete={'off'} style={{ width: '100%' }} placeholder="请输入新的语料" onPressEnter={this.onInputEnter}
                                     onBlur={this.corpusBlur} addonAfter={<Icon onClick={this.addCorpusToIntent} type="plus" />} />
                              )}
                         </FormItem>

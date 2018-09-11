@@ -103,7 +103,7 @@ export default class intentList extends Component {
                 data[i].valuesF = [...data[i].values]
                 for (let j = 0; j < data[i].valuesF.length; j++) {
                     let reg = /[\[\]]/g
-                    let labelReg = /\/L[0-9]/g
+                    let labelReg = /\/L[0-9]+/g
                     data[i].valuesF[j] = data[i].valuesF[j].replace(reg, '').replace(labelReg, '').replace(' ','')
                 }
                 data[i].valuesShow = [...data[i].valuesF.slice(0, 10)]

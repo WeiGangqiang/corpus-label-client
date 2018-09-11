@@ -198,9 +198,10 @@ export class EntityParameters extends Component {
                 width: '10%',
                 render(text, record, index) {
                     if(record.entity){
-                        if(record.values.length < 10){
-                            return (<div><Icon style={{float: 'right'}} onClick={that.deleteItems.bind(that,record)} type="delete"/></div>)
+                        if(record.values.length <= 10){
+                            return (<div><Button className='button-icon' onClick={that.deleteItems.bind(that,record)} icon={'delete'}></Button></div>)
                         } else if(record.valuesShow.length <= 10){
+                            console.log(record);
                             return ( <div>
                                 <Button className='button-icon' onClick={that.deleteItems.bind(that,record.entity)} icon='delete'></Button>
                                 {/*<Icon style={{float: 'right'}} onClick={that.deleteItems.bind(that,record.entity)} type="delete"/>*/}

@@ -151,12 +151,12 @@ export class EntityTable extends Component {
                 cursor: 'pointer'
             },
             span:{
-                padding: '0px 5px',
+                padding: '5px 11px',
                 background: '#bae7ff',
-                borderRadius: '2px',
+                borderRadius: '5px',
                 marginLeft: '5px',
                 display: 'inline-block',
-                lineHeight: '32px',
+                lineHeight: '22px',
                 marginTop: '5px',
             },
             input:{
@@ -177,7 +177,7 @@ export class EntityTable extends Component {
                     if(record){
                         return that.state.wordState[index] ? <Input defaultValue={record.split(',')[0]} placeholder='词条名' autoFocus={true} onPressEnter={that.changeWord.bind(that,index)} onBlur={that.changeWord.bind(that,index)}/> : <span onClick={that.showInput.bind(that,index)}>{record.split(',')[0]}</span>
                     }else{
-                        return <Input placeholder='词条名' onBlur={that.newWord}/>
+                        return <Input placeholder='词条名' onInput={that.newWord}/>
                     }
                 }
             },
@@ -200,7 +200,7 @@ export class EntityTable extends Component {
                             <Input placeholder='请输入近义词' style={style.input} onPressEnter={that.updateItem.bind(that,index)}/>
                         </block>
                     }else{
-                        return <Input placeholder='输入近义词' onBlur={that.newPhrase}/>
+                        return <Input placeholder='输入近义词' onInput={that.newPhrase}/>
                     }
                 }
             },
