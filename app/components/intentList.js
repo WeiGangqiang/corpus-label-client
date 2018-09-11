@@ -45,7 +45,6 @@ export class IntentList extends Component {
     };
 
     rightClickNode =({event, node}) => {
-        console.log(node.props.dataRef)
         this.setState({
             showUl: 'block',
             top: event.pageY + 14,

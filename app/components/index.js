@@ -10,7 +10,9 @@ import {UnknownPatternLine} from "./unknowPatternLine";
 import {UnknownPatternList} from "./unknownPatternList";
 import {ActionsList} from "./actionsList";
 import {IntentEdit} from "./intentEdit";
-import {EditEntity} from './entity/editEntity'
+import {EditEntity} from './entity/editEntity';
+import {InputValidate} from './validate/input';
+import {IntentTitle} from "./intentTitle";
 
 export {
     PatternLine,
@@ -25,5 +27,7 @@ export {
     UnknownPatternLine,
     ActionsList,
     IntentEdit,
-    EditEntity
+    EditEntity,
+    InputValidate,
+    IntentTitle
 }

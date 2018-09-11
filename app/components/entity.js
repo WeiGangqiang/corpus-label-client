@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import { Table , Icon, Input, Select, Button, message} from 'antd'
 
+import {InputValidate} from 'components/index'
+
 const Option = Select.Option;
 
 export class EntityParameters extends Component {
@@ -57,9 +59,9 @@ export class EntityParameters extends Component {
         });
     };
 
-    inputName = (e) => {
+    inputName = (value) => {
         this.setState({
-            name: e.target.value
+            name: value
         })
     };
 
@@ -153,7 +155,8 @@ export class EntityParameters extends Component {
                     if(record.entity){
                         return that.state.nameEditArray[index] ? <input className='inputOrigin' placeholder={text} defaultValue={record.name} onBlur={that.updateName.bind(that, record,index)}/> : <span style={{display: 'block'}} onClick={that.changeInput.bind(that,index)}>{record.name}</span>}
                     else{
-                        return <Input className='bb' defaultValue='' onInput={that.inputName}/>
+                        // return <Input className='bb' defaultValue='' onInput={that.inputName}/>
+                        return <InputValidate setName={that.inputName}/>
                     }
                 }
             },
@@ -201,16 +204,15 @@ export class EntityParameters extends Component {
                         if(record.values.length <= 10){
                             return (<div><Button className='button-icon' onClick={that.deleteItems.bind(that,record)} icon={'delete'}></Button></div>)
                         } else if(record.valuesShow.length <= 10){
-                            console.log(record);
                             return ( <div>
-                                <Button className='button-icon' onClick={that.deleteItems.bind(that,record.entity)} icon='delete'></Button>
+                                <Button className='button-icon' onClick={that.deleteItems.bind(that,record)} icon='delete'></Button>
                                 {/*<Icon style={{float: 'right'}} onClick={that.deleteItems.bind(that,record.entity)} type="delete"/>*/}
                                 <Button className='button-icon' icon='down' onClick={that.showMoreValues.bind(that, index)}></Button>
                                 {/*<Icon style={{float: 'right'}} onClick={that.showMoreValues.bind(that, index)} type='down'/>*/}
                             </div>)
                         } else {
                             return (<div>
-                                <Button className='button-icon' icon='delete' onClick={that.deleteItems.bind(that,record.entity)}></Button>
+                                <Button className='button-icon' icon='delete' onClick={that.deleteItems.bind(that,record)}></Button>
                                 {/*<Icon  style={{float: 'right'}} onClick={that.deleteItems.bind(that,record.entity)} type="delete"/>*/}
                                 <Button className='button-icon' icon='up' onClick={that.showLessValues.bind(that, index)}>
                                     {/*<Icon style={{float: 'right'}} onClick={that.showLessValues.bind(that, index)} type='up'/>*/}
