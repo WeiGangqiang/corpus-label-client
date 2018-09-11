@@ -45,7 +45,6 @@ export class EntityDesc extends Component {
               lineHeight: '55px'
           },
           box:{
-              padding: '0 15px',
               borderBottom: '1px solid #dadada',
               marginBottom: '10px'
           }

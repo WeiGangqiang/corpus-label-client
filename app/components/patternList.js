@@ -207,16 +207,7 @@ export class PatternList extends Component {
                 border: '1px solid #dadada',
                 overflow: 'auto'
             },
-            corpusBox: {
-                background: '#fbfbfb',
-                padding: '10px, 15px',
-                width: '100%',
-                height: '100%',
-                borderRadius: '15px',
-                marginBottom: '15px'
-            },
             corpusTab: {
-                padding: '10px 15px',
                 height: '500px',
             },
             corpusTabPane: {
@@ -226,8 +217,8 @@ export class PatternList extends Component {
         }
         const TabPane = Tabs.TabPane;
 
-        return (<div style={style.corpusBox}>
-               {this.getTitle()}
+        return (<div className='table-container'>
+            <p className='table-container-title'> 用户语料 </p>
             <Tabs type="card" style={style.corpusTab} defaultActiveKey="1" onChange={this.updateTabPane}>
                 <TabPane style={style.corpusTabPane} tab="正样本" key="positive">
                     <div ref="div" style={style.pBox}> {this.getPatternViews("positive")}</div>

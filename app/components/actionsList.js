@@ -53,16 +53,6 @@ export class ActionsList extends Component {
         }))
     }
 
-    getTitle = () => {
-        const subtitleCss = {
-            fontSize: '20px',
-            fontWeight: 'bold',
-            marginBottom: '0px',
-            lineHeight: '40px'
-        }
-        return <p style={subtitleCss}> 动作 </p>
-    }
-
     getActions = () => {
         return this.state.actions
     };
@@ -215,28 +205,18 @@ export class ActionsList extends Component {
     }
 
     render(){
-        const style = {
-            actionsContainer: {
-                marginTop: '15px',
-                background: '#fbfbfb',
-                borderRadius: '15px',
-                padding: '10px 15px',
-                marginBottom: '50px',
-            }
-        }
         if(this.props.intentMode == "local"){
             return (<div/>)
         }
 
-        return (<div style={style.actionsContainer}>
-            {this.getTitle()}
+        return (<div className='table-container'>
+            <p className='table-container-title'> 动作 </p>
             <Table
                 dataSource={this.getActions()}
                 columns={this.columns()}
                 bordered
                 pagination={false}
             />
-            <div style={{ height: '10px' }}> </div>
         </div>)
     }
 }

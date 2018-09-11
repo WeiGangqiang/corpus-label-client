@@ -12,6 +12,11 @@ export class EntityTable extends Component {
         }
     }
 
+    getTitle = () => {
+
+        return <p style={subtitleCss}> 近义词列表 </p>
+    };
+    
     newWord = (e) => {
         this.setState({
             newWord: e.target.value
@@ -264,14 +269,6 @@ export class EntityTable extends Component {
                 paddingLeft: '10px',
                 color: '#aaa'
             },
-            baseInfo: {
-                height: 'auto',
-                background: '#fbfbfb',
-                padding: '0 15px',
-                fontSize: '14px',
-                marginBottom: '30px',
-                borderRadius: '15px'
-            },
             col: {
                 lineHeight: '40px',
                 paddingLeft: '70px'
@@ -281,45 +278,35 @@ export class EntityTable extends Component {
                 width: '70px',
                 marginLeft: '-70px'
             },
+
         };
 
         return (
-            <div className="entity-table-container">
-                {/*<Row style={style.baseInfo}>*/}
-                    {/*<Col style={style.col} span={10} xs={24} sm={12} xl={10}>*/}
-                        {/*<span style={style.span}>名字:</span>*/}
-                        {/*<div>{this.props.data.name}</div>*/}
-                    {/*</Col>*/}
-                    {/*<Col style={style.col} span={10} xs={24} sm={12} xl={10}>*/}
-                        {/*<span style={style.span}>中文名字:</span>*/}
-                        {/*<div>{this.props.data.zhName}</div>*/}
-                    {/*</Col>*/}
-                    {/*<Col style={style.col} span={4} xs={24} sm={12} xl={4}>*/}
-                        {/*<span style={style.span}>类型:</span>*/}
-                        {/*<div>枚举</div>*/}
-                    {/*</Col>*/}
-                {/*</Row>*/}
+            <div>
+                <div className="entity-table-container table-container">
+                    <span className="table-container-title">近义词列表</span>
+                    <Table
+                        dataSource={this.props.data.items && this.props.data.items}
+                        columns={this.columns()}
+                        bordered
+                        pagination={false}
+                        scroll={{x:600}}
+                    ></Table>
+                </div>
+                <div className="entity-table-container table-container">
+                    <span className="table-container-title">实体的引用</span>
+                    <Table
+                        dataSource={this.props.entityRefrence}
+                        columns={this.columnsRefrence()}
+                        bordered
+                        pagination={false}
+                        scroll={{x:600}}
+                    >
+                    </Table>
+                </div>
 
-                <Table
-                    dataSource={this.props.data.items && this.props.data.items}
-                    columns={this.columns()}
-                    bordered
-                    pagination={false}
-                    scroll={{x:600}}
-                ></Table>
-
-               <div>
-                   <span>实体的引用</span>
-                   <Table
-                       dataSource={this.props.entityRefrence}
-                       columns={this.columnsRefrence()}
-                       bordered
-                       pagination={false}
-                       scroll={{x:600}}
-                   >
-                   </Table>
-               </div>
             </div>
+
         )
     }
 }

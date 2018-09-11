@@ -425,10 +425,10 @@ export default class CorpusLabel extends Component {
                                              corpusType={this.state.type} updatePhrase={this.getPhrase} phraseArray={this.state.phraseArray} entityParam={this.state.entityParam} positivePatterns={this.state.positivePatterns} negativePatterns={this.state.negativePatterns} getPatternList={this.getPatternList}/>
 
                                 <PhraseList intent={this.state.name} agent={agentName} intentId={this.state.intentId} phraseArray={this.state.phraseArray} updatePhraseArray={this.getPhrase}  reloadPatterns={this.reloadPatterns}/>
+                                <ActionsList agentName={agentName} intentId={this.state.intentId} intentMode={this.state.intentMode}/>
                                 <div style={{position:'fixed', zIndex: 500}}>
                                     <ChatPage agentName={agentName}/>
                                 </div>
-                                <ActionsList agentName={agentName} intentId={this.state.intentId} intentMode={this.state.intentMode}/>
                             </div> : ''}
                         </div> : 
                         <div className='entity-container'>

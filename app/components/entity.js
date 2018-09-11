@@ -22,16 +22,6 @@ export class EntityParameters extends Component {
         this.props.showLessValues(i)
     }
 
-    getTitle = () => {
-        const subtitleCss = {
-            fontSize: '20px',
-            fontWeight: 'bold',
-            marginBottom: '0px',
-            lineHeight: '40px',
-        }
-        return <p style={subtitleCss}> 槽位信息 </p>
-    };
-
     handleChange = (value) => {
         this.setState({
             entity: value
@@ -232,31 +222,16 @@ export class EntityParameters extends Component {
     }
 
     render() {
-        const style = {
-            entityContainer: {
-                marginTop: '15px',
-                background: '#fbfbfb',
-                borderRadius: '15px',
-                marginBottom: '15px',
-                padding: '0 15px',
-                paddingEnd: '10px'
-            }
-        };
         return (
-            <div style={style.entityContainer}>
-                {this.getTitle()}
+            <div className="table-container">
+                <p className='table-container-title'> 槽位信息 </p>
                 <Table
                     dataSource={this.props.entityParam}
                     columns={this.columns()}
                     bordered
                     pagination={false}
                 />
-                <div>
-
-                </div>
-                <div style={{ height: '10px' }}> </div>
             </div>
-
         )
     }
 }
