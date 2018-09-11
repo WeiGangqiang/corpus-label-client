@@ -2,238 +2,199 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {Spin, Icon, Form, Row, Col} from 'antd'
-import {isArrayDomain} from 'utils/util'
 import {
-    fetchintent,
-    fetchEntity,
-    postPattern,
-    postCorpus,
-    predict,
-    getPhrase,
-    putPhrase,
-    deletePhrase,
-    postPhrase,
-    getPattern
+  fetchintent
 } from 'actions/intent'
 
 import {unknownList} from 'actions/unknown'
 
-import {fetchEntityList, certainEntity, updateEntity, deleteEntity, addEntity} from 'actions/entity'
-
-import {UnknownPatternList, EntityParameters, PatternList, PhraseList, IntentList, IntentDesc} from "components/index";
+import {UnknownItem, UnknownItemList, IntentTree} from "components/index";
+import {intentResult} from "../reducers/intent";
 
 let agent = '';
 
 @connect((state, dispatch) => ({
-    config: state.config,
-    intentResult: state.intentResult,
-    entityResult: state.entityResult,
-    unknownResult: state.unknownResult,
-    entitySlideResult: state.entitySlideResult
+  intentResult: state.intentResult,
+  unknownList: state.unknownList
 }))
 
-@Form.create({
-    onFieldsChange(props, items) {
-    },
-})
 export default class unknownSays extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            agent: '',
-            intent: '',
-            intentId: '',
-            intentOrEntity: 'intent',
-            entityParam: [],
-            phraseArray: [],
-            certainEntity: {}
-        };
-    }
+  constructor(props) {
+    super(props)
+    this.state = {
+      agent: '',
+      intentId: '',
+      unknownIndex: 0,
+      unknownList: [],
+      backlog:[]
+    };
+  }
 
-    componentWillMount() {
-        agent = this.props.location.query.agent;
+  componentWillMount() {
+    agent = this.props.location.query.agent;
+    this.setState({
+      agent: agent
+    })
+    this.props.dispatch(fetchintent('?agent=' + agent, data => {
+      // console.log(data)
+    }, error => {
+      console.log(error)
+    }));
+
+    this.props.dispatch(unknownList('?agent=' + agent, data => {
+      this.setState({
+        unknownList: [...data]
+      })
+      console.log('unknownList fetched:', this.state.unknownList)
+    }, error => {
+      console.log(error)
+    }));
+
+    this.props.dispatch(unknownList('?agent=' + agent, data => {
+      this.setState({
+        backlog: [...data]
+      })
+      console.log('backlog fetched:', this.state.backlog)
+    }, error => {
+      console.log(error)
+    }));
+  }
+
+  onSelect = (value) => {
+    console.log('onSelect, item: ',value);
+    if (value) {
+      this.setState({
+        intentId:value
+      })
+    }
+  }
+
+  deleteUnknownItem = (index) => {
+    console.log('enter deleteUnknownItem, index:', index)
+    if (index < 0 || index >= this.state.unknownList.length) {
+        return
+    }
+    this.state.unknownList.splice(index, 1);
+    if (this.state.backlog.length > 0) {
+      this.state.unknownList.push(this.state.backlog[0])
+      this.state.backlog.shift()
+      this.setState({
+        unknownList:this.state.unknownList,
+        backlog:this.state.backlog
+      })
+    } else {
+      this.props.dispatch(unknownList('?agent=' + agent, data => {
+        // this.setState({
+        //   backlog: [...data]
+        // })
+        console.log('backlog fetched:', this.state.backlog)
+        if (data.length > 0) {
+          this.state.unknownList.push(data[0])
+          data.shift()
+        }
         this.setState({
-            agent: agent
+          unknownList:data,
+          backlog:this.state.backlog
         })
-        this.props.dispatch(fetchintent('?agent=' + agent, data => {
-            if (data.length) {
-                this.initData(agent, data[0])
-            }
-        }, error => {
-            console.log(error)
-        }));
-        this.props.dispatch(fetchEntityList('?agent=' + agent, data => {
-            // console.log(data)
-        }, error => {
-            console.log(error)
-        }));
-
-        this.props.dispatch(unknownList('?agent=' + agent, data => {
-            // console.log(data)
-        }, error => {
-            console.log(error)
-        }));
-
+      }, error => {
+        console.log(error)
+      }));
     }
+  }
 
-    initData (agent, obj) {
-        this.setState({
-            intent: obj.name,
-            intentId: obj.intentId
-        })
-        this.props.dispatch(fetchEntity('?agent=' + agent + '&intentId=' + obj.intentId, data => {
-            for (let i = 0; i < data.length; i++) {
-                data[i].valuesF = [...data[i].values]
-                for (let j = 0; j < data[i].valuesF.length; j++) {
-                    let reg = /[\[\]]/g
-                    let labelReg = /\/L[0-9]/g
-                    data[i].valuesF[j] = data[i].valuesF[j].replace(reg, '').replace(labelReg, '').replace(' ','')
-                }
-                data[i].valuesShow = [...data[i].valuesF.slice(0, 10)]
-            }
-            this.setState({
-                entityParam: [...data]
-            })
-        }, error => {
-            console.log(error)
-        }))
-        this.props.dispatch(getPhrase('?agent=' + agent + '&intentId=' + obj.intentId
-            , data => {
-                this.setState({
-                    phraseArray: [...data]
-                })
-            }, error => {
-                console.log(error)
-            }))
+  selectUnknownItem = (index) => {
+    console.log('enter selectUnknownItem')
+    if (!index || index < 0 || index >= this.state.unknownList.length) {
+      return
     }
+    this.setState({
+      unknownIndex: index
+    })
+  }
 
-    showMoreValues = (i) => {
-        this.state.entityParam[i].valuesShow = [...this.state.entityParam[i].valuesF]
-        this.setState({
-            entityParam: this.state.entityParam
-        })
-    };
+  onDelete = (key) => {
+    // console.log('enter onDelete, key:', key)
+    this.deleteUnknownItem(this.state.unknownIndex)
+  }
+  onPick = (key) => {
+    console.log('enter onPick, key:', key)
+    // this.props.dispatch(postCorpus(obj, data => {
+    //     // this.props.dispatch(unknownList('?agent=' + agent, data => {
+    //     // }, error => {
+    //     //     console.log(error)
+    //     // }));
+    // }))
+  }
 
-    showLessValues = (i) => {
-        this.state.entityParam[i].valuesShow = [...this.state.entityParam[i].valuesF.slice(0, 10)]
-        this.setState({
-            entityParam: this.state.entityParam
-        })
-    };
+  render() {
+    const {intentResult} = this.props
+    const {unknownList, unknownIndex, intentId} =this.state
+    const style = {
+      innerContainer: {
+        width: '100%',
+        height: '100%',
+        paddingTop: '10px',
+      },
 
-    getIntent = (item) => {
-        this.setState({
-            intentOrEntity: 'intent'
-        });
-        this.initData(agent, item)
-    };
+      itemTitle: {
+        fontSize:'20px',
+      },
 
-    getEntity = (item) => {
-        this.setState({
-            intentOrEntity: 'entity'
-        });
-        this.initEntity(item)
-    };
+      unknownList:{
+        marginTop:'10px'
+      },
 
-    initEntity = (obj) => {
-        this.props.dispatch(certainEntity('?agent=' + agent + '&entityName=' + obj.key, data => {
-            this.setState({
-                certainEntity: {...data}
-            })
-        }, error => {
-            console.log(error)
-        }))
-    };
-
-    getPhrase = () => {
-        this.props.dispatch(getPhrase('?agent=' + agent + '&intentId=' + this.state.intentId
-            , data => {
-                this.setState({
-                    phraseArray: [...data]
-                })
-            }, error => {
-                console.log(error)
-            }))
-    };
-
-    getPatternList = (prop, type) => {
-          this.props.dispatch(unknownList('?agent=' + agent, data => {
-            this.setState({
-              unknownResult: [...data]
-            })
-          }, error => {
-            console.log(error)
-          }));
+      link:{
+        marginTop:'10px'
+      }
+      // innerBox: {
+      //     height: '100%'
+      // },
+      // headerStyle:{
+      //     background: '#0099CC',
+      // },
+      // body: {
+      //     width: '80%'
+      // }
     }
-
-    saveCorpus = (obj) => {
-        console.log('enter saveCorpus')
-        this.props.dispatch(postCorpus(obj, data => {
-            // this.props.dispatch(unknownList('?agent=' + agent, data => {
-            // }, error => {
-            //     console.log(error)
-            // }));
-        }))
-    }
-
-    render() {
-        const {unknownResult, intentResult, entitySlideResult} = this.props
-        const style = {
-            innerContainer: {
-                width: '100%',
-                height: '100%',
-                paddingTop: '50px',
-            },
-            innerBox: {
-                height: '100%'
-            },
-            headerStyle:{
-                background: '#0099CC',
-            },
-            body: {
-                width: '80%'
-            }
-        }                                                                                                                                                                  ;
-        return (
-            <Spin spinning={intentResult.loading}>
-                <div style={style.innerContainer}>
-                    <Link className='bread-cruft' to={'/selectService'}>
-                        <Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择
-
-                    </Link>
-                    <div style={style.innerBox} className='intentContainer'>
-                        <IntentList
-                            originEntity={[intentResult.data]}
-                            intentId={this.state.intentId}
-                            getIntent={this.getIntent}
-                            entityList={[entitySlideResult]}
-                            getEntity={this.getEntity}
-                        />
-
-                        <div style={{height: '100%', overflow: 'auto'}}>
-                            <div className="container" style={style.body}>
-                                <EntityParameters
-                                    entityParam={this.state.entityParam}
-                                    showLessValues={this.showLessValues}
-                                    showMoreValues={this.showMoreValues}
-                                />
-                                <UnknownPatternList
-                                    agentName={this.state.agent}
-                                    intent={this.state.intent}
-                                    intentId={this.state.intentId}
-                                    phraseArray={this.state.phraseArray}
-                                    entityParam={this.state.entityParam}
-                                    patterns={unknownResult.data}
-                                    updatePhrase={this.getPhrase}
-                                    getPatternList={this.getPatternList}
-                                    saveCorpus={this.saveCorpus}
-                                />
-                            </div>
-                        </div>
-                    </div>
+    return (
+      <Spin spinning={intentResult.loading}>
+        <div style={style.innerContainer}>
+          <Link className='bread-cruft' style={style.link} to={'/selectService'}>
+            <Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择
+          </Link>
+          <Row>
+            <Col span={4} offset={1}>
+              <div style={{height: '100%', overflow: 'auto'}}>
+                <div className="container" style={style.unknownList}>
+                  <UnknownItemList
+                    items={unknownList}
+                    onDelete={this.deleteUnknownItem}
+                    onSelect={this.selectUnknownItem}
+                  />
                 </div>
-            </Spin>
+              </div>
+            </Col>
+            <Col span={12} offset={1}>
+              <div>
+                <label style={style.itemTitle}>未识别语料:</label>
+                <UnknownItem
+                  content={unknownList.length > unknownIndex && unknownList[unknownIndex].sentence}
+                  index={unknownIndex}
+                  intentId={intentId}
+                  deleteMe={this.onDelete}
+                  pickMe={this.onPick}
+                />
 
-        )
-    }
+              </div>
+              <IntentTree intentCollections={[intentResult.data]}
+                          onSelect={this.onSelect}
+              />
+            </Col>
+          </Row>
+        </div>
+      </Spin>
+
+    )
+  }
 }

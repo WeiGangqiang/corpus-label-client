@@ -1,5 +1,4 @@
 @import "./theme.less";
-
 html, body { min-width: 290px; -ms-overflow-style: scrollbar; overflow: hidden;}
 body {background-color: #e7ebee; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: #515151; -moz-osx-font-smoothing: grayscale; -webkit-font-smoothing: antialiased !important;}
 ul,li{
@@ -17,7 +16,7 @@ ul,li{
 .effect #aside-container,
 .effect .navbar-brand,
 .effect .navbar-content,
-.effect .navbar-header:before, 
+.effect .navbar-header:before,
 .mainnav-container,
 .ant-menu-dark.ant-menu-inline,
 .left-contant,
@@ -120,6 +119,21 @@ ul,li{
   right: 10px;
   top: 10px;
 }
+
+.activeUnknownItem {
+  height: 32px;
+  line-height: 32px;
+  background-color: @active-color;
+  color: #ffffff;
+}
+
+.inactiveUnknownItem {
+  height: 32px;
+  line-height: 32px;
+  background-color: @body-background ;
+  color: @text-color;
+}
+
 
 .intentSlide{
   width: @g-slide-width;
