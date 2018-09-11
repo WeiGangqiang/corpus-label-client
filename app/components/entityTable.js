@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Icon, Row, Col, Input, Table, message, Button} from 'antd'
+import {Icon, Row, Col, Input, Table, message, Button, Popconfirm} from 'antd'
 import {IntentDesc} from 'components/index'
 
 export class EntityTable extends Component {
@@ -212,9 +212,16 @@ export class EntityTable extends Component {
                 className: '',
                 render(text, record, index) {
                     if(record){
-                        return <div><Button className='button-icon' icon='delete' onClick={that.deleteItems.bind(that,index)}></Button></div>
+                        return  (
+                        <div>
+                            <Popconfirm placement="top" title="你确认要删除吗" onConfirm={that.deleteItems.bind(that,index)} 
+                                okText="是" cancelText="否">
+                                <Button className='button-icon' icon='delete'/>
+                            </Popconfirm>
+                        </div>
+                    )
                     }else{
-                        return <div><Button disabled={that.state.newWord == '' || that.state.newPhrase == ''} className='button-icon' icon='plus' onClick={that.addItem}></Button></div>
+                        return <div><Button disabled={that.state.newWord == ''} className='button-icon' icon='plus' onClick={that.addItem}></Button></div>
                     }
                 }
             }

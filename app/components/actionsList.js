@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Table, Button, Icon, Input, Select, message} from 'antd'
+import {Table, Button, Icon, Input, Select, message, Popconfirm} from 'antd'
 
 import {getIntentActions, updateIntentActions} from 'actions/intent'
 
@@ -139,7 +139,11 @@ export class ActionsList extends Component {
 
     getOperators = (record, index) => {
         if(record.type){
-            return <Button className='button-icon' icon='delete' onClick={this.updateAction.bind(this, index, 'delete')}></Button>
+            return (
+                <Popconfirm placement="top" title="你确认要删除吗" onConfirm={this.updateAction.bind(this, index, 'delete')} okText="是" cancelText="否">
+                    <Button className='button-icon' icon='delete'></Button>
+                </Popconfirm>
+            )
         }else{
             return <Button className='button-icon' icon='plus' onClick={this.updateAction.bind(this,0,'new')} disabled={this.state.type == ''}></Button>
         }
