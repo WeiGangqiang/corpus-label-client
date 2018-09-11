@@ -271,9 +271,6 @@ export class IntentList extends Component {
                         <li onClick={this.showAddIntent} className="hoverLi" style={style.positionLi}>新增子意图</li>
                         <li onClick={this.showDelIntent} className="hoverLi" style={style.positionLi}>删除此意图</li>
                     </ul>
-                    <ul style={{...style.positionUl, top:this.state.top, left: this.state.left,display: this.state.showEntityUl, height: '40px'}}>
-                        <li onClick={this.showAddEntity} className="hoverLi" style={style.positionLi}>新增实体</li>
-                    </ul>
                 </div>
                 <Modal
                     title='新增'
