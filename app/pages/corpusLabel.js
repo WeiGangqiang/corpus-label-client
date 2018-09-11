@@ -411,7 +411,9 @@ export default class CorpusLabel extends Component {
                     <Icon onClick={this.showMenu} className="menu-fold" type="menu-fold" />
                     <Logout/>
                 </div>
-             
+                <div style={{position:'fixed', zIndex: 500}}>
+                    <ChatPage agentName={agentName}/>
+                </div>
                 <div style={style.innerBox} className='intentContainer'>
                     <IntentList originEntity={[intentResult.data]} intentId={this.state.intentId} agent={agentName} getIntent={this.getIntent} entityList={[entitySlideResult]} getEntity={this.getEntity} addintent={this.addintent} deleteIntent={this.deleteIntent} handleEntitySubmit={this.handleEntitySubmit} showMenu={this.state.showMenu}/>
                     {
@@ -426,9 +428,7 @@ export default class CorpusLabel extends Component {
 
                                 <PhraseList intent={this.state.name} agent={agentName} intentId={this.state.intentId} phraseArray={this.state.phraseArray} updatePhraseArray={this.getPhrase}  reloadPatterns={this.reloadPatterns}/>
                                 <ActionsList agentName={agentName} intentId={this.state.intentId} intentMode={this.state.intentMode}/>
-                                <div style={{position:'fixed', zIndex: 500}}>
-                                    <ChatPage agentName={agentName}/>
-                                </div>
+
                             </div> : ''}
                         </div> : 
                         <div className='entity-container'>

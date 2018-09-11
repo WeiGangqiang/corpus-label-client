@@ -7,6 +7,21 @@ import {connect} from 'react-redux'
 
 const Option = Select.Option;
 
+const typeArray = [
+    {
+        name: 'replies',
+        zhName: '文本回复'
+    },
+    {
+        name: 'api-call',
+        zhName: '函数调用'
+    },
+    {
+        name: 'forward',
+        zhName: '跳转'
+    }
+]
+
 @connect((state, dispatch) => ({
 }))
 
@@ -16,20 +31,7 @@ export class ActionsList extends Component {
         this.state = {
             actions: [
             ],
-            typeArray: [
-                {
-                    name: 'replies',
-                    zhName: '文本回复'
-                },
-                {
-                    name: 'api-call',
-                    zhName: '函数调用'
-                },
-                {
-                    name: 'forward',
-                    zhName: '跳转'
-                }
-            ],
+
             values: [],
             type: 'replies',
             typeState: []
@@ -70,7 +72,7 @@ export class ActionsList extends Component {
     };
 
     getZhName = (type) => {
-        let obj = this.state.typeArray.find(item => item.name == type)
+        let obj = typeArray.find(item => item.name == type)
         return obj.zhName
     };
 
@@ -105,19 +107,19 @@ export class ActionsList extends Component {
     };
 
     getActionsType = (type,index) => {
-        if(type){
+        if (type) {
             let desc = this.getZhName(type);
             return this.state.typeState[index]? <Select defaultValue={desc} firstActiveValue={type}	 style={{ width: 120 }} onChange={this.updateAction.bind(this,index,'typeChange')} autoFocus={true} open={true} onBlur={this.typeBlur}>
                 {
-                    this.state.typeArray.map((item,index) => {
+                    typeArray.map((item,index) => {
                         return <Option key={index} value={item.name}>{item.zhName}</Option>
                     })
                 }
             </Select> : <span onClick={this.typeFocus.bind(this,index)}> {desc} </span>
         }else{
-            return <Select defaultValue="" style={{ width: 120 }} defaultValue={this.state.typeArray[0].name} onChange={this.selectType}>
+            return <Select style={{ width: 120 }} defaultValue={typeArray[0].name} onChange={this.selectType}>
                 {
-                    this.state.typeArray.map((item,index) => {
+                    typeArray.map((item,index) => {
                         return <Option key={index} value={item.name}>{item.zhName}</Option>
                     })
                 }
