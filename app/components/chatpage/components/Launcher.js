@@ -28,7 +28,7 @@ class Launcher extends Component {
   _renderButton() {
     return <Row>
       <Col sm={24} xs={0}>
-        <Button type="primary" icon="message" ghost size="large" className={"sc-chat-desc"}>和小哒聊天</Button>
+        <Button type="primary" icon="message" size="large" className={"sc-chat-desc"}>和小哒聊天</Button>
       </Col>
       <Col xs={24} sm={0}>
       <Button type="primary" icon="message" shape="circle" size="large" className={"sc-chat-desc"}></Button>
