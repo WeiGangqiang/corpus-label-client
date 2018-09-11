@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
-import {Row, Col, Icon, Modal, Button, message} from 'antd'
+import {Row, Col, Icon, Modal, Button, message, Spin} from 'antd'
 import {publishAgent} from 'actions/serve'
 
 @connect((state, props) => ({
@@ -15,7 +15,8 @@ export class AgentTable extends Component {
             deleteVisible: false,
             agentName: '',
             agentId: '',
-            packageVisible: false
+            packageVisible: false,
+            publishing: false
         }
     }
 
@@ -51,13 +52,40 @@ export class AgentTable extends Component {
 
     package = () => {
         message.info('开始部署，可能需要几分钟，请等待');
+        this.setState({publishing: true})
         this.props.dispatch(publishAgent({agent: this.props.agent.name, agentId: this.props.agent.agentId}, data => {
             message.info(this.props.agent.name + '升级部署完成')
+            this.setState({publishing: false})
         }, error => {
             message.error('部署失败');
+            this.setState({publishing: false})
             console.log(error)
         }))
     };
+
+    getAgentState = ()=> {
+        const style ={
+            borderPre:{
+                marginBottom: 0,
+                display: 'inline-flex',
+                borderLeft: '1px solid #dadada',
+                verticalAlign: 'top',
+                alignItems: 'center',
+                lineHeight: '24px',
+                minHeight: '40px',
+                paddingLeft: '10px'
+            },
+            fontSize: {
+                lineHeight: '24px',
+                paddingLeft: '10px',
+                marginBottom: 0,
+            }
+        }
+        if(this.state.publishing){
+            return (<div style={style.borderPre}> <Spin/> <p style={style.fontSize}> 发布中 </p></div>)
+        }
+        return (<p style={style.borderPre}> 已发布</p>)
+    }
 
     render() {
 
@@ -92,7 +120,7 @@ export class AgentTable extends Component {
                 alignItems: 'center',
                 lineHeight: '24px',
                 minHeight: '40px',
-                paddingLeft: '5px'
+                paddingLeft: '10px'
             },
             link:{
                 textAlign: 'center',
@@ -129,7 +157,7 @@ export class AgentTable extends Component {
                 <Row style={style.row}>
                     <Col className='bottom-line' style={style.col} xs={24} sm={24} md={24} lg={24} xl={12}>
                         <Col xs={6} sm={8} md={6} lg={4} xl={4}>
-                            <span style={style.label}>name</span>
+                            <span style={style.label}>应用名称</span>
                         </Col>
                         <Col xs={18} sm={18} md={18} lg={20} xl={20}>
                             <p style={style.pre}>{this.props.agent.name}</p>
@@ -137,20 +165,20 @@ export class AgentTable extends Component {
                     </Col>
                     <Col style={style.col} xs={24} sm={24} md={24} lg={24} xl={12}>
                         <Col xs={6} sm={8} md={6} lg={4} xl={4}>
-                            <span style={style.label}>中文名字</span>
+                            <span style={style.label}>状态</span>
                         </Col>
                         <Col xs={18} sm={18} md={18} lg={20} xl={20}>
-                            <p style={style.pre}>{this.props.agent.zhName}</p>
+                            {this.getAgentState()}
                         </Col>
                     </Col>
                 </Row>
                 <Row style={style.row}>
                     <Col className='bottom-line' style={style.col} xs={24} sm={24} md={24} lg={24} xl={12}>
                         <Col xs={6} sm={8} md={6} lg={4} xl={4}>
-                            <span style={style.label}>ID</span>
+                            <span style={style.label}>中文名字</span>
                         </Col>
                         <Col xs={18} sm={18} md={18} lg={20} xl={20}>
-                            <p style={style.pre}>{this.props.agent.agentId}</p>
+                            <p style={style.pre}>{this.props.agent.zhName}</p>
                         </Col>
                     </Col>
                     <Col style={style.col} xs={24} sm={24} md={24} lg={24} xl={12}>
