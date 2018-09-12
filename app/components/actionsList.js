@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {Table, Button, Icon, Input, Select, message, Popconfirm} from 'antd'
 
 import {getIntentActions, updateIntentActions} from 'actions/intent'
+import {IntentSelect} from 'components/forwardIntent/intentSelect'
 
 import {connect} from 'react-redux'
 
@@ -49,7 +50,7 @@ export class ActionsList extends Component {
                 type: '',
                 values: []
                 })
-            this.setState({actions: rsp.data})
+            this.setState({actions: rsp.data, type: 'replies', values:[]})
         }, err=> {
 
         }))
@@ -100,10 +101,9 @@ export class ActionsList extends Component {
                 values: [value]
             });
             setTimeout(() => {
-                this.updateAction(0,'new', '')
+                this.updateAction(0,'new', {target:{value}})
             })
         }
-
     };
 
     getActionsType = (type,index) => {
@@ -129,16 +129,24 @@ export class ActionsList extends Component {
 
     getActionsContent = (values, index, record) => {
         if(record.type){
-            return <div>
-                {
-                    values.map((item,i) => {
-                        return <span className='cell-span' key={i}>{item} <Icon onClick={this.updateAction.bind(this, index, i)} type='close'></Icon></span>
-                    })
-                }
-                <Input style={{width: '100px',verticalAlign: 'top'}} onPressEnter={this.updateAction.bind(this, index, 'add')}/>
-            </div>
+            if(record.type === 'replies' || record.type === 'api-call') {
+                return <div>
+                    {
+                        values.map((item,i) => {
+                            return <span className='cell-span' key={i}>{item} <Icon onClick={this.updateAction.bind(this, index, i)} type='close'></Icon></span>
+                        })
+                    }
+                    <Input style={{width: '200px',verticalAlign: 'top'}} onPressEnter={this.updateAction.bind(this, index, 'add')}/>
+                </div>
+            } else if (record.type === 'forward') {
+                return <IntentSelect intentList = {this.props.intentList} value={values[0]} onChange={this.updateForwardAction.bind(this,index,'update')}/>
+            }
         }else{
-            return <Input style={{width: '100px',verticalAlign: 'top'}} onBlur={this.saveValues} onPressEnter={this.addAction}/>
+            if (this.state.type === 'forward') {
+                return <IntentSelect intentList = {this.props.intentList} value={this.state.values[0]} onChange={this.updateForwardAction.bind(this, 0, 'new')}/>
+            } else {
+                return <Input style={{width: '200px',verticalAlign: 'top'}} onBlur={this.saveValues} onPressEnter={this.addAction}/>
+            }
         }
     };
 
@@ -154,15 +162,21 @@ export class ActionsList extends Component {
         }
     };
 
+    updateForwardAction = (index,i, value) => {
+        this.updateAction(index, i, value)
+    }
+
     updateAction = (index,i,e) => {
         this.state.actions=this.state.actions.filter(item => item.type!='');
         if (i == 'add'){
             this.state.actions[index].values.push(e.target.value);
-        }else if(i=='new'){
+        } else if (i == 'update'){
+            this.state.actions[index].values = [e.target.value]
+        } else if(i=='new'){
             if(this.state.type){
                 this.state.actions.push({
                     type: this.state.type,
-                    values: this.state.values
+                    values: [e.target.value]
                 });
             }else{
                 message.info('请选择类型')

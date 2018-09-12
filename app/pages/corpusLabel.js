@@ -52,6 +52,7 @@ export default class CorpusLabel extends Component {
         agentName = this.props.location.query.agent;
         this.props.dispatch(fetchintent('?agent=' + agentName, data => {
             if (data.length) {
+                console.log('componentWillMount', this.props.intentResult)
                 this.initData(this.props.intentResult.data.children[0])
             }
         }, error => {
@@ -427,7 +428,7 @@ export default class CorpusLabel extends Component {
                                              corpusType={this.state.type} updatePhrase={this.getPhrase} phraseArray={this.state.phraseArray} entityParam={this.state.entityParam} positivePatterns={this.state.positivePatterns} negativePatterns={this.state.negativePatterns} getPatternList={this.getPatternList}/>
 
                                 <PhraseList intent={this.state.name} agent={agentName} intentId={this.state.intentId} phraseArray={this.state.phraseArray} updatePhraseArray={this.getPhrase}  reloadPatterns={this.reloadPatterns}/>
-                                <ActionsList agentName={agentName} intentId={this.state.intentId} intentMode={this.state.intentMode}/>
+                                <ActionsList agentName={agentName} intentId={this.state.intentId} intentMode={this.state.intentMode} intentList={intentResult.data.children}/>
 
                             </div> : ''}
                         </div> : 
