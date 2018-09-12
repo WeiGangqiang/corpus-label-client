@@ -45,8 +45,6 @@ export class EntityTable extends Component {
         }else {
             message.info('该实体不允许更新')
         }
-
-
     };
 
     addWord = (e) => {
@@ -261,7 +259,6 @@ export class EntityTable extends Component {
                 className: 'tableIndex'
             }
         ]
-
     };
 
     render() {
