@@ -14,7 +14,7 @@ export class UnknownItemList extends Component {
   getItemView = () => {
     return this.props.items.length && this.props.items.map((item, index) => {
       return (
-        <Menu.Item className="corpusItem" style={{margin: '0'}} key={index}>
+        <Menu.Item className="corpusItem" style={{margin: '0', height: '40px', alignContent:'center'}} key={index}>
             <UnknownItem
               content={item.sentence}
               index={index}
@@ -77,11 +77,14 @@ export class UnknownItemList extends Component {
       menu: {
         float:'left',
         width:'100%',
-        boarder:'none'
+        height: '100%',
+        boarder:'none',
+        background: 'transparent'
+        // backgroundColor: '#f8f8f8'
       }
     }
     return (<div>
-      <div className="headerTitle">未识别语料集</div>
+      <div className="headerTitle">未识别语料</div>
       <Menu style= {style.menu}>
         {this.getItemView()}
       </Menu>

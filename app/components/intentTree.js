@@ -16,15 +16,14 @@ export class IntentTree extends Component {
   constructor(props) {
     super(props);
     this.props = props;
-    this.state = {
-      value: undefined
-    }
   }
 
   onSelect = (value, label, extra) => {
-    console.log('onSelect, item: ',value);
+    if (!label || !label.props || !label.props.label) {
+      return
+    }
     if (this.props.onSelect) {
-      this.props.onSelect(value)
+      this.props.onSelect(label.props.label)
     }
   }
 
@@ -46,8 +45,10 @@ export class IntentTree extends Component {
     return data.map((item,index) => {
       if (item.children) {
         return (
-          <TreeNode value={item.intentId} title={this.getIntentTitle(item)} key={item.key}
-                    disabled={this.inIntentIdNull(item)}>
+            <TreeNode value={this.getIntentTitle(item)} title={this.getIntentTitle(item)} key={item.key}
+                      label={item.intentId}
+                      labelInValue={true}
+                      disabled={this.inIntentIdNull(item)}>
             {this.renderTreeNodes(item.children)}
           </TreeNode>
         );
@@ -61,10 +62,12 @@ export class IntentTree extends Component {
       <TreeSelect
         showSearch
         style={{ width: '100%'}}
-        value={this.state.value}
-        dropdownStyle={{ maxHeight: '400px', overflow: 'auto' }}
+        // value={this.state.value}
+        dropdownStyle={{ maxHeight: '600px', overflow: 'auto' }}
         placeholder="请选择意图"
-        allowClear
+        searchPlaceholder="过滤条件"
+        allowClear={true}
+        showSearch={true}
         treeDefaultExpandAll={true}
         onSelect={this.onSelect}
       >

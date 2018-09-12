@@ -55,6 +55,11 @@ export default class unknownSays extends Component {
         this.state.unknownList.push(dummy)
         this.state.unknownList.push(dummy)
         this.state.unknownList.push(dummy)
+        this.state.unknownList.push(dummy)
+        this.state.unknownList.push(dummy)
+        this.state.unknownList.push(dummy)
+        this.state.unknownList.push(dummy)
+        this.state.unknownList.push(dummy)
       }
       this.setState({
         unknownList: this.state.unknownList
@@ -87,8 +92,8 @@ export default class unknownSays extends Component {
     }));
   }
 
-  onSelect = (value) => {
-    console.log('onSelect, item: ',value);
+  onIntentSelect = (value) => {
+    console.log('onIntentSelect, intent id: ',value);
     if (value) {
       this.setState({
         intentId:value
@@ -176,17 +181,16 @@ export default class unknownSays extends Component {
 
       link:{
         marginTop:'10px'
+      },
+
+      sentence: {
+        fontSize: '16px',
+        width: '100%',
+        borderBottom: '1px solid #dadada'
       }
-      // innerBox: {
-      //     height: '100%'
-      // },
-      // headerStyle:{
-      //     background: '#0099CC',
-      // },
-      // body: {
-      //     width: '80%'
-      // }
+
     }
+    console.log('intentResult:', intentResult)
     return (
       <Layout>
       <Spin spinning={intentResult.loading}>
@@ -197,7 +201,7 @@ export default class unknownSays extends Component {
             </Link>
           </Header>
           <Content>
-            <Row>
+            <Row style={style.innerContainer}>
               <Col span={4} offset={1}>
                 <div style={{height: '100%', overflow: 'auto'}}>
                   <div className="container" style={style.unknownList}>
@@ -211,18 +215,12 @@ export default class unknownSays extends Component {
               </Col>
               <Col span={12} offset={1}>
                 <div style={{height: '100%', overflow: 'auto'}}>
-                  <label className="headerTitle">待标注语料:</label>
-                  <UnknownItem
-                    content={unknownList.length > unknownIndex && unknownList[unknownIndex].sentence}
-                    index={unknownIndex}
-                    intentId={intentId}
-                    deleteMe={this.onDelete}
-                    pickMe={this.onPick}
-                  />
+                  <label className="headerTitle">标注语料:</label>
+                  <p style={style.sentence}> {unknownList.length > unknownIndex && unknownList[unknownIndex].sentence} </p>
 
                 </div>
                 <IntentTree intentCollections={[intentResult.data]}
-                            onSelect={this.onSelect}
+                            onSelect={this.onIntentSelect}
                 />
               </Col>
             </Row>

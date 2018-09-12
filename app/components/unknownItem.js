@@ -35,12 +35,14 @@ export class UnknownItem extends Component {
   render() {
     const style = {
       title: {
+        fontSize: '16px'
+      },
+      wrapper: {
         width: '100%',
-        paddingTop: '10px',
-        height: '40px',
-        lineHeight: '40px',
         padding: '0',
-        margin: '0'
+        margin: '0',
+        height: '45px',
+        lineHeight: '45px'
       },
       colRight:{
         float: 'right',
@@ -55,7 +57,7 @@ export class UnknownItem extends Component {
       }
     }
     return (
-      <div style={style.title}>
+      <div style={style.wrapper}>
         <Row>
           <Col style={style.colRight}>
             <span> <Icon type="delete"
@@ -71,7 +73,7 @@ export class UnknownItem extends Component {
           </Col>
           <Col>
             <div>
-              <label onClick={this.onSelect}>{this.props.content}</label>
+              <label style={style.title} onClick={this.onSelect}>{this.props.content}</label>
             </div>
           </Col>
         </Row>
