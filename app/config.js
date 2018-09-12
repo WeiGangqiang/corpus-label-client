@@ -5,10 +5,8 @@ export default (() => {
         global.host = 'http://192.168.3.220';
         // 本地开发打开的路径以及端口
         // global.linkUrl = 'http://localhost:8080';
-        global.linkUrl = 'http://www.xiaoda.ai/corpus-label2';
-        if (process.env.NODE_ENV === 'production') {
-            global.linkUrl = 'http://www.xiaoda.ai/corpus-label';
-        }
+        global.linkUrl = 'http://www.xiaoda.ai/corpus-label';
+        
         // 系统一二级菜单
         global.nav = [
             {
