@@ -70,7 +70,9 @@ export class UnknownItemList extends Component {
         width: '100%',
         height: '100%',
         borderRadius: '15px',
-        marginBottom: '15px'
+        marginBottom: '15px',
+        // fontSize: '20px',
+        // fontWeight: 'bold',
       },
       menu: {
         float:'left',
@@ -78,10 +80,11 @@ export class UnknownItemList extends Component {
         boarder:'none'
       }
     }
-    return (<Card title={'未识别语料集'} style={style.corpusBox}>
+    return (<div>
+      <div className="headerTitle">未识别语料集</div>
       <Menu style= {style.menu}>
         {this.getItemView()}
       </Menu>
-    </Card>)
+    </div>)
   }
 }

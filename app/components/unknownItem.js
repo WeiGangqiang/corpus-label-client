@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Row, Col, Button} from 'antd'
+import {Row, Col, Icon} from 'antd'
 
 
 export class UnknownItem extends Component {
@@ -29,7 +29,7 @@ export class UnknownItem extends Component {
     if (this.props.hideSave) {
       return 'none'
     }
-    return 'inline'
+    return 'inline-block'
   }
 
   render() {
@@ -41,25 +41,37 @@ export class UnknownItem extends Component {
         lineHeight: '40px',
         padding: '0',
         margin: '0'
+      },
+      colRight:{
+        float: 'right',
+        marginTop: '5px',
+        marginLeft: '10px',
+        cursor:'pointer'
+      },
+      delete:{
+        marginTop: '5px',
+        fontSize :'20px',
+        height:'40px'
       }
     }
     return (
       <div style={style.title}>
         <Row>
-          <Col span={18}>
+          <Col style={style.colRight}>
+            <span> <Icon type="delete"
+                         style={style.delete}
+                         onClick={this.deleteMe} />
+            </span>
+          </Col>
+          <Col style={style.colRight}>
+            <span> <Icon type="appstore-o"
+                         style={{marginTop: '5px', fontSize :'20px', height:'40px', display: this.getDisplayMode()}}
+                         onClick={this.pickMe} />
+            </span>
+          </Col>
+          <Col>
             <div>
               <label onClick={this.onSelect}>{this.props.content}</label>
-            </div>
-          </Col>
-          <Col span={6}>
-            <div style={{float: 'right'}}>
-              <Button onClick={this.deleteMe} icon="delete"></Button>
-
-              <Button disabled={!this.props.intentId}
-                onClick={this.pickMe}
-                icon="save"
-                style={{display: this.getDisplayMode()}}
-              ></Button>
             </div>
           </Col>
         </Row>

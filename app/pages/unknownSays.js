@@ -1,18 +1,19 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
-import {Spin, Icon, Form, Row, Col} from 'antd'
+import {Spin, Icon, Form, Row, Col, Layout} from 'antd'
+
 import {
   fetchintent
 } from 'actions/intent'
 
 import {unknownList} from 'actions/unknown'
-
 import {UnknownItem, UnknownItemList, IntentTree} from "components/index";
 import {intentResult} from "../reducers/intent";
 
-let agent = '';
+const { Header, Footer, Sider, Content } = Layout;
 
+let agent = '';
 @connect((state, dispatch) => ({
   intentResult: state.intentResult,
   unknownList: state.unknownList
@@ -163,8 +164,9 @@ export default class unknownSays extends Component {
       itemTitle: {
         fontSize: '20px',
         fontWeight: 'bold',
-        paddingLeft: '15px',
-        marginBottom: '0px',
+        // paddingLeft: '15px',
+        marginBottom: '20px',
+        height: '40px',
         lineHeight: '40px'
       },
 
@@ -186,43 +188,48 @@ export default class unknownSays extends Component {
       // }
     }
     return (
+      <Layout>
       <Spin spinning={intentResult.loading}>
         <div style={style.innerContainer}>
-          <Link className='bread-cruft' style={style.link} to={'/selectService'}>
-            <Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择
-          </Link>
-          <Row>
-            <Col span={4} offset={1}>
-              <div style={{height: '100%', overflow: 'auto'}}>
-                <div className="container" style={style.unknownList}>
-                  <UnknownItemList
-                    items={unknownList}
-                    onDelete={this.deleteUnknownItem}
-                    onSelect={this.selectUnknownItem}
-                  />
+          <Header>
+            <Link style={style.link} to={'/selectService'}>
+              <Icon style={{fontWeight:'bold'}} type='left'></Icon>应用选择
+            </Link>
+          </Header>
+          <Content>
+            <Row>
+              <Col span={4} offset={1}>
+                <div style={{height: '100%', overflow: 'auto'}}>
+                  <div className="container" style={style.unknownList}>
+                    <UnknownItemList
+                      items={unknownList}
+                      onDelete={this.deleteUnknownItem}
+                      onSelect={this.selectUnknownItem}
+                    />
+                  </div>
                 </div>
-              </div>
-            </Col>
-            <Col span={12} offset={1}>
-              <div>
-                <label style={style.itemTitle}>未识别语料:</label>
-                <UnknownItem
-                  content={unknownList.length > unknownIndex && unknownList[unknownIndex].sentence}
-                  index={unknownIndex}
-                  intentId={intentId}
-                  deleteMe={this.onDelete}
-                  pickMe={this.onPick}
-                />
+              </Col>
+              <Col span={12} offset={1}>
+                <div style={{height: '100%', overflow: 'auto'}}>
+                  <label className="headerTitle">待标注语料:</label>
+                  <UnknownItem
+                    content={unknownList.length > unknownIndex && unknownList[unknownIndex].sentence}
+                    index={unknownIndex}
+                    intentId={intentId}
+                    deleteMe={this.onDelete}
+                    pickMe={this.onPick}
+                  />
 
-              </div>
-              <IntentTree intentCollections={[intentResult.data]}
-                          onSelect={this.onSelect}
-              />
-            </Col>
-          </Row>
+                </div>
+                <IntentTree intentCollections={[intentResult.data]}
+                            onSelect={this.onSelect}
+                />
+              </Col>
+            </Row>
+          </Content>
         </div>
       </Spin>
-
+      </Layout>
     )
   }
 }
