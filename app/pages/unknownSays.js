@@ -69,18 +69,6 @@ export default class unknownSays extends Component {
 
     this.props.dispatch(unknownList('?agent=' + agent, data => {
       this.state.backlog = [...data]
-
-      //TODO for test, should be removed
-      // var dummy = {
-      //   sentence: '我是backlog语料'
-      // }
-      // if (!data.length) {
-      //   this.state.backlog.push(dummy)
-      //   this.state.backlog.push(dummy)
-      //   this.state.backlog.push(dummy)
-      //   this.state.backlog.push(dummy)
-      // }
-
       this.setState({
         backlog: this.state.backlog
       })
@@ -123,9 +111,6 @@ export default class unknownSays extends Component {
       this.state.backlog.shift()
     } else {
       this.props.dispatch(unknownList('?agent=' + agent, data => {
-        // this.setState({
-        //   backlog: [...data]
-        // })
         console.log('backlog fetched:', data)
         if (data.length > 0) {
           this.state.unknownList.push(data[0])
@@ -227,7 +212,8 @@ export default class unknownSays extends Component {
       sentence: {
         fontSize: '16px',
         width: '100%',
-        borderBottom: '1px solid #dadada'
+        borderBottom: '1px solid #dadada',
+        margin: '5px 0'
       }
 
     }
@@ -256,13 +242,13 @@ export default class unknownSays extends Component {
               </Col>
               <Col span={12} offset={1}>
                 <div style={{height: '100%', overflow: 'auto'}}>
-                  <label className="headerTitle">标注语料:</label>
+                  <label className="headerTitle">待标注语料:</label>
                   <p style={style.sentence}> {unknownList.length > unknownIndex && unknownList[unknownIndex].sentence} </p>
-
+                  <label className="headerTitle">目标意图:</label>
+                  <IntentTree intentCollections={[intentResult.data]}
+                              onSelect={this.onIntentSelect}
+                  />
                 </div>
-                <IntentTree intentCollections={[intentResult.data]}
-                            onSelect={this.onIntentSelect}
-                />
               </Col>
             </Row>
           </Content>
