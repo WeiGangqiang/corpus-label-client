@@ -33,7 +33,7 @@ export {
     IntentEdit,
     EditEntity,
     InputValidate,
-    IntentTitle
+    IntentTitle,
     IntentTree,
     UnknownItem,
     UnknownItemList
