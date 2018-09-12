@@ -33,7 +33,7 @@ export class ActionsList extends Component {
             ],
 
             values: [],
-            type: '',
+            type: 'replies',
             typeState: []
         }
     }
@@ -93,6 +93,19 @@ export class ActionsList extends Component {
         })
     };
 
+    addAction = (e) => {
+        const value = e.target.value.replace(/\s/g, '');
+        if(value){
+            this.setState({
+                values: [value]
+            });
+            setTimeout(() => {
+                this.updateAction(0,'new', '')
+            })
+        }
+
+    };
+
     getActionsType = (type,index) => {
         if (type) {
             let desc = this.getZhName(type);
@@ -103,8 +116,8 @@ export class ActionsList extends Component {
                     })
                 }
             </Select> : <span onClick={this.typeFocus.bind(this,index)}> {desc} </span>
-        } else {
-            return <Select defaultValue="" style={{ width: 120 }} onChange={this.selectType}>
+        }else{
+            return <Select style={{ width: 120 }} defaultValue={typeArray[0].name} onChange={this.selectType}>
                 {
                     typeArray.map((item,index) => {
                         return <Option key={index} value={item.name}>{item.zhName}</Option>
@@ -125,7 +138,7 @@ export class ActionsList extends Component {
                 <Input style={{width: '100px',verticalAlign: 'top'}} onPressEnter={this.updateAction.bind(this, index, 'add')}/>
             </div>
         }else{
-            return <Input style={{width: '100px',verticalAlign: 'top'}} onBlur={this.saveValues}/>
+            return <Input style={{width: '100px',verticalAlign: 'top'}} onBlur={this.saveValues} onPressEnter={this.addAction}/>
         }
     };
 

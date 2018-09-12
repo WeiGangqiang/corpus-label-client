@@ -20,7 +20,6 @@ export default class App extends Component {
 
     componentWillMount () {
         this.props.router.listen(route => {
-            console.log(this)
             this.setState({
                 pathname: route.pathname
             })
@@ -30,7 +29,7 @@ export default class App extends Component {
     componentDidMount () {
         this.setState({
             pathname: this.props.location.pathname
-        })
+        });
         this.props.router.listen(route => {
             this.setState({
                 pathname: route.pathname
@@ -44,7 +43,7 @@ export default class App extends Component {
             pageContent: {
                 background: '#fff',
             },
-        }
+        };
         return (
             <div id="container" className={`effect easeInOutBack ${(this.state.pathname == '/corpusLabel' || this.state.pathname == '/unknown') ? "" : "slider-padding header-padding"}`}
             >
