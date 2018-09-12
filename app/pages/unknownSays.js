@@ -3,17 +3,18 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {Spin, Icon, Form, Row, Col, Layout} from 'antd'
 
-import {
-  fetchintent
-} from 'actions/intent'
-
-import {unknownList} from 'actions/unknown'
 import {UnknownItem, UnknownItemList, IntentTree} from "components/index";
+import {Simplifier} from 'components/Simplifer'
+
+import {fetchintent, postPattern, predict} from 'actions/intent'
+import {unknownList} from 'actions/unknown'
+
 import {intentResult} from "../reducers/intent";
 
 const { Header, Footer, Sider, Content } = Layout;
 
 let agent = '';
+let intentId  = '';
 @connect((state, dispatch) => ({
   intentResult: state.intentResult,
   unknownList: state.unknownList
@@ -27,7 +28,8 @@ export default class unknownSays extends Component {
       intentId: '',
       unknownIndex: 0,
       unknownList: [],
-      backlog:[]
+      backlog:[],
+      simpliferSequence: 0
     };
   }
 
@@ -47,19 +49,15 @@ export default class unknownSays extends Component {
         unknownList: [...data]
       })
       //TODO for test, should be removed
-      var dummy = {
-          sentence: '我是未识别语料'
-      }
       if (!this.state.unknownList.length) {
-        this.state.unknownList.push(dummy)
-        this.state.unknownList.push(dummy)
-        this.state.unknownList.push(dummy)
-        this.state.unknownList.push(dummy)
-        this.state.unknownList.push(dummy)
-        this.state.unknownList.push(dummy)
-        this.state.unknownList.push(dummy)
-        this.state.unknownList.push(dummy)
-        this.state.unknownList.push(dummy)
+        var step;
+        for (step = 0; step < 5; step++) {
+          var dummy = {
+            sentence: ''
+          }
+          dummy.sentence = '我是未识别语料' + step
+          this.state.unknownList.push(dummy)
+        }
       }
       this.setState({
         unknownList: this.state.unknownList
@@ -95,9 +93,21 @@ export default class unknownSays extends Component {
   onIntentSelect = (value) => {
     console.log('onIntentSelect, intent id: ',value);
     if (value) {
+      this.state.intentId = value
+      // onIntentSelect()
+      console.log('onIntentSelect, intent id: ',this.state.intentId);
+      let labels = []
       this.setState({
-        intentId:value
+        intentId: this.state.intentId
       })
+      if (this.state.unknownList.length > this.state.unknownIndex) {
+        this.addPattern(this.state.unknownList[this.state.unknownIndex].sentence, labels)
+        this.deleteUnknownItem(this.state.unknownIndex)
+        this.state.unknownIndex = 0
+        this.setState({
+          unknownIndex: this.state.unknownIndex
+        })
+      }
     }
   }
 
@@ -146,14 +156,45 @@ export default class unknownSays extends Component {
     // console.log('enter onDelete, key:', key)
     this.deleteUnknownItem(this.state.unknownIndex)
   }
+
+  addPattern = (newCorpus, labels) => {
+    console.log('add pattern for', newCorpus, labels)
+    let that = this
+    this.props.dispatch(postPattern({
+      pattern: {
+        sentence: newCorpus,
+        labels: labels
+      },
+      type: 'positive',
+      intentId: this.state.intentId,
+      agent: this.state.agent
+    }, data => {
+      // console.log('add pattern result', data)
+      // that.props.getPatternList(that.props, corpusType)
+    }))
+  }
+
+  addPatternWithPredict = (sentence) => {
+    console.log('enter addPatternWithPredict, sentence:', sentence)
+    let that = this
+    this.props.dispatch(predict({
+      "sentence": sentence,
+      "intentId": this.state.intentId,
+      "agent": this.state.agent
+    }, data => {
+      // console.log('predict labels is', data)
+      that.addPattern(sentence, data)
+    }, error => {
+      console.log(error)
+    }))
+    this.setState({
+      simpliferSequence: this.state.simpliferSequence+1
+    })
+  }
+
   onPick = (key) => {
     console.log('enter onPick, key:', key)
-    // this.props.dispatch(postCorpus(obj, data => {
-    //     // this.props.dispatch(unknownList('?agent=' + agent, data => {
-    //     // }, error => {
-    //     //     console.log(error)
-    //     // }));
-    // }))
+    // addPattern()
   }
 
   render() {

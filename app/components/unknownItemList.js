@@ -20,7 +20,6 @@ export class UnknownItemList extends Component {
               index={index}
               intentId=''
               deleteMe={this.props.onDelete}
-              onSelect={this.onItemSelected}
               pickMe=''
               active={this.state.isActive[index]}
               key={index}
@@ -33,9 +32,12 @@ export class UnknownItemList extends Component {
 
   onItemSelected = (index) => {
     const {items} = this.props
-    console.log('enter list onSelect')
+    console.log('enter onItemSelected')
     if (!items) {
       // console.log('items is null')
+      return
+    }
+    if (index < 0 && index >= items.length) {
       return
     }
     if (this.props.items.length) {
@@ -43,18 +45,24 @@ export class UnknownItemList extends Component {
         this.state.isActive[index] = false
       })
     }
-    if (index >= 0 && index < items.length) {
-      this.state.isActive[index] = true
-      if (this.props.onSelect) {
-        this.props.onSelect(index)
-      }
+    this.state.isActive[index] = true
+    this.state.selectedIndex = index
+    if (this.props.onSelect) {
+      this.props.onSelect(index)
     }
 
     this.setState({
       isActive: [...this.state.isActive],
-      selectedIndex: index
+      selectedIndex: this.state.selectedIndex
     })
     // console.log('active status:', this.state.isActive)
+  }
+
+  onMenuClick = (event) => {
+    console.log('onMenuClick, index:', event)
+    if (event && event.key) {
+      this.onItemSelected(event.key)
+    }
   }
 
   render() {
@@ -85,7 +93,7 @@ export class UnknownItemList extends Component {
     }
     return (<div>
       <div className="headerTitle">未识别语料</div>
-      <Menu style= {style.menu}>
+      <Menu onClick={this.onMenuClick} style= {style.menu}>
         {this.getItemView()}
       </Menu>
     </div>)
