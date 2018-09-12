@@ -304,7 +304,7 @@ export class EntityTable extends Component {
                     >
                     </Table>
                 </div>
-
+                <div style = {{height: '10px'}}> </div>
             </div>
 
         )
