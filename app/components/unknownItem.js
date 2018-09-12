@@ -34,16 +34,20 @@ export class UnknownItem extends Component {
 
   render() {
     const style = {
-      item: {
+      title: {
         width: '100%',
         paddingTop: '10px',
+        height: '40px',
+        lineHeight: '40px',
+        padding: '0',
+        margin: '0'
       }
     }
     return (
-      <div style={style.item}>
+      <div style={style.title}>
         <Row>
           <Col span={18}>
-            <div className={this.props.active ? 'activeUnknownItem': 'inactiveUnknownItem'}>
+            <div>
               <label onClick={this.onSelect}>{this.props.content}</label>
             </div>
           </Col>

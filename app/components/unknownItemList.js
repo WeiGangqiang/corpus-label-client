@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Card } from 'antd';
+import { Card, Menu } from 'antd';
 import {UnknownItem} from "components/index";
 
 export class UnknownItemList extends Component {
@@ -13,17 +13,21 @@ export class UnknownItemList extends Component {
 
   getItemView = () => {
     return this.props.items.length && this.props.items.map((item, index) => {
-      return (<UnknownItem
-        content={item.sentence}
-        index={index}
-        intentId=''
-        deleteMe={this.props.onDelete}
-        onSelect={this.onItemSelected}
-        pickMe=''
-        active={this.state.isActive[index]}
-        key={index}
-        hideSave={true}
-      />)
+      return (
+        <Menu.Item className="corpusItem" style={{margin: '0'}} key={index}>
+            <UnknownItem
+              content={item.sentence}
+              index={index}
+              intentId=''
+              deleteMe={this.props.onDelete}
+              onSelect={this.onItemSelected}
+              pickMe=''
+              active={this.state.isActive[index]}
+              key={index}
+              hideSave={true}
+          />
+        </Menu.Item>
+      )
     })
   }
 
@@ -62,16 +66,22 @@ export class UnknownItemList extends Component {
       },
       corpusBox: {
         background: '#fbfbfb',
-        padding: '10px, 15px',
+        padding: '0px, 0px',
         width: '100%',
         height: '100%',
         borderRadius: '15px',
         marginBottom: '15px'
+      },
+      menu: {
+        float:'left',
+        width:'100%',
+        boarder:'none'
       }
     }
     return (<Card title={'未识别语料集'} style={style.corpusBox}>
-          {this.getItemView()}
-        {/*</Select>*/}
+      <Menu style= {style.menu}>
+        {this.getItemView()}
+      </Menu>
     </Card>)
   }
 }

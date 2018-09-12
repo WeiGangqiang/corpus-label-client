@@ -45,14 +45,40 @@ export default class unknownSays extends Component {
       this.setState({
         unknownList: [...data]
       })
+      //TODO for test, should be removed
+      var dummy = {
+          sentence: '我是未识别语料'
+      }
+      if (!this.state.unknownList.length) {
+        this.state.unknownList.push(dummy)
+        this.state.unknownList.push(dummy)
+        this.state.unknownList.push(dummy)
+        this.state.unknownList.push(dummy)
+      }
+      this.setState({
+        unknownList: this.state.unknownList
+      })
       console.log('unknownList fetched:', this.state.unknownList)
     }, error => {
       console.log(error)
     }));
 
     this.props.dispatch(unknownList('?agent=' + agent, data => {
+      this.state.backlog = [...data]
+
+      //TODO for test, should be removed
+      // var dummy = {
+      //   sentence: '我是backlog语料'
+      // }
+      // if (!data.length) {
+      //   this.state.backlog.push(dummy)
+      //   this.state.backlog.push(dummy)
+      //   this.state.backlog.push(dummy)
+      //   this.state.backlog.push(dummy)
+      // }
+
       this.setState({
-        backlog: [...data]
+        backlog: this.state.backlog
       })
       console.log('backlog fetched:', this.state.backlog)
     }, error => {
@@ -75,31 +101,29 @@ export default class unknownSays extends Component {
         return
     }
     this.state.unknownList.splice(index, 1);
+
     if (this.state.backlog.length > 0) {
       this.state.unknownList.push(this.state.backlog[0])
       this.state.backlog.shift()
-      this.setState({
-        unknownList:this.state.unknownList,
-        backlog:this.state.backlog
-      })
     } else {
       this.props.dispatch(unknownList('?agent=' + agent, data => {
         // this.setState({
         //   backlog: [...data]
         // })
-        console.log('backlog fetched:', this.state.backlog)
+        console.log('backlog fetched:', data)
         if (data.length > 0) {
           this.state.unknownList.push(data[0])
           data.shift()
         }
-        this.setState({
-          unknownList:data,
-          backlog:this.state.backlog
-        })
+        this.state.backlog = [...data]
       }, error => {
         console.log(error)
       }));
     }
+    this.setState({
+      unknownList:this.state.unknownList,
+      backlog:this.state.backlog
+    })
   }
 
   selectUnknownItem = (index) => {
@@ -137,7 +161,11 @@ export default class unknownSays extends Component {
       },
 
       itemTitle: {
-        fontSize:'20px',
+        fontSize: '20px',
+        fontWeight: 'bold',
+        paddingLeft: '15px',
+        marginBottom: '0px',
+        lineHeight: '40px'
       },
 
       unknownList:{
