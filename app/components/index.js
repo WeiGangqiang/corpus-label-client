@@ -17,6 +17,7 @@ import {EntityDesc} from "./entityDesc";
 import {IntentTree} from "./intentTree";
 import {UnknownItem} from "./unknownItem";
 import {UnknownItemList} from "./unknownItemList";
+import {UnknownPicker} from "./unknownPicker";
 
 export {
     PatternLine,
@@ -37,5 +38,6 @@ export {
     EntityDesc,
     IntentTree,
     UnknownItem,
-    UnknownItemList
+    UnknownItemList,
+    UnknownPicker
 }
