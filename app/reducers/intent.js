@@ -18,6 +18,7 @@ export const intentResult = handleActions({
             // res.key = modelPath;
             res.title = '意图';
             res.modelPath = res.key;
+            res.valid = true;
             return {data: {...res}, loading: false}
         } else {
             return {data:
@@ -28,7 +29,8 @@ export const intentResult = handleActions({
                         modelPath: "",
                         name: '',
                         zhName: '',
-                        children: []
+                        children: [],
+                        valid: true
 
                 }, loading: false}
         }
@@ -48,20 +50,21 @@ export const entitySlideResult = handleActions({
             key: '实体',
             title: '实体',
             children: [],
-            entityId: ''
+            entityId: '',
+            valid: true
         };
         res.map((item, index) => {
             rootObj.children.push({
-                key: item,
-                title: item,
+                key: item.name,
+                title: item.name,
                 children: [],
+                valid: item.valid,
                 entityId: 'entity' + index
             })
         });
         return {...rootObj}
     }
 }, entityListState)
-
 
 const colorArray = ['#64B8CF', '#FAB900', '#90BB23', '#EE7008', '#1AB39F'];
 const entityState = () => [];

@@ -13,6 +13,7 @@ import {IntentEdit} from "./intentEdit";
 import {EditEntity} from './entity/editEntity';
 import {InputValidate} from './validate/input';
 import {IntentTitle} from "./intentTitle";
+import {EntityDesc} from "./entityDesc";
 
 export {
     PatternLine,
@@ -29,5 +30,6 @@ export {
     IntentEdit,
     EditEntity,
     InputValidate,
-    IntentTitle
+    IntentTitle,
+    EntityDesc
 }

@@ -37,26 +37,9 @@ export class ActionsList extends Component {
             typeState: []
         }
     }
-
-    componentWillReceiveProps(props){
-        this.retreiveActions(props)
-    }
     
     retreiveActions = (props) => {
-        let entityUrl = '?agent=' + props.agentName + '&intentId=' + props.intentId;
-        this.props.dispatch(getIntentActions(entityUrl, rsp => {
-            rsp.data.push({
-                type: '',
-                values: []
-                })
-            this.setState({actions: rsp.data})
-        }, err=> {
-
-        }))
-    }
-
-    getActions = () => {
-        return this.state.actions
+        this.props.reloadActions(props.intentId)
     };
 
     saveValues = (e) => {
@@ -84,7 +67,7 @@ export class ActionsList extends Component {
 
     typeFocus = (index) => {
         let arr=[];
-        this.state.actions.map(item => {
+        this.props.actions.map(item => {
             arr.push(false)
         })
         arr[index] = true;
@@ -155,7 +138,7 @@ export class ActionsList extends Component {
     };
 
     updateAction = (index,i,e) => {
-        this.state.actions=this.state.actions.filter(item => item.type!='');
+        this.state.actions=this.props.actions.filter(item => item.type!='');
         if (i == 'add'){
             this.state.actions[index].values.push(e.target.value);
         }else if(i=='new'){
@@ -223,15 +206,17 @@ export class ActionsList extends Component {
         if(this.props.intentMode == "local"){
             return (<div/>)
         }
-
         return (<div className='table-container'>
             <p className='table-container-title'> 动作 </p>
             <Table
-                dataSource={this.getActions()}
+                dataSource={this.props.actions}
                 columns={this.columns()}
                 bordered
                 pagination={false}
             />
+            {
+                this.props.intentMode != 'local' && this.props.actions.length <= 1 ? <div className={'empty-tip'}>动作不能为空，请填写至少一条动作</div> : ''
+            }
         </div>)
     }
 }

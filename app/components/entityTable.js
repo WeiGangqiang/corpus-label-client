@@ -306,6 +306,9 @@ export class EntityTable extends Component {
                         pagination={false}
                         scroll={{x:600}}
                     ></Table>
+                    {
+                        this.props.data.items && this.props.data.items.length<=1 ? <div className={'empty-tip'}>近义词不能为空，请填写至少一条近义词</div> : ''
+                    }
                 </div>
                 <div className="entity-table-container table-container">
                     <span className="table-container-title">实体的引用</span>

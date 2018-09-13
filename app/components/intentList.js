@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 
-import { Tree, Modal, message, Radio, Form, Input, Button } from 'antd';
+import {hashHistory} from 'react-router'
+
+import { Tree, Modal, message, Radio, Form, Input, Button, Icon } from 'antd';
 
 import {EditEntity} from 'components/index'
 
@@ -38,7 +40,11 @@ export class IntentList extends Component {
     selectNode =(selectKey,e) => {
         if(e.selectedNodes.length){
             if(e.selectedNodes[0].props.dataRef.intentId){
-                this.props.getIntent(e.selectedNodes[0].props.dataRef)
+                // this.props.getIntent(e.selectedNodes[0].props.dataRef)
+                hashHistory.push({
+                    pathname: '/corpusLabel/intent/' + e.selectedNodes[0].props.dataRef.name,
+                    query: e.selectedNodes[0].props.dataRef
+                })
             }
         }else{
 
@@ -75,9 +81,13 @@ export class IntentList extends Component {
 
     selectNodeEntity = (selectKey, e) => {
         if(e.selectedNodes.length){
-            if(e.selectedNodes[0].props.dataRef.entityId){
-                this.props.getEntity(e.selectedNodes[0].props.dataRef)
-            }
+            // if(e.selectedNodes[0].props.dataRef.entityId){
+                // this.props.getEntity(e.selectedNodes[0].props.dataRef)
+                hashHistory.push({
+                    pathname: '/corpusLabel/entity/' + e.selectedNodes[0].props.dataRef.key,
+                    query: e.selectedNodes[0].props.dataRef
+                })
+            // }
         }
     };
 
@@ -85,12 +95,16 @@ export class IntentList extends Component {
         return data.map((item,index) => {
             if (item.children) {
                 return (
-                    <TreeNode key={index} title={item.title} key={item.key} dataRef={item}>
+                    <TreeNode
+                        title={<div>{item.title} <Icon type="exclamation" className={'warning-tip'} style={{display: item.valid ? 'none' : 'inline-block'}}/></div>}
+                        key={item.key + index}
+                        dataRef={item}
+                    >
                         {this.renderTreeNodes(item.children)}
                     </TreeNode>
                 );
             }
-            return <TreeNode key={index} {...item} />;
+            return <TreeNode key={item.key + index} {...item} />;
         });
     };
 
