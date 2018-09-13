@@ -133,10 +133,12 @@ export class ActionsList extends Component {
                 return <div>
                     {
                         values.map((item,i) => {
-                            return <span className='cell-span' key={i}>{item} <Icon onClick={this.updateAction.bind(this, index, i)} type='close'></Icon></span>
+                            return (<div>
+                                <span className='cell-span' key={i}>{item} <Icon onClick={this.updateAction.bind(this, index, i)} type='close'></Icon></span>
+                                </div>)
                         })
                     }
-                    <Input style={{width: '200px',verticalAlign: 'top'}} onPressEnter={this.updateAction.bind(this, index, 'add')}/>
+                    <Input style={{width: '100%',verticalAlign: 'middle'}} onPressEnter={this.updateAction.bind(this, index, 'add')}/>
                 </div>
             } else if (record.type === 'forward') {
                 return <IntentSelect intentList = {this.props.intentList} value={values[0]} onChange={this.updateForwardAction.bind(this,index,'update')}/>
@@ -145,7 +147,7 @@ export class ActionsList extends Component {
             if (this.state.type === 'forward') {
                 return <IntentSelect intentList = {this.props.intentList} value={this.state.values[0]} onChange={this.updateForwardAction.bind(this, 0, 'new')}/>
             } else {
-                return <Input style={{width: '200px',verticalAlign: 'top'}} onBlur={this.saveValues} onPressEnter={this.addAction}/>
+                return <Input style={{width: '100%',verticalAlign: 'middle'}} onBlur={this.saveValues} onPressEnter={this.addAction}/>
             }
         }
     };
