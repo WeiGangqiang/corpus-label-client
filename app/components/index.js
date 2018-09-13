@@ -14,6 +14,9 @@ import {EditEntity} from './entity/editEntity';
 import {InputValidate} from './validate/input';
 import {IntentTitle} from "./intentTitle";
 import {EntityDesc} from "./entityDesc";
+import {IntentTree} from "./intentTree";
+import {UnknownItem} from "./unknownItem";
+import {UnknownItemList} from "./unknownItemList";
 
 export {
     PatternLine,
@@ -31,5 +34,8 @@ export {
     EditEntity,
     InputValidate,
     IntentTitle,
-    EntityDesc
+    EntityDesc,
+    IntentTree,
+    UnknownItem,
+    UnknownItemList
 }
