@@ -39,9 +39,9 @@ export default class unknownSays extends Component {
       // console.log('simplifer success')
       this.state.suggestion = data.y
       //TODO
-      if (data.y === sentence) {
-        this.state.suggestion = '简化模型'
-      }
+      // if (data.y === sentence) {
+      //   this.state.suggestion = '简化模型'
+      // }
       //////////////////////////////////////////////////////
 
       this.setState({
@@ -73,19 +73,19 @@ export default class unknownSays extends Component {
         unknownList: [...data]
       })
       //TODO for test, should be removed
-      if (!this.state.unknownList.length) {
-        var step;
-        for (step = 0; step < 5; step++) {
-          var dummy = {
-            sentence: ''
-          }
-          dummy.sentence = '我是未识别语料' + step
-          this.state.unknownList.push(dummy)
-        }
-      }
-      this.setState({
-        unknownList: this.state.unknownList,
-      })
+      // if (!this.state.unknownList.length) {
+      //   var step;
+      //   for (step = 0; step < 5; step++) {
+      //     var dummy = {
+      //       sentence: ''
+      //     }
+      //     dummy.sentence = '我是未识别语料' + step
+      //     this.state.unknownList.push(dummy)
+      //   }
+      // }
+      // this.setState({
+      //   unknownList: this.state.unknownList,
+      // })
       //////////////////////////////////
 
       this.selectUnknownItem(0)
