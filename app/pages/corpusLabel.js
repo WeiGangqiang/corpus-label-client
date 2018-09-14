@@ -110,6 +110,8 @@ export default class CorpusLabel extends Component {
                     data[i].valuesF[j] = data[i].valuesF[j].replace(reg, '').replace(labelReg, '').replace(' ','')
                 }
                 data[i].valuesShow = [...data[i].valuesF.slice(0, 10)]
+                data[i].require = data[i].require || false
+                data[i].param = data[i].param || []
             }
             if(intentId && mode!='local'){
                 this.setState({
@@ -118,6 +120,8 @@ export default class CorpusLabel extends Component {
                         label:'',
                         entity:'',
                         isList:false,
+                        require:false,
+                        prompt: [],
                         values:[],
                         subEntities:[],
                         kind:'',
@@ -423,7 +427,18 @@ export default class CorpusLabel extends Component {
                             {!intentResult.loading ? <div className="container" style={style.body}>
                                 <IntentTitle modelPath={this.state.modelPath} agent={agentName} mode={this.state.intentMode} addintent={this.addintent}/>
                                 <IntentDesc name={this.state.name} zhName={this.state.zhName} modelPath={this.state.modelPath} mode={this.state.intentMode} intentId={this.state.intentId} editIntent={this.editIntent} deleteIntent={this.deleteIntent}/>
-                                <EntityParameters entityList={entitySlideResult.children} entityParam={this.state.entityParam} agent={agentName} intentId={this.state.intentId} name={this.state.name} zhName={this.state.zhName} modelPath={this.state.modelPath} mode={this.props.mode} showLessValues={this.showLessValues} showMoreValues={this.showMoreValues} addIntentParameter={this.addIntentParameter} deleteIntentParameter={this.deleteIntentParameter} putIntentParameter={this.editIntentParameter} putIntentParameterEntity={this.putIntentParameterEntity}/>
+                                <EntityParameters entityList={entitySlideResult.children} 
+                                                entityParam={this.state.entityParam}
+                                                agent={agentName}
+                                                intentId={this.state.intentId}
+                                                name={this.state.name}
+                                                zhName={this.state.zhName}
+                                                modelPath={this.state.modelPath}
+                                                mode={this.props.mode} 
+                                                addIntentParameter={this.addIntentParameter}
+                                                deleteIntentParameter={this.deleteIntentParameter}
+                                                putIntentParameter={this.editIntentParameter}
+                                                putIntentParameterEntity={this.putIntentParameterEntity}/>
                                 <PatternList key={this.state.pattenListKey} agentName={agentName} intent={this.state.name} intentId={this.state.intentId}
                                              corpusType={this.state.type} updatePhrase={this.getPhrase} phraseArray={this.state.phraseArray} entityParam={this.state.entityParam} positivePatterns={this.state.positivePatterns} negativePatterns={this.state.negativePatterns} getPatternList={this.getPatternList}/>
 

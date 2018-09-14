@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Table , Icon, Input, Select, Button, message, Popconfirm} from 'antd'
+import { Table , Icon, Input, Select, Button, message, Popconfirm, Tooltip, Checkbox} from 'antd'
 
 import {InputValidate} from 'components/index'
 
@@ -11,17 +11,10 @@ export class EntityParameters extends Component {
         this.state={
             entity: '',
             name: '',
+            prompt: [],
             nameEditArray: [],
             entityEditArray: []
         }
-    }
-
-    showMoreValues(i) {
-        this.props.showMoreValues(i)
-    }
-
-    showLessValues(i) {
-        this.props.showLessValues(i)
     }
 
     handleChange = (value) => {
@@ -34,13 +27,9 @@ export class EntityParameters extends Component {
         this.setState({
             entityEditArray: []
         });
-        let {name, label, entity} = item;
+        
         entity = value;
-
-        this.props.putIntentParameterEntity({
-            "intentId": this.props.intentId,
-            "parameter": {name,label,entity}
-        },{intentId: this.props.intentId, mode: this.props.mode})
+        this.updateValue(item, {entity: value})
     };
 
     blur = () => {
@@ -98,13 +87,21 @@ export class EntityParameters extends Component {
         this.setState({
             nameEditArray: []
         });
-        let {name, label, entity} = item;
-        name = e.target.value;
+        this.updateName(item, {name: e.target.value})
+    };
+
+    updateRequire = (item, e) => {
+        console.log(e)
+        this.updateValue(item, {require: e.target.checked})
+    }
+
+    updateValue = (item, value) => {
+        let {name, label, entity, require, prompt} = item
         this.props.putIntentParameter({
             "intentId": this.props.intentId,
-            "parameter": {name,label,entity}
-        },{intentId: this.props.intentId, mode: this.props.mode})
-    };
+            "parameter": {name, label, entity, require, prompt, ...value}
+        },{intentId: this.props.intentId, mode: this.props.mode})        
+    }
 
     getEntity = () => {
 
@@ -138,17 +135,43 @@ export class EntityParameters extends Component {
                 <Button className='button-icon' icon='delete'></Button>
             </Popconfirm>
         )
-    } 
+    }
+
+    deletePrompt (record, index,  promptIdx) {
+        let prompt = [...record.prompt]
+        prompt.splice(promptIdx, 1)
+        this.updateValue(record, {prompt})
+    }
+
+    addPrompt (record, event) {
+        let prompt = [...record.prompt, event.target.value]
+        event.target.value = ''
+        this.updateValue(record, {prompt})
+    }
 
     columns = () => {
         const that = this
-
         return [
+            {
+                title: '必选',
+                dataIndex: 'require',
+                key: 'require',
+                width: '2%',
+                render(require, record, index) {
+                    if (record.entity) {
+                        return (
+                            <div style={{width: '100%', textAlign:'center'}}>
+                                <Checkbox checked={require} onChange={that.updateRequire.bind(that, record)}></Checkbox>
+                            </div>
+                        )    
+                    }   
+                }
+            },            
             {
                 title: '变量名',
                 dataIndex: 'name',
                 key: 'name',
-                width: '15%',
+                width: '10%',
                 render(text, record, index) {
                     if(record.entity){
                         return that.state.nameEditArray[index] ? <input className='inputOrigin' placeholder={text} defaultValue={record.name} onBlur={that.updateName.bind(that, record,index)}/> : <span style={{display: 'block'}} onClick={that.changeInput.bind(that,index)}>{record.name}</span>}
@@ -162,7 +185,7 @@ export class EntityParameters extends Component {
                 title: '实体名',
                 dataIndex: 'entity',
                 key: 'entity',
-                width: '15%',
+                width: '10%',
                 render(text, record, index) {
                     if(text){
                         return that.state.entityEditArray[index] ? <Select className='testAA' defaultValue={text} firstActiveValue={text} style={{ width: 120 }} onChange={that.handleEntityChange.bind(that,record)} onBlur={that.blur} open={true} autoFocus={true}>
@@ -171,7 +194,11 @@ export class EntityParameters extends Component {
                                     return <Option key={item.entityId} value={item.key}>{item.key}</Option>
                                 })
                             }
-                        </Select> : <span onClick={that.changeSelected.bind(that,index)} className='corpusSpan' style={{background: record.color}}>{text}</span>
+                        </Select> : (
+                            <Tooltip placement="topLeft" title={record.valuesShow.join(',')} arrowPointAtCenter>
+                                <span onClick={that.changeSelected.bind(that,index)} className='corpusSpan' style={{background: record.color}}>{text}</span>
+                            </Tooltip>
+                        )
                     }else{
                         return <Select className='testAA' defaultValue="" style={{ width: 120 }} onChange={that.handleChange}>
                             {
@@ -184,36 +211,35 @@ export class EntityParameters extends Component {
                 }
             },
             {
-                title: '槽位值',
-                dataIndex: 'valuesShow',
-                key: 'valuesShow',
-                width: '60%',
-                render(text, record, index) {
-                    return <span> {text.join()} </span>
+                title: '追问',
+                dataIndex: 'prompt',
+                key: 'prompt',
+                width: '30%',
+                render(prompt, record, index) {
+                    if(record.entity && record.require) {
+                        return <div>
+                            {
+                                prompt.map((item,i) => {
+                                    return (<div>
+                                        <span className='cell-span' key={i}>{item} <Icon onClick={that.deletePrompt.bind(that, record, index, i)} type='close'></Icon></span>
+                                        </div>)
+                                })
+                            }
+                            <Input style={{width: '100%',verticalAlign: 'middle'}} onPressEnter={that.addPrompt.bind(that, record)}/>
+                        </div>
+                    }
                 }
             },
             {
                 title: '操作',
                 dataIndex: 'operate',
                 key: 'operate',
-                width: '10%',
+                width: '5%',
                 render(text, record, index) {
                     if(record.entity){
-                        if(record.values.length <= 10){
-                            return (<div>
-                                    {that._renderDeleteButton(record)}
-                                </div>)
-                        } else if(record.valuesShow.length <= 10){
-                            return ( <div>
+                        return (<div>
                                 {that._renderDeleteButton(record)}
-                                <Button className='button-icon' icon='down' onClick={that.showMoreValues.bind(that, index)}/>
                             </div>)
-                        } else {
-                            return (<div>
-                                {that._renderDeleteButton(record)}
-                                <Button className='button-icon' icon='up' onClick={that.showLessValues.bind(that, index)}/>
-                            </div>)
-                        }
                     }else{
                         return <Button className='button-icon' icon='plus' onClick={that.addItems} disabled={that.state.entity=='' || that.state.name==''}></Button>
                         // return <Button disabled={true}>增加</Button>
