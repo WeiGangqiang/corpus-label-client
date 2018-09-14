@@ -29,47 +29,32 @@ export default class unknownSays extends Component {
       unknownList: [],
       backlog:[],
       suggestion: '',
-      corpus: '',
-      loading: true,
-      simpliferSequence: 0
+      acceptSuggestion: true
     };
   }
 
   doSimplifer = (sentence) => {
-    this.state.loading = true
-    this.state.suggestion = ''
-    this.state.corpus = this.state.sentence
-    console.log('enter doSimplifer')
+    // console.log('enter doSimplifer')
     this.props.dispatch(simplifier({x: sentence}, data => {
-      console.log('simplifer success')
-      this.state.loading = false
-      if (data.y != sentence) {
-        this.state.suggestion = data.y
-        this.state.corpus = data.y
-      } else {
-        this.state.suggestion = ''
+      // console.log('simplifer success')
+      this.state.suggestion = data.y
+      //TODO
+      if (data.y === sentence) {
+        this.state.suggestion = '简化模型'
       }
+      //////////////////////////////////////////////////////
+
       this.setState({
-        loading: this.state.loading,
         suggestion: this.state.suggestion,
-        corpus: this.state.corpus
       })
     }, err => {
       console.log(err)
-      console.log('simplifer failed')
-      this.state.loading = false
-      this.state.suggestion = ''
+      // console.log('simplifer failed')
+      this.state.suggestion = sentence
       this.setState({
-        loading: this.state.loading,
         suggestion: this.state.suggestion,
-        corpus: this.state.corpus
       })
     }))
-    this.setState({
-      loading: this.state.loading,
-      suggestion: this.state.suggestion,
-      corpus: this.state.corpus
-    })
   }
 
   componentWillMount() {
@@ -98,14 +83,13 @@ export default class unknownSays extends Component {
           this.state.unknownList.push(dummy)
         }
       }
-      if (this.state.unknownList.length) {
-        this.state.unknownIndex = 0
-      }
       this.setState({
         unknownList: this.state.unknownList,
-        unknownIndex: this.state.unknownIndex
       })
-      console.log('unknownList fetched:', this.state.unknownList)
+      //////////////////////////////////
+
+      this.selectUnknownItem(0)
+      // console.log('unknownList fetched:', this.state.unknownList)
     }, error => {
       console.log(error)
     }));
@@ -115,27 +99,30 @@ export default class unknownSays extends Component {
       this.setState({
         backlog: this.state.backlog
       })
-      console.log('backlog fetched:', this.state.backlog)
+      // console.log('backlog fetched:', this.state.backlog)
     }, error => {
       console.log(error)
     }));
   }
 
   onIntentSelect = (value) => {
-    console.log('onIntentSelect, intent id: ',value);
+    // console.log('onIntentSelect, intent id: ',value);
     if (value) {
       this.state.intentId = value
       // onIntentSelect()
-      console.log('onIntentSelect, intent id: ',this.state.intentId);
+      // console.log('onIntentSelect, intent id: ',this.state.intentId);
       let labels = []
 
       if (this.state.unknownList.length > this.state.unknownIndex) {
-        this.addPattern(this.state.corpus, labels)
+        // console.log('onIntentSelect, intent id: ',this.state.intentId);
+        if (this.state.acceptSuggestion) {
+          // console.log('onIntentSelect, acceptSuggestion')
+          this.addPattern(this.state.suggestion, labels)
+        } else {
+          // console.log('onIntentSelect, not acceptSuggestion')
+          this.addPattern(this.state.unknownList[this.state.unknownIndex].sentence, labels)
+        }
         this.deleteUnknownItem(this.state.unknownIndex)
-        this.state.unknownIndex = 0
-        this.setState({
-          unknownIndex: this.state.unknownIndex
-        })
       }
       this.setState({
         intentId: this.state.intentId
@@ -144,7 +131,7 @@ export default class unknownSays extends Component {
   }
 
   deleteUnknownItem = (index) => {
-    console.log('enter deleteUnknownItem, index:', index)
+    // console.log('enter deleteUnknownItem, index:', index)
     if (index < 0 || index >= this.state.unknownList.length) {
         return
     }
@@ -155,12 +142,17 @@ export default class unknownSays extends Component {
       this.state.backlog.shift()
     } else {
       this.props.dispatch(unknownList('?agent=' + agent, data => {
-        console.log('backlog fetched:', data)
+        // console.log('backlog fetched:', data)
         if (data.length > 0) {
           this.state.unknownList.push(data[0])
           data.shift()
         }
         this.state.backlog = [...data]
+        this.setState({
+          unknownList:this.state.unknownList,
+          backlog:this.state.backlog
+        })
+        this.selectUnknownItem(0)
       }, error => {
         console.log(error)
       }));
@@ -169,17 +161,30 @@ export default class unknownSays extends Component {
       unknownList:this.state.unknownList,
       backlog:this.state.backlog
     })
+    this.selectUnknownItem(0)
+  }
+
+  setUnknownItem = (index) => {
+    if (index < 0 || index >= this.state.unknownList.length) {
+      return
+    }
+    this.state.suggestion = this.state.unknownList[index].sentence
+    this.state.acceptSuggestion = true
+    this.setState({
+      unknownIndex: index,
+      suggestion: this.state.suggestion,
+      acceptSuggestion: true
+    })
   }
 
   selectUnknownItem = (index) => {
-    console.log('enter selectUnknownItem')
-    if (!index || index < 0 || index >= this.state.unknownList.length) {
+    // console.log('enter selectUnknownItem, index', index)
+    if (index < 0 || index >= this.state.unknownList.length) {
+      console.log('selectUnknownItem, invalid index, length is:', this.state.unknownList.length)
       return
     }
+    this.setUnknownItem(index)
     this.doSimplifer(this.state.unknownList[index].sentence)
-    this.setState({
-      unknownIndex: index
-    })
   }
 
   onDelete = (key) => {
@@ -188,19 +193,20 @@ export default class unknownSays extends Component {
   }
 
   deleteByPicker = () => {
-    // console.log('enter onDelete, key:', key)
+    // console.log('enter deleteByPicker')
     this.deleteUnknownItem(this.state.unknownIndex)
   }
 
-  onRejectSuggestion = (v) => {
-    this.state.corpus = v
+  onRejectSuggestion = () => {
+    // console.log( 'enter onRejectSuggestion')
+    this.state.acceptSuggestion = false
     this.setState({
-      corpus: this.state.corpus
+      acceptSuggestion: this.state.acceptSuggestion
     })
   }
 
   addPattern = (newCorpus, labels) => {
-    console.log('add pattern for', newCorpus, labels)
+    // console.log('add pattern for', newCorpus, labels)
     let that = this
     this.props.dispatch(postPattern({
       pattern: {
@@ -217,8 +223,6 @@ export default class unknownSays extends Component {
   }
 
   render() {
-    const {intentResult} = this.props
-    const {unknownList, unknownIndex, intentId, suggestion} =this.state
     const style = {
       innerContainer: {
         width: '100%',
@@ -255,7 +259,9 @@ export default class unknownSays extends Component {
       }
 
     }
-    console.log('intentResult:', intentResult)
+    const {intentResult} = this.props
+    const {unknownList, unknownIndex, suggestion} =this.state
+    // console.log('intentResult:', intentResult)
     return (
       <Layout style={{height: '100%'}}>
       <Spin spinning={intentResult.loading} style={{height: '100%'}}>
@@ -283,6 +289,7 @@ export default class unknownSays extends Component {
                     <UnknownPicker
                       sentence={unknownList[unknownIndex].sentence}
                       suggestion={suggestion}
+                      acceptSuggestion={this.state.acceptSuggestion}
                       onDelete={this.deleteByPicker}
                       onRejectSuggestion={this.onRejectSuggestion}
                     />
