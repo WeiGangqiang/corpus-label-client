@@ -14,7 +14,6 @@ import {ChatPage} from 'components/chatpage/chatpage'
 
 let agentName = '';
 
-
 @connect((state, dispatch) => ({
     config: state.config,
     intentResult: state.intentResult,
@@ -426,6 +425,7 @@ export default class CorpusLabel extends Component {
                         <div style={{height: '100%', overflow: 'auto'}}>
                             {!intentResult.loading ? <div className="container" style={style.body}>
                                 <IntentTitle modelPath={this.state.modelPath} agent={agentName} mode={this.state.intentMode} addintent={this.addintent}/>
+
                                 <IntentDesc name={this.state.name} zhName={this.state.zhName} modelPath={this.state.modelPath} mode={this.state.intentMode} intentId={this.state.intentId} editIntent={this.editIntent} deleteIntent={this.deleteIntent}/>
                                 <EntityParameters entityList={entitySlideResult.children} 
                                                 entityParam={this.state.entityParam}

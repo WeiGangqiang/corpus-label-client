@@ -4,6 +4,7 @@ import hashHistory from './history'
 import axios from 'axios'
 
 import App from './base'
+import IntentDetail from "./pages/intentDetail";
 axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use(function (config) {
@@ -54,6 +55,24 @@ const corpusLabel = (location, cb) => {
     }, 'corpusLabel')
 };
 
+const corpusLabelTest = (location, cb) => {
+    require.ensure([], (require) => {
+        cb(null, require('./pages/corpusLabelTest').default)
+    }, 'corpusLabelTest')
+};
+
+const intentDetail = (location, cb) => {
+    require.ensure([], (require) => {
+        cb(null, require('./pages/intentDetail').default)
+    }, 'intentDetail')
+};
+
+const entityDetail = (location, cb) => {
+    require.ensure([], (require) => {
+        cb(null, require('./pages/entityDetail').default)
+    }, 'entityDetail')
+};
+
 const unknownSays = (location, cb) => {
     require.ensure([], (require) => {
         cb(null, require('./pages/unknownSays').default)
@@ -83,9 +102,12 @@ export default () => (
     <Router history={hashHistory}>
         <Route path="/" component={App}  onEnter={requireAuth}>
             <IndexRoute getComponent={selectService}/>
-            <Route path="/selectService" getComponent={selectService}/>
-            <Route path="/corpusLabel" query='agent' getComponent={corpusLabel  }></Route>
-            <Route path="/unknown"  query='agent' getComponent={unknownSays}></Route>
+            <Route path="selectService" getComponent={selectService}/>
+            <Route path="corpusLabel" getComponent={corpusLabelTest}>
+                <Route path={'intent/:intent'} getComponent={intentDetail}></Route>
+                <Route path={'entity/:entity'} getComponent={entityDetail}></Route>
+            </Route>
+            <Route path="unknown"  query='agent' getComponent={unknownSays}></Route>
         </Route>
         <Route path="/login" getComponent={Login} />
         <Route path="/register" getComponent={Register} />

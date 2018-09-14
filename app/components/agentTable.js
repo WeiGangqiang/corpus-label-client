@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
-import {Link} from 'react-router'
+import {Link, hashHistory} from 'react-router'
 import {Row, Col, Icon, Modal, Button, message, Spin} from 'antd'
 import {publishAgent} from 'actions/serve'
 
@@ -85,7 +85,14 @@ export class AgentTable extends Component {
             return (<div style={style.borderPre}> <Spin/> <p style={style.fontSize}> 发布中 </p></div>)
         }
         return (<p style={style.borderPre}> 已发布</p>)
-    }
+    };
+
+    toCorpusLabel = () => {
+        sessionStorage.setItem('agent', this.props.agent.name)
+        hashHistory.push({
+            pathname: 'corpusLabel',
+        })
+    };
 
     render() {
 
@@ -222,10 +229,7 @@ export class AgentTable extends Component {
                 </Row>
                 <Row style={style.row}>
                     <Col className='bottom-line' style={style.col} xs={12} sm={12} md={12} lg={12} xl={6}>
-                        <Link style={style.link} to={{
-                            pathname: '/corpusLabel',
-                            search: '?agent=' + this.props.agent.name,
-                        }}>配置语料</Link>
+                        <Link style={style.link} onClick={this.toCorpusLabel}>配置语料</Link>
                     </Col>
                     <Col className='bottom-line' style={style.col} xs={12} sm={12} md={12} lg={12} xl={6}>
                         <Link style={style.link} to={{

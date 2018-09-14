@@ -41,7 +41,8 @@ export const arrayToDisc = (arr, parentObj) => {
             modelPath: rightArray[0].modelWord.length?'':rightArray[0].modelPath,
             name: rightArray[0].modelWord.length?'':rightArray[0].name,
             zhName: rightArray[0].modelWord.length?'':rightArray[0].zhName,
-            mode: rightArray[0].modelWord.length?'':rightArray[0].mode
+            mode: rightArray[0].modelWord.length?'':rightArray[0].mode,
+            valid: rightArray[0].modelWord.length?'':rightArray[0].valid,
         }
         if (parentObj) {
             parentObj.children.push(sonObj);

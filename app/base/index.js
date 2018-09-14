@@ -45,13 +45,13 @@ export default class App extends Component {
             },
         };
         return (
-            <div id="container" className={`effect easeInOutBack ${(this.state.pathname == '/corpusLabel' || this.state.pathname == '/unknown') ? "" : "slider-padding header-padding"}`}
+            <div id="container" className={`effect easeInOutBack ${(this.state.pathname.indexOf('/corpusLabel') >= 0  || this.state.pathname.indexOf('/unknown') >= 0) ? "" : "slider-padding header-padding"}`}
             >
                 {
-                    (this.state.pathname == '/corpusLabel' || this.state.pathname == '/unknown') ? '' : <Header pathname={this.state.pathname}/>
+                    (this.state.pathname.indexOf('/corpusLabel') >= 0 || this.state.pathname.indexOf('/unknown') >= 0) ? '' : <Header pathname={this.state.pathname}/>
                 }
                 {
-                    (this.state.pathname == '/corpusLabel' || this.state.pathname == '/unknown') ? '' : <SliderBar/>
+                    (this.state.pathname.indexOf('/corpusLabel') >= 0 || this.state.pathname.indexOf('/unknown') >= 0) ? '' : <SliderBar/>
                 }
                 <div className="boxed">
                     <div className='boxed'>
