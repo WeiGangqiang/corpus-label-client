@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {PatternLine} from 'components/pattern'
 import {getPattern, deletePattern, putPattern, predict, postPattern, fetchEntity, getPhrase} from 'actions/intent'
 import {Simplifier} from 'components/Simplifer'
-import { Tabs } from 'antd';
+import { Tabs, Button } from 'antd';
 
 @connect((state, dispatch) => ({}))
 
@@ -12,32 +12,10 @@ export class PatternList extends Component {
         super(props)
         this.state = {
             posSimpliferKey: 0,
-            negSimpliferKey: 0
+            negSimpliferKey: 0,
+            slotLabel: ''
         }
     }
-
-    getEntityForIntent = (props) =>{
-        let entityUrl = '?agent=' + props.agentName + '&intentId=' + props.intentId
-        // console.log('get entity for intent url', entityUrl, )
-        this.props.dispatch(fetchEntity(entityUrl, data => {
-            for (let i = 0; i < data.length; i++) {
-                data[i].valuesF = [...data[i].values]
-                for (let j = 0; j < data[i].valuesF.length; j++) {
-                    let reg = /[\[\]]/g
-                    let labelReg = /\/L[0-9]/g
-                    data[i].valuesF[j] = data[i].valuesF[j].replace(reg, '').replace(labelReg, '')
-                }
-                data[i].valuesShow = [...data[i].valuesF.slice(0, 10)]
-            }
-            // console.log('get  entity data', data)
-            this.setState({
-                entityParam: [...data]
-            })
-        }, error => {
-            console.log(error)
-        }))
-    }
-
 
     removePatternBy = (patternId, corpusType) => {
         // console.log('patternId', patternId, 'removed')
@@ -46,17 +24,17 @@ export class PatternList extends Component {
             "patternId": patternId,
             "type": corpusType,
             "intentId": this.props.intentId,
-            "agent": this.props.agentName
+            "agent": this.props.agentName,
+            slotLabel: this.props.labelValue
         }, data => {
-            that.props.getPatternList(that.props, corpusType)
+            this.props.initPattern(this.props.intentId, this.props.labelValue)
         }))
-    }
+    };
 
     updateSelectLabel = (patternId, selectLoc, corpusType) => {
         this.props.updatePhrase()
-        // console.log('patternId', patternId, selectLoc)
         this.updatePatternLabels(patternId, selectLoc, corpusType)
-    }
+    };
 
     isLocOverLap = (selectLoc, labelLoc) => {
         if (labelLoc.startPos + labelLoc.length <= selectLoc.startPos) {
@@ -83,15 +61,15 @@ export class PatternList extends Component {
         let patternList = this.getPatternListBy(corpusType)
         let pattern = patternList[patternId]
         pattern.labels = this.updateNewLabels(pattern.labels, newLabel)
-        let that = this
         this.props.dispatch(putPattern({
             "patternId": patternId,
             "type": corpusType,
             "intentId": this.props.intentId,
             "agent": this.props.agentName,
-            "pattern": pattern
+            "pattern": pattern,
+            slotLabel: this.props.labelValue
         }, data => {
-            that.props.getPatternList(that.props, corpusType)
+            this.props.initPattern(this.props.intentId, this.props.labelValue)
 
         }))
 
@@ -112,7 +90,6 @@ export class PatternList extends Component {
     addPattern = (newCorpus, labels, corpusType) => {
         // console.log('add pattern for', newCorpus, labels, corpusType)
         this.updateSimpliferKey(corpusType)
-        let that = this
         this.props.dispatch(postPattern({
             pattern: {
                 sentence: newCorpus,
@@ -120,10 +97,10 @@ export class PatternList extends Component {
             },
             type: corpusType,
             intentId: this.props.intentId,
-            agent: this.props.agentName
+            agent: this.props.agentName,
+            slotLabel: this.props.labelValue
         }, data => {
-            // console.log('add pattern result', data)
-            that.props.getPatternList(that.props, corpusType)
+            this.props.initPattern(this.props.intentId, this.props.labelValue)
         }))
     }
 
@@ -148,15 +125,15 @@ export class PatternList extends Component {
             return index != labelIndex
         })
         pattern.labels = newLabels
-        let that = this
         this.props.dispatch(putPattern({
             "patternId": patternId,
             "type": corpusType,
             "intentId": this.props.intentId,
             "agent": this.props.agentName,
-            "pattern": pattern
+            "pattern": pattern,
+            slotLabel: this.props.labelValue
         }, data => {
-            that.props.getPatternList(that.props, corpusType)
+            this.props.initPattern(this.props.intentId, this.props.labelValue)
         }))
     }
 
@@ -200,6 +177,27 @@ export class PatternList extends Component {
         // console.log('change key', key)
     }
 
+    setTypeNum = (label) => {
+        this.props.initPattern(this.props.intentId, label)
+    };
+
+    getTabs = () => {
+        let entityParam = [
+            {
+                name: '主意图',
+                slotLabel: '',
+                require: true,
+                label: ''
+            }
+        ];
+        if(this.props.entityParam.length){
+            entityParam = [...entityParam, ...this.props.entityParam].filter(item => item.require == true);
+            return entityParam.map((item,index) => {
+                return <Button className='patternBtn' onClick={this.setTypeNum.bind(this,item.label)} type={this.props.labelValue == item.label ? 'primary' : 'default'} key={index}>槽位{item.name}</Button>
+            })
+        }
+    };
+
     render() {
         const style = {
             pBox: {
@@ -218,7 +216,11 @@ export class PatternList extends Component {
         const TabPane = Tabs.TabPane;
 
         return (<div className='table-container'>
-            <p className='table-container-title'> 用户语料 </p>
+            <p className='table-container-title' style={{display: 'inline-block'}}> 用户语料 </p>
+
+            {
+                this.getTabs()
+            }
             <Tabs type="card" style={style.corpusTab} defaultActiveKey="1" onChange={this.updateTabPane}>
                 <TabPane style={style.corpusTabPane} tab="正样本" key="positive">
                     <div ref="div" style={style.pBox}> {this.getPatternViews("positive")}</div>

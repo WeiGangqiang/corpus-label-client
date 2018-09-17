@@ -55,12 +55,6 @@ const corpusLabel = (location, cb) => {
     }, 'corpusLabel')
 };
 
-const corpusLabelTest = (location, cb) => {
-    require.ensure([], (require) => {
-        cb(null, require('./pages/corpusLabelTest').default)
-    }, 'corpusLabelTest')
-};
-
 const intentDetail = (location, cb) => {
     require.ensure([], (require) => {
         cb(null, require('./pages/intentDetail').default)
@@ -103,7 +97,7 @@ export default () => (
         <Route path="/" component={App}  onEnter={requireAuth}>
             <IndexRoute getComponent={selectService}/>
             <Route path="selectService" getComponent={selectService}/>
-            <Route path="corpusLabel" getComponent={corpusLabelTest}>
+            <Route path="corpusLabel" getComponent={corpusLabel}>
                 <Route path={'intent/:intent'} getComponent={intentDetail}></Route>
                 <Route path={'entity/:entity'} getComponent={entityDetail}></Route>
             </Route>

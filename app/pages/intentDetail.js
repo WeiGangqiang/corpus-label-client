@@ -32,6 +32,7 @@ export default class IntentDetail extends Component{
             positivePatterns: [],
             negativePatterns:[],
             actions: [],
+            labelValue: ''
         }
     }
 
@@ -154,8 +155,9 @@ export default class IntentDetail extends Component{
             }))
     };
 
-    initPattern = (intentId) => {
-        this.props.dispatch(getPattern('?agent=' + agent + '&intentId=' + intentId + '&type=positive',
+    initPattern = (intentId, slotlabel) => {
+        slotlabel = slotlabel ? slotlabel : '';
+        this.props.dispatch(getPattern('?agent=' + agent + '&intentId=' + intentId + '&type=positive' + '&slotLabel=' + slotlabel,
             data => {
                 this.setState({
                     positivePatterns: data
@@ -163,7 +165,7 @@ export default class IntentDetail extends Component{
             },error => {
                 console.log(error)
             }));
-        this.props.dispatch(getPattern('?agent=' + agent + '&intentId=' + intentId + '&type=negative',
+        this.props.dispatch(getPattern('?agent=' + agent + '&intentId=' + intentId + '&type=negative' + '&slotLabel=' + slotlabel,
             data => {
                 this.setState({
                     negativePatterns: data
@@ -171,6 +173,13 @@ export default class IntentDetail extends Component{
             },error => {
                 console.log(error)
             }))
+    };
+
+    changePattern = (intentId, slotlabel) => {
+        this.initPattern(intentId, slotlabel)
+        this.setState({
+            labelValue: slotlabel
+        })
     };
 
     initAction = (intentId) => {
@@ -257,7 +266,13 @@ export default class IntentDetail extends Component{
             agent: agent
         }, data => {
             this.initEntityParam(obj.intentId, obj.mode);
-            this.initPattern(obj.intentId);
+            let label = this.state.labelValue;
+            if(obj.label == this.state.labelValue){
+                label = ''
+            }else{
+                label = 'L' + (label.replace('L','')-1)
+            }
+            this.changePattern(param.intentId, label)
         }, error => {}))
     };
 
@@ -269,6 +284,23 @@ export default class IntentDetail extends Component{
             this.initEntityParam(obj.intentId,obj.mode)
         }, error => {}))
     };
+
+    updateIntentRequire = (param, obj) => {
+        this.props.dispatch(putIntentParameter({
+            ...param,
+            agent: agent
+        }, data => {
+            this.initEntityParam(obj.intentId,obj.mode);
+            let label = this.state.labelValue;
+            if(obj.require){
+            }else{
+                if(obj.label == this.state.labelValue){
+                    label = ''
+                }
+            }
+            this.changePattern(obj.intentId, label)
+        }, error => {}))
+    }
 
     putIntentParameterEntity = (param, obj) => {
         this.props.dispatch(putIntentParameter({
@@ -377,6 +409,7 @@ export default class IntentDetail extends Component{
                         addIntentParameter={this.addIntentParameter}
                         deleteIntentParameter={this.deleteIntentParameter}
                         putIntentParameter={this.editIntentParameter}
+                        updateIntentRequire={this.updateIntentRequire}
                         putIntentParameterEntity={this.putIntentParameterEntity}
                     />
 
@@ -388,10 +421,12 @@ export default class IntentDetail extends Component{
                         corpusType={this.state.type}
                         phraseArray={this.state.phraseArray}
                         entityParam={this.state.entityParam}
+                        labelValue={this.state.labelValue}
                         positivePatterns={this.state.positivePatterns}
                         negativePatterns={this.state.negativePatterns}
                         getPatternList={this.getPatternList}
                         updatePhrase={this.getPhrase}
+                        initPattern={this.changePattern}
                     />
 
                     <PhraseList

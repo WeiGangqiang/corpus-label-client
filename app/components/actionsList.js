@@ -154,7 +154,11 @@ export class ActionsList extends Component {
     updateAction = (index,i,e) => {
         this.state.actions=this.props.actions.filter(item => item.type!='');
         if (i == 'add'){
-            this.state.actions[index].values.push(e.target.value);
+            if(e.target.value){
+                this.state.actions[index].values.push(e.target.value);
+            }else{
+                return
+            }
         } else if (i == 'update'){
             this.state.actions[index].values = [e.target.value]
         } else if(i=='new'){

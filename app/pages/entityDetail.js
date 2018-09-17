@@ -95,6 +95,10 @@ export default class EntityDetail extends Component{
             entity: obj
         }, data => {
             this.initEntity({key:obj.name})
+            this.props.dispatch(fetchEntityList('?agent=' + agent, data => {
+            }, error => {
+                console.log(error)
+            }))
         }, error => {
             console.log(error)
         }))

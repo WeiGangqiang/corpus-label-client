@@ -68,43 +68,40 @@ export class ColorDownList extends Component {
     entityOrPhrase = (e) => {
       if(this.getButtonType(e) == 'phrase'){
         this.updatePhraseLabel(this.getLabelId(e))
-
       }else if (this.getButtonType(e) == 'addNew'){
         this.addPhrase()
       }else if (this.getButtonType(e) == 'entity'){
         this.addEntityLabel(this.getLabelId(e))
       }
       this.props.hideDownlist()
-    }
+    };
 
     getEntityDisplay = (entity) => {
       return '槽位：' + entity.name
-    }
+    };
 
     getPhraseDisPlay = (phrase) => {
       return '近义词：' + phrase.similars.slice(0,2).join(',')
-    }
+    };
 
     getSubMenu = () =>{
       let subMenus = []
       let that = this
       let menuStyle = {
         borderTop: '1px solid #dadada',
-      }
+      };
       let noMargin = {
           margin: 0
-      }
-      console.log('this phrase id', this.props.phraseArray)
-        console.log(this.props.entityParam)
+      };
 
-      this.props.entityParam.forEach(entity => {
+      this.props.entityParam.filter(item => item.entity != '').forEach(entity => {
         if(that.props.hasLabel && that.props.label.type == 'entity'){
           if(entity.name == that.props.label.id){
             return
           }
         }
         subMenus.push(<Menu.Item className="corpusItem" style={{...noMargin}} key={entity.name + '###entity'}>{that.getEntityDisplay(entity)}</Menu.Item>)
-      })
+      });
 
       this.props.phraseArray.forEach(phrase => {
         if(that.props.hasLabel && that.props.label.type == 'phrase'){
@@ -115,11 +112,11 @@ export class ColorDownList extends Component {
         if(phrase.intentId) {
             subMenus.push(<Menu.Item style={{...noMargin}} className="corpusItem" key={phrase.phraseId + '###phrase'}>{that.getPhraseDisPlay(phrase)}</Menu.Item>)
         }
-      })
+      });
 
       subMenus.push(<Menu.Item style={{...menuStyle,...noMargin}} className="corpusItem" key={'453543###addNew'}>添加近义词</Menu.Item>)
       return subMenus
-    }
+    };
 
     removelabel = (e) => {
       this.props.removeLabel(this.props.labelIndex)

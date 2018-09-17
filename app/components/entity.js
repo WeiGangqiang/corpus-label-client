@@ -76,7 +76,8 @@ export class EntityParameters extends Component {
                 zhName: this.props.zhName,
                 modelPath: this.props.modelPath,
                 intentId: this.props.intentId,
-                mode: this.props.mode
+                mode: this.props.mode,
+                label: label
             })
         }else{
             message.info('不允许删除该变量')
@@ -91,8 +92,11 @@ export class EntityParameters extends Component {
     };
 
     updateRequire = (item, e) => {
-        console.log(e)
-        this.updateValue(item, {require: e.target.checked})
+        let {name, label, entity, require, prompt} = item;
+        this.props.updateIntentRequire({
+            "intentId": this.props.intentId,
+            "parameter": {name, label, entity, require, prompt, ...{require: e.target.checked}}
+        },{intentId: this.props.intentId, mode: this.props.mode, label: label, require: e.target.checked})
     }
 
     updateValue = (item, value) => {
@@ -100,11 +104,7 @@ export class EntityParameters extends Component {
         this.props.putIntentParameter({
             "intentId": this.props.intentId,
             "parameter": {name, label, entity, require, prompt, ...value}
-        },{intentId: this.props.intentId, mode: this.props.mode})        
-    }
-
-    getEntity = () => {
-
+        },{intentId: this.props.intentId, mode: this.props.mode, label: label})
     };
 
     changeInput = (index) => {
@@ -258,6 +258,7 @@ export class EntityParameters extends Component {
                     columns={this.columns()}
                     bordered
                     pagination={false}
+                    scroll={{x:700}}
                 />
             </div>
         )
