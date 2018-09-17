@@ -71,10 +71,9 @@ export class Simplifier extends Component {
     }
 
     onInputEnter = () => {
-        let that = this
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                that.doSimplifer(values.newCorpus)
+                this.doSimplifer(values.newCorpus)
             }
         })
     }

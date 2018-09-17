@@ -82,13 +82,12 @@ export class PatternList extends Component {
             })
         }else{
             this.setState({
-                posSimpliferKey: this.state.negSimpliferKey + 1
+                negSimpliferKey: this.state.negSimpliferKey + 1
             })
         }
     }
 
     addPattern = (newCorpus, labels, corpusType) => {
-        // console.log('add pattern for', newCorpus, labels, corpusType)
         this.updateSimpliferKey(corpusType)
         this.props.dispatch(postPattern({
             pattern: {
@@ -102,21 +101,19 @@ export class PatternList extends Component {
         }, data => {
             this.props.initPattern(this.props.intentId, this.props.labelValue)
         }))
-    }
+    };
 
     addPatternWithPredict = (sentence, corpusType) => {
-        let that = this
         this.props.dispatch(predict({
             "sentence": sentence,
             "intentId": this.props.intentId,
             "agent": this.props.agentName
         }, data => {
-            // console.log('predict labels is', data)
-            that.addPattern(sentence, data, corpusType)
+            this.addPattern(sentence, data, corpusType)
         }, error => {
             console.log(error)
         }))
-    }
+    };
 
     removeLabel = (patternId, labelIndex, corpusType) => {
         let patternList = this.getPatternListBy(corpusType)
@@ -228,7 +225,7 @@ export class PatternList extends Component {
                 </TabPane>
                 <TabPane style={style.corpusTabPane} tab="负样本" key="negative">
                     <div  ref="div" style={style.pBox}> {this.getPatternViews("negative")}</div>
-                    <Simplifier key={this.state.posSimpliferKey} corpusType="negative" addPattern={this.addPatternWithPredict}></Simplifier>
+                    <Simplifier key={this.state.negSimpliferKey} corpusType="negative" addPattern={this.addPatternWithPredict}></Simplifier>
                 </TabPane>
             </Tabs>
         </div>)
