@@ -145,7 +145,7 @@ export class IntentDesc extends Component {
                             <span style={style.span}>意图名字:</span>
                             <div>
                                 {
-                                    this.state.editState? <Input defaultValue={this.props.name} onBlur={this.nameBlur}/> : this.props.name
+                                    this.state.editState? <Input defaultValue={this.props.name} onBlur={this.nameBlur}/> : this.props.intentId ? this.props.name : ''
                                 }</div>
                         </Col>
                         <Col style={style.col} span={10} xs={24} sm={12} xl={10}>
@@ -162,7 +162,7 @@ export class IntentDesc extends Component {
                         </Col>
                         <Col style={style.col} span={24} xs={24} sm={24}>
                             <span style={style.span}>模型路径:</span>
-                            <div>{this.props.modelPath}</div>
+                            <div>{this.props.intentId ? this.props.modelPath : ''}</div>
                         </Col>
                     </div>
                 </Row>

@@ -172,7 +172,7 @@ export class PhraseList extends Component {
                     if (record.intentId) {
                         return that._renderDeleteButton(record)
                     } else {
-                        return <Button className='button-icon' icon='delete' disabled></Button>
+                        return <Button className='button-icon' icon='plus' disabled></Button>
                     }
                 }
             }

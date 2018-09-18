@@ -39,13 +39,13 @@ export class IntentList extends Component {
 
     selectNode =(selectKey,e) => {
         if(e.selectedNodes.length){
-            if(e.selectedNodes[0].props.dataRef.intentId){
+            // if(e.selectedNodes[0].props.dataRef.intentId){
                 // this.props.getIntent(e.selectedNodes[0].props.dataRef)
                 hashHistory.push({
                     pathname: '/corpusLabel/intent/' + e.selectedNodes[0].props.dataRef.name,
                     query: e.selectedNodes[0].props.dataRef
                 })
-            }
+            // }
         }else{
 
         }

@@ -39,22 +39,7 @@ export default class IntentDetail extends Component{
     componentWillMount () {
         agent = sessionStorage.getItem('agent');
         const {intentId, name, zhName, modelPath, mode} = this.props.location.query;
-        // console.log({intentId, name, zhName, modelPath, mode});
         this.initData({intentId, name, zhName, modelPath, mode})
-        // this.props.router.setRouteLeaveHook(this.props.route, () => {
-        //     return '当前页面信息不完整，退出可能导致已有信息不可用\n确定要退出当前页面'
-        // });
-
-        // this.props.router.listenBefore((route) => {
-        //     console.log(route)
-        //     // return false
-        // })
-
-        // console.log(this.props.router)
-    }
-
-    componentDidMount() {
-
     }
 
     isEgle = (obj1,obj2) => {
@@ -72,30 +57,26 @@ export default class IntentDetail extends Component{
             const {intentId, name, zhName, modelPath, mode} = props.location.query;
             this.initData({name,zhName,modelPath,mode,intentId});
         }
-    }
-
-    shouldComponentUpdate () {
-        return true
-    }
-
-    componentDidUpdate(props){
-        // console.log(props)
-    }
-
-    componentWillUnmount() {
-        console.log('unmount')
-    }
+    };
 
     initData = (obj) => {
-        this.initState(obj);
+        if(obj.intentId){
+            this.initState(obj);
 
-        this.initEntityParam(obj.intentId, obj.mode);
+            this.initEntityParam(obj.intentId, obj.mode);
 
-        this.initPhrase(obj.intentId);
+            this.initPhrase(obj.intentId);
 
-        this.initPattern(obj.intentId);
+            this.initPattern(obj.intentId);
 
-        this.initAction(obj.intentId);
+            this.initAction(obj.intentId);
+        }else{
+            this.setState({
+                name: '',
+                modelPath: ''
+            })
+        }
+
     };
 
     initState = (obj) => {

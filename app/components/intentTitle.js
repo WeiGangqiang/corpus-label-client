@@ -20,21 +20,21 @@ export class IntentTitle extends Component{
 
     intentInput = (e) => {
         this.setState({
-            modelPath: this.props.modelPath ? this.props.modelPath + '/' + e.target.value : 'users/'+ sessionStorage.getItem('user') + '/' + this.props.agent + '/' + e.target.value
+            modelPath:this.state.state == 'son' ? this.props.modelPath ? this.props.modelPath + '/' + e.target.value : 'users/'+ sessionStorage.getItem('user') + '/' + this.props.agent + '/' + e.target.value : 'users/'+ sessionStorage.getItem('user') + '/' + this.props.agent + '/' + e.target.value
         })
     };
 
     showModal = (role) => {
         if(this.props.mode != 'local'){
+
             this.setState({
                 state: role,
                 addIntentVisible: true,
-                modelPath: this.props.modelPath ? this.props.modelPath + '/' : 'users/'+ sessionStorage.getItem('user') + '/' + this.props.agent + '/'
+                modelPath: role == 'son' ? this.props.modelPath ? this.props.modelPath + '/' : 'users/'+ sessionStorage.getItem('user') + '/' + this.props.agent + '/': 'users/'+ sessionStorage.getItem('user') + '/' + this.props.agent + '/'
             })
         }else{
             message.info('由于mode值为local，不允许新增')
         }
-
     };
 
     hideModal = () => {
@@ -63,10 +63,12 @@ export class IntentTitle extends Component{
 
     render() {
         const {getFieldDecorator} = this.props.form;
+
         return <div>
             <div className='entity-container-head margin-top-0 margin-bottom-20'>
                 <span className='header-word'>意图</span>
-                <Button className='add-new-button' onClick={this.showModal.bind(this,'son')} type="primary">新增子意图</Button>
+                <Button className='add-new-button' style={{width:'120px',marginLeft: '15px'}} onClick={this.showModal.bind(this,'root')} type='primary'>新增顶层意图</Button>
+                <Button className='add-new-button' style={{width:'100px'}} onClick={this.showModal.bind(this,'son')} type="primary">新增子意图</Button>
             </div>
             <Modal
                 title='新增'

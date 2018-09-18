@@ -22,7 +22,6 @@ export default class EntityDetail extends Component{
 
     componentWillMount () {
         agent = sessionStorage.getItem('agent');
-        console.log(this.props.location.query);
         const {key, entityId} = this.props.location.query;
         this.initEntity({key,entityId})
     }

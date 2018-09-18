@@ -17,6 +17,7 @@ export const intentResult = handleActions({
             res = getDisc(res).children[0].children[0].children[0];
             // res.key = modelPath;
             res.title = '意图';
+            res.name = '意图';
             res.modelPath = res.key;
             res.valid = true;
             return {data: {...res}, loading: false}
@@ -27,7 +28,7 @@ export const intentResult = handleActions({
                         title:'意图',
                         intentId: '',
                         modelPath: "",
-                        name: '',
+                        name: '意图',
                         zhName: '',
                         children: [],
                         valid: true
