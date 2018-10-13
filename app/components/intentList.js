@@ -254,6 +254,12 @@ export class IntentList extends Component {
             },
             modalFootBtn:{
                 marginLeft: '8px'
+            },
+            treeContainer:{
+                height: '100%',
+                overflowY: 'auto',
+                width: '100%',
+                float: 'left'
             }
         }
 
@@ -261,23 +267,25 @@ export class IntentList extends Component {
             <div className={`intentSlide ${this.props.showMenu? 'height-auto': ''}`}>
                 <div style={style.corpusBox}>
                     <div style={style.headerTitle}>操作</div>
-                    <Tree
-                        autoExpandParent={true}
-                        defaultExpandAll={true}
-                        defaultExpandParent={true}
-                        onSelect={this.selectNode}
-                        onRightClick={this.rightClickNode}
-                        // expandedKeys={this.state.expandedKeys}
-                    >
-                        {this.renderTreeNodes(this.props.originEntity)}
-                    </Tree>
-                    <Tree
-                        autoExpandParent={true}
-                        onSelect={this.selectNodeEntity}
-                        onRightClick={this.rightClickEntity}
-                    >
-                        {this.renderTreeNodes(this.props.entityList)}
-                    </Tree>
+                    <div style={style.treeContainer}>
+                        <Tree
+                            autoExpandParent={true}
+                            defaultExpandAll={true}
+                            defaultExpandParent={true}
+                            onSelect={this.selectNode}
+                            onRightClick={this.rightClickNode}
+                            // expandedKeys={this.state.expandedKeys}
+                        >
+                            {this.renderTreeNodes(this.props.originEntity)}
+                        </Tree>
+                        <Tree
+                            autoExpandParent={true}
+                            onSelect={this.selectNodeEntity}
+                            onRightClick={this.rightClickEntity}
+                        >
+                            {this.renderTreeNodes(this.props.entityList)}
+                        </Tree>
+                    </div>
                 </div>
                 <div onClick={this.hideUl} style={{...style.positionDiv, display: this.state.showUl=='block'|| this.state.showEntityUl=='block'? 'block': 'none'}}>
                     <ul style={{...style.positionUl, top:this.state.top, left: this.state.left,display: this.state.showUl}}>
