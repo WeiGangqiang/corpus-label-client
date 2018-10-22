@@ -213,7 +213,14 @@ export class AgentTable extends Component {
                             <span style={style.label}>依赖</span>
                         </Col>
                         <Col xs={18} sm={18} md={18} lg={20} xl={20}>
-                            <p style={style.pre}>{this.props.agent.shareAgents.join(',')}</p>
+                            <p style={style.pre}>
+                                {
+                                    this.props.agent.shareAgents.length > 0 && this.props.agent.shareAgents.map((item,index) => {
+                                        let domon = this.props.agent.shareAgents.length-index==1? '' : ','
+                                        return (item.name || item) + domon
+                                    })
+                                }
+                            </p>
                         </Col>
                     </Col>
                 </Row>

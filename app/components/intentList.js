@@ -92,11 +92,12 @@ export class IntentList extends Component {
     };
 
     renderTreeNodes = (data) => {
+        const that = this;
         return data.map((item,index) => {
             if (item.children) {
                 return (
                     <TreeNode
-                        title={<div>{item.title} <Icon type="exclamation" className={'warning-tip'} style={{display: item.valid ? 'none' : 'inline-block'}}/></div>}
+                        title={<div>{item.title} <Icon type="exclamation" className={'warning-tip'} style={{display: item.valid||item.mode == 'local'||item.mode=='' ? 'none' : 'inline-block'}}/></div>}
                         key={item.key + index}
                         dataRef={item}
                     >

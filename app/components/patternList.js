@@ -52,7 +52,7 @@ export class PatternList extends Component {
         })
         newLabels.push(newLabel)
         newLabels.sort((left, right) => {
-            return left.startPos > right.startPos
+            return left.startPos > right.startPos ? 1 : -1
         })
         return  newLabels
     }
