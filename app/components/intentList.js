@@ -97,7 +97,7 @@ export class IntentList extends Component {
             if (item.children) {
                 return (
                     <TreeNode
-                        title={<div>{item.title} <Icon type="exclamation" className={'warning-tip'} style={{display: item.valid||item.mode == 'local'||item.mode=='' ? 'none' : 'inline-block'}}/></div>}
+                        title={<div style={{background: item.intentId ? '' : '#e8e8e8', padding: '0 10px',borderRadius: '3px'}}>{item.title} <Icon type="exclamation" className={'warning-tip'} style={{display: item.valid||item.mode == 'local'||item.mode=='' ? 'none' : 'inline-block'}}/></div>}
                         key={item.key + index}
                         dataRef={item}
                     >

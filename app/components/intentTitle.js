@@ -67,8 +67,8 @@ export class IntentTitle extends Component{
         return <div>
             <div className='entity-container-head margin-top-0 margin-bottom-20'>
                 <span className='header-word'>意图</span>
-                <Button className='add-new-button' style={{width:'120px',marginLeft: '15px'}} onClick={this.showModal.bind(this,'root')} type='primary'>新增顶层意图</Button>
-                <Button className='add-new-button' style={{width:'100px'}} onClick={this.showModal.bind(this,'son')} type="primary">新增子意图</Button>
+                <Button className='add-new-button' style={{width:'120px',marginLeft: '15px',visibility: this.props.mode == 'server' ? 'visible' : 'hidden'}} onClick={this.showModal.bind(this,'root')} type='primary'>新增顶层意图</Button>
+                <Button className='add-new-button' style={{width:'100px',visibility: this.props.mode == 'server' ? 'visible' : 'hidden'}} onClick={this.showModal.bind(this,'son')} type="primary">新增子意图</Button>
             </div>
             <Modal
                 title='新增'

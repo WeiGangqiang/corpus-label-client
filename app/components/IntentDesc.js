@@ -158,7 +158,7 @@ export class IntentDesc extends Component {
                         </Col>
                         <Col style={style.col} span={4} xs={24} sm={12} xl={4}>
                             <span style={style.span}>类型:</span>
-                            <div>{this.props.mode}</div>
+                            <div>{this.props.mode == 'server'? '服务器端' : '本地'}</div>
                         </Col>
                         <Col style={style.col} span={24} xs={24} sm={24}>
                             <span style={style.span}>模型路径:</span>
