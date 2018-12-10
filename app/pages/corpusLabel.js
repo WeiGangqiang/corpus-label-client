@@ -133,8 +133,6 @@ export default class CorpusLabel extends Component {
     };
 
     render() {
-
-        // const agentName = this.props.location.query.agent;
         const {intentResult, entitySlideResult, children} = this.props;
 
         const style = {
