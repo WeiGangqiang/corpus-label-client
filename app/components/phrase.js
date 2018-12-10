@@ -18,7 +18,8 @@ export class PhraseList extends Component {
         this.state = {
             showModalFlag: false,
             inputKey: 0,
-            phrase: {}
+            phrase: {},
+            focusIndex: 0
         }
     }
 
@@ -77,9 +78,10 @@ export class PhraseList extends Component {
 
     }
 
-    addPhraseText(phrase, e) {
-        console.log(phrase)
-        console.log('get phrase test', e.target.value)
+    addPhraseText(phrase, index, e) {
+        this.setState({
+            focusIndex: index
+        })
         if(phrase.intentId){
             this.setState({inputKey: this.state.inputKey + 1})
             const phraseText = e.target.value.replace(/，/g, ',').split(',');
@@ -156,9 +158,13 @@ export class PhraseList extends Component {
                             })
                         }
                         <div style={style.input} >
-                            <Input placeholder="请输入" type="text" key={that.state.inputKey}
-                                onPressEnter={that.addPhraseText.bind(that, record)}
-                            />
+                            {
+                                that.state.focusIndex == index ? <Input  placeholder="请输入" type="text" key={that.state.inputKey}
+                                onPressEnter={that.addPhraseText.bind(that, record, index)} autoFocus
+                                /> :  <Input placeholder="请输入" type="text" key={that.state.inputKey}
+                                             onPressEnter={that.addPhraseText.bind(that, record, index)}
+                                />
+                            }
                         </div>
                     </div>
                 }

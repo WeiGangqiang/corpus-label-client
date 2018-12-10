@@ -59,11 +59,16 @@ export class Simplifier extends Component {
                 this.props.addPattern(newCorpus, this.props.corpusType)
             }
             else{
-                this.setState({
-                    newCorpus: newCorpus,
-                    simCorpus: data.y,
-                    isSimplified: isSimplified
-                })
+                if (this.state.isSimplified) {
+                    this.addSimpliferSentence()
+                } else {
+                    this.setState({
+                        newCorpus: newCorpus,
+                        simCorpus: data.y,
+                        isSimplified: isSimplified
+                    })
+                }
+
             }
         }, err => {
             console.log(err)

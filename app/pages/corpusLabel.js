@@ -7,6 +7,8 @@ import {fetchintent, postIntent, deleteIntent, putIntent, putIntentParameter, ad
 
 import {fetchEntityList, certainEntity, updateEntity, deleteEntity, addEntity, entityReference} from 'actions/entity'
 
+import {setRouteParam} from "actions/routeParam";
+
 import {PatternList, PhraseList, EntityParameters, IntentList, IntentTitle, IntentDesc, EntityTable, ActionsList,EditEntity} from "components/index";
 import {EntityDesc} from 'components/entityDesc'
 import {Logout} from 'components/logout'
@@ -50,14 +52,19 @@ export default class CorpusLabel extends Component {
 
     componentWillMount() {
         agentName = sessionStorage.getItem('agent');
+        console.log(agentName)
     }
 
     componentDidMount() {
         this.props.dispatch(fetchintent('?agent=' + agentName, data => {
             if (data.length) {
+                this.props.dispatch(setRouteParam(this.props.intentResult.data.children[0]))
+                // hashHistory.push({
+                //     pathname:'/corpusLabel/intent/' + this.props.intentResult.data.children[0].name,
+                //     query:this.props.intentResult.data.children[0],
+                // })
                 hashHistory.push({
-                    pathname:'/corpusLabel/intent/' + this.props.intentResult.data.children[0].name,
-                    query:this.props.intentResult.data.children[0],
+                    pathname:'/corpusLabel/intent/' + this.props.intentResult.data.children[0].name
                 })
             }
         }, error => {
@@ -127,7 +134,7 @@ export default class CorpusLabel extends Component {
 
     render() {
 
-        const agentName = this.props.location.query.agent;
+        // const agentName = this.props.location.query.agent;
         const {intentResult, entitySlideResult, children} = this.props;
 
         const style = {

@@ -17,7 +17,8 @@ let agent = '';
     config: state.config,
     intentResult: state.intentResult,
     entityResult: state.entityResult,
-    entitySlideResult: state.entitySlideResult
+    entitySlideResult: state.entitySlideResult,
+    routeResult: state.routeResult
 }))
 
 
@@ -38,7 +39,10 @@ export default class IntentDetail extends Component{
 
     componentWillMount () {
         agent = sessionStorage.getItem('agent');
-        const {intentId, name, zhName, modelPath, mode} = this.props.location.query;
+        // console.log(this.props.location.query)
+        // console.log(this.props.routeResult.data)
+        // const {intentId, name, zhName, modelPath, mode} = this.props.location.query;
+        const {intentId, name, zhName, modelPath, mode} = this.props.routeResult.data;
         this.initData({intentId, name, zhName, modelPath, mode})
     }
 
@@ -51,10 +55,14 @@ export default class IntentDetail extends Component{
 
     componentWillReceiveProps(props){
 
-        if(this.isEgle(props.location.query, this.props.location.query)){
+        // if(this.isEgle(props.routeResult.data, this.props.location.query)){
+        if(this.isEgle(props.routeResult.data, this.props.routeResult.data)){
 
         }else{
-            const {intentId, name, zhName, modelPath, mode} = props.location.query;
+            // const {intentId, name, zhName, modelPath, mode} = props.location.query;
+            // console.log(props.location.query)
+            // console.log(props.routeResult.data)
+            const {intentId, name, zhName, modelPath, mode} = props.routeResult.data;
             this.initData({name,zhName,modelPath,mode,intentId});
         }
     };
@@ -267,6 +275,7 @@ export default class IntentDetail extends Component{
     };
 
     updateIntentRequire = (param, obj) => {
+        console.log(param,obj)
         this.props.dispatch(putIntentParameter({
             ...param,
             agent: agent
@@ -328,7 +337,8 @@ export default class IntentDetail extends Component{
     }
 
     render() {
-        const {intentId, name, zhName, modelPath, mode} = this.props.location.query;
+        // const {intentId, name, zhName, modelPath, mode} = this.props.location.query;
+        const {intentId, name, zhName, modelPath, mode} = this.props.routeResult.data;
 
         const {intentResult, entitySlideResult} = this.props;
 

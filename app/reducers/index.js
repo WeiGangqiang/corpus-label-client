@@ -15,6 +15,7 @@ import {serveResult, agentResult, hostResult} from './serve'
 import {intentResult, entitySlideResult, entityResult, phraseResult,actionsResult} from './intent';
 import {patternResult, predictResult} from './pattern'
 import {unknownResult} from './unknown'
+import {routeResult} from './routeParam'
 
 const rootReducer = combineReducers({
     routing,
@@ -31,7 +32,8 @@ const rootReducer = combineReducers({
     patternResult,
     predictResult,
     unknownResult,
-    actionsResult
+    actionsResult,
+    routeResult
 });
 
 export default rootReducer;

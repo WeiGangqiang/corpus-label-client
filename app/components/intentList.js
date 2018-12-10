@@ -6,14 +6,21 @@ import { Tree, Modal, message, Radio, Form, Input, Button, Icon } from 'antd';
 
 import {EditEntity} from 'components/index'
 
+import {setRouteParam} from '../actions/routeParam'
+import {connect} from "react-redux";
+
 const RadioGroup = Radio.Group;
 const FormItem = Form.Item;
 const TreeNode = Tree.TreeNode;
+
+@connect((state, props) => ({
+}))
 
 @Form.create({
     onFieldsChange(props, items) {
     },
 })
+
 
 export class IntentList extends Component {
     constructor(props) {
@@ -38,16 +45,19 @@ export class IntentList extends Component {
     }
 
     selectNode =(selectKey,e) => {
+        console.log(this)
         if(e.selectedNodes.length){
-            // if(e.selectedNodes[0].props.dataRef.intentId){
-                // this.props.getIntent(e.selectedNodes[0].props.dataRef)
+            if (e.selectedNodes[0].props.dataRef.intentId) {
+                this.props.dispatch(setRouteParam(e.selectedNodes[0].props.dataRef))
+                // hashHistory.push({
+                //     pathname: '/corpusLabel/intent/' + e.selectedNodes[0].props.dataRef.name,
+                //     query: e.selectedNodes[0].props.dataRef
+                // })
                 hashHistory.push({
-                    pathname: '/corpusLabel/intent/' + e.selectedNodes[0].props.dataRef.name,
-                    query: e.selectedNodes[0].props.dataRef
+                    pathname: '/corpusLabel/intent/' + e.selectedNodes[0].props.dataRef.name
                 })
-            // }
+            }
         }else{
-
         }
     };
 
